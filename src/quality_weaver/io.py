@@ -1,9 +1,20 @@
 import os
+import sys
 import tempfile
 import time
 from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
+from typing import BinaryIO
+
+if sys.platform == "win32":
+    import msvcrt
+else:
+    import fcntl
+
+
+class LockTimeoutError(TimeoutError):
+    """Raised when an operating-system file lock cannot be acquired in time."""
 
 
 def _temporary_path(path: Path) -> Path:
@@ -50,20 +61,53 @@ def atomic_create_text(path: Path, content: str) -> None:
 
 @contextmanager
 def exclusive_lock(path: Path, timeout_seconds: float = 10.0) -> Iterator[None]:
-    """Serialize a short operation using an exclusive, transient lock file."""
+    """Serialize an operation with an OS-released lock on a persistent lock file."""
     deadline = time.monotonic() + timeout_seconds
-    descriptor: int | None = None
-    while descriptor is None:
-        try:
-            descriptor = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-        except FileExistsError:
-            if time.monotonic() >= deadline:
-                raise TimeoutError(f"timed out waiting for lock: {path}") from None
-            time.sleep(0.01)
+    with path.open("a+b") as lock_file:
+        _ensure_lock_byte(lock_file)
+        while True:
+            try:
+                _lock_file(lock_file)
+                break
+            except BlockingIOError:
+                if time.monotonic() >= deadline:
+                    raise LockTimeoutError(f"timed out waiting for lock: {path}") from None
+                time.sleep(0.01)
 
-    try:
-        os.write(descriptor, str(os.getpid()).encode("ascii"))
-        yield
-    finally:
-        os.close(descriptor)
-        path.unlink(missing_ok=True)
+        try:
+            yield
+        finally:
+            _unlock_file(lock_file)
+
+
+def _ensure_lock_byte(lock_file: BinaryIO) -> None:
+    lock_file.seek(0, os.SEEK_END)
+    if lock_file.tell() == 0:
+        lock_file.write(b"\0")
+        lock_file.flush()
+    lock_file.seek(0)
+
+
+if sys.platform == "win32":
+
+    def _lock_file(lock_file: BinaryIO) -> None:
+        lock_file.seek(0)
+        try:
+            msvcrt.locking(lock_file.fileno(), msvcrt.LK_NBLCK, 1)
+        except OSError as error:
+            raise BlockingIOError from error
+
+    def _unlock_file(lock_file: BinaryIO) -> None:
+        lock_file.seek(0)
+        msvcrt.locking(lock_file.fileno(), msvcrt.LK_UNLCK, 1)
+
+else:
+
+    def _lock_file(lock_file: BinaryIO) -> None:
+        try:
+            fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError as error:
+            raise BlockingIOError from error
+
+    def _unlock_file(lock_file: BinaryIO) -> None:
+        fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)

@@ -2,12 +2,14 @@ import hashlib
 import json
 import threading
 import time
+from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
 
+import quality_weaver.io as io_module
 import quality_weaver.workspace as workspace_module
-from quality_weaver.io import atomic_write_text
+from quality_weaver.io import atomic_write_text, exclusive_lock
 from quality_weaver.models import ApprovalStatus
 from quality_weaver.workspace import Stage, StateError, Workspace, sha256_file
 
@@ -49,6 +51,75 @@ def test_init_refuses_to_overwrite_existing_state(tmp_path) -> None:
         Workspace.init(tmp_path)
 
     assert state_path.read_text(encoding="utf-8") == '{"sentinel": true}'
+
+
+def test_stale_lock_file_does_not_block_new_owner(tmp_path) -> None:
+    lock_path = tmp_path / "workspace.lock"
+    lock_path.write_text("crashed-owner", encoding="utf-8")
+
+    with exclusive_lock(lock_path, timeout_seconds=0.05):
+        assert lock_path.exists()
+
+
+def test_workspace_translates_lock_timeout_to_state_error(tmp_path, monkeypatch) -> None:
+    @contextmanager
+    def timed_out_lock(*args, **kwargs):
+        raise io_module.LockTimeoutError("timed out")
+        yield
+
+    monkeypatch.setattr(workspace_module, "exclusive_lock", timed_out_lock)
+
+    with pytest.raises(StateError, match="timed out acquiring workspace lock"):
+        Workspace.init(tmp_path)
+
+
+def test_workspace_path_aliases_share_the_same_locks(tmp_path, monkeypatch) -> None:
+    monkeypatch.chdir(tmp_path.parent)
+    relative_path = Path(tmp_path.name)
+
+    absolute_workspace = Workspace(tmp_path)
+    relative_workspace = Workspace(relative_path)
+
+    assert relative_workspace._init_lock_path == absolute_workspace._init_lock_path
+    assert relative_workspace._mutation_lock_path == absolute_workspace._mutation_lock_path
+
+
+def test_init_rejects_file_at_expected_directory_and_rolls_back(tmp_path) -> None:
+    workspace_path = tmp_path / ".quality-weaver"
+    workspace_path.mkdir()
+    normalized_path = workspace_path / "normalized"
+    normalized_path.write_text("user content", encoding="utf-8")
+
+    with pytest.raises(StateError, match="expected workspace directory"):
+        Workspace.init(tmp_path)
+
+    assert normalized_path.read_text(encoding="utf-8") == "user content"
+    assert {path.name for path in workspace_path.iterdir()} == {"normalized"}
+
+
+def test_init_rejects_directory_at_config_path_and_rolls_back(tmp_path) -> None:
+    config_path = tmp_path / ".quality-weaver" / "config.yaml"
+    config_path.mkdir(parents=True)
+
+    with pytest.raises(StateError, match="config.yaml must be a regular file"):
+        Workspace.init(tmp_path)
+
+    assert config_path.is_dir()
+    assert {path.name for path in config_path.parent.iterdir()} == {"config.yaml"}
+
+
+def test_failed_init_removes_newly_created_empty_project_root(tmp_path, monkeypatch) -> None:
+    project_path = tmp_path / "new-project"
+
+    def fail_create(*args, **kwargs) -> None:
+        raise OSError("state creation failed")
+
+    monkeypatch.setattr(workspace_module, "atomic_create_text", fail_create)
+
+    with pytest.raises(OSError, match="state creation failed"):
+        Workspace.init(project_path)
+
+    assert not project_path.exists()
 
 
 def test_load_state_rejects_unsupported_schema_version(tmp_path) -> None:

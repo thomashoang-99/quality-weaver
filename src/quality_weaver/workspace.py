@@ -1,5 +1,6 @@
 import hashlib
 import json
+import stat
 from collections.abc import Callable
 from contextlib import suppress
 from enum import StrEnum
@@ -8,7 +9,12 @@ from typing import Literal
 
 from pydantic import Field, ValidationError, model_validator
 
-from quality_weaver.io import atomic_create_text, atomic_write_text, exclusive_lock
+from quality_weaver.io import (
+    LockTimeoutError,
+    atomic_create_text,
+    atomic_write_text,
+    exclusive_lock,
+)
 from quality_weaver.models import ApprovalStatus, StrictModel
 
 
@@ -50,17 +56,38 @@ class Workspace:
         self.project_path = project_path
         self.path = project_path / ".quality-weaver"
         self.state_path = self.path / "state.json"
-        self._mutation_lock_path = project_path / ".quality-weaver.state.lock"
-        self._init_lock_path = project_path / ".quality-weaver.init.lock"
+        canonical_project_path = project_path.resolve()
+        lock_prefix = f".{canonical_project_path.name}.quality-weaver"
+        self._mutation_lock_path = canonical_project_path.parent / f"{lock_prefix}.state.lock"
+        self._init_lock_path = canonical_project_path.parent / f"{lock_prefix}.init.lock"
 
     @classmethod
     def init(cls, project_path: Path) -> "Workspace":
-        project_path.mkdir(parents=True, exist_ok=True)
+        created_project = False
+        try:
+            project_path.mkdir(parents=True)
+        except FileExistsError:
+            if not cls._is_directory(project_path):
+                raise StateError(f"project path must be a directory: {project_path}") from None
+        else:
+            created_project = True
+
         workspace = cls(project_path)
-        with exclusive_lock(workspace._init_lock_path):
-            if workspace.state_path.is_file():
-                raise StateError(f"workspace state already exists: {workspace.state_path}")
-            workspace._initialize_exclusively()
+        try:
+            try:
+                with exclusive_lock(workspace._init_lock_path):
+                    if workspace.state_path.is_file():
+                        raise StateError(
+                            f"workspace state already exists: {workspace.state_path}"
+                        )
+                    workspace._initialize_exclusively()
+            except LockTimeoutError as error:
+                raise StateError("timed out acquiring workspace lock") from error
+        except BaseException:
+            if created_project:
+                with suppress(OSError):
+                    project_path.rmdir()
+            raise
         return workspace
 
     def _initialize_exclusively(self) -> None:
@@ -73,16 +100,18 @@ class Workspace:
                 try:
                     directory.mkdir()
                 except FileExistsError:
+                    if not self._is_directory(directory):
+                        raise StateError(f"expected workspace directory: {directory}") from None
                     continue
                 created_directories.append(directory)
 
-            if not config_path.exists():
-                try:
-                    atomic_create_text(config_path, config_content)
-                except FileExistsError:
-                    pass
-                else:
-                    created_config = True
+            try:
+                atomic_create_text(config_path, config_content)
+            except FileExistsError:
+                if not self._is_regular_file(config_path):
+                    raise StateError("config.yaml must be a regular file") from None
+            else:
+                created_config = True
 
             try:
                 atomic_create_text(self.state_path, self._state_content(WorkspaceState()))
@@ -113,6 +142,20 @@ class Workspace:
                 "runs",
             )
         )
+
+    @staticmethod
+    def _is_directory(path: Path) -> bool:
+        try:
+            return stat.S_ISDIR(path.lstat().st_mode)
+        except OSError:
+            return False
+
+    @staticmethod
+    def _is_regular_file(path: Path) -> bool:
+        try:
+            return stat.S_ISREG(path.lstat().st_mode)
+        except OSError:
+            return False
 
     def load_state(self) -> WorkspaceState:
         try:
@@ -198,11 +241,14 @@ class Workspace:
         atomic_write_text(self.state_path, self._state_content(state))
 
     def _mutate_state(self, transition: Callable[[WorkspaceState], None]) -> None:
-        with exclusive_lock(self._mutation_lock_path):
-            state = self.load_state()
-            transition(state)
-            validated_state = WorkspaceState.model_validate(state.model_dump())
-            self._save_state(validated_state)
+        try:
+            with exclusive_lock(self._mutation_lock_path):
+                state = self.load_state()
+                transition(state)
+                validated_state = WorkspaceState.model_validate(state.model_dump())
+                self._save_state(validated_state)
+        except LockTimeoutError as error:
+            raise StateError("timed out acquiring workspace lock") from error
 
     @staticmethod
     def _state_content(state: WorkspaceState) -> str:
