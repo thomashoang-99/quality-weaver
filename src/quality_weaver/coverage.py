@@ -1,4 +1,4 @@
-from collections import Counter
+from collections import Counter, defaultdict
 from collections.abc import Mapping
 from collections.abc import Set as AbstractSet
 from dataclasses import dataclass
@@ -24,16 +24,15 @@ class CoverageFinding:
 def validate_ledger(
     ledger: CoverageLedger,
     *,
-    known_requirement_ids: set[str] | frozenset[str] | None = None,
-    known_target_ids: Mapping[str, AbstractSet[str]] | None = None,
-    catalog: Catalog | None = None,
+    known_requirement_ids: AbstractSet[str],
+    known_target_ids: Mapping[str, AbstractSet[str]],
+    catalog: Catalog,
 ) -> list[CoverageFinding]:
     """Validate a ledger using only the explicitly supplied lookup inputs."""
     findings: list[CoverageFinding] = []
-    key_counts = Counter(item.logical_key for item in ledger.items)
-    viewpoint_ids = {viewpoint.id for viewpoint in catalog.viewpoints} if catalog else None
+    viewpoint_ids = {viewpoint.id for viewpoint in catalog.viewpoints}
 
-    if catalog is not None and ledger.catalog_version != catalog.version:
+    if ledger.catalog_version != catalog.version:
         findings.append(
             CoverageFinding(
                 code="COVERAGE_CATALOG_VERSION_MISMATCH",
@@ -45,18 +44,31 @@ def validate_ledger(
             )
         )
 
-    duplicate_keys_reported: set[tuple[str, str, str, str]] = set()
+    ids_by_key: dict[tuple[str, str, str, str], list[str]] = defaultdict(list)
     for item in ledger.items:
-        if key_counts[item.logical_key] > 1 and item.logical_key not in duplicate_keys_reported:
-            duplicate_keys_reported.add(item.logical_key)
+        ids_by_key[item.logical_key].append(item.id)
+    for coverage_ids in ids_by_key.values():
+        if len(coverage_ids) > 1:
             findings.append(
                 CoverageFinding(
                     code="COVERAGE_DUPLICATE_KEY",
                     message="Coverage logical key is duplicated",
-                    artifact_id=item.id,
+                    artifact_id=min(coverage_ids),
                 )
             )
-        if known_requirement_ids is not None and item.requirement_id not in known_requirement_ids:
+
+    for coverage_id, count in Counter(item.id for item in ledger.items).items():
+        if count > 1:
+            findings.append(
+                CoverageFinding(
+                    code="COVERAGE_DUPLICATE_ID",
+                    message="Coverage ID is duplicated",
+                    artifact_id=coverage_id,
+                )
+            )
+
+    for item in ledger.items:
+        if item.requirement_id not in known_requirement_ids:
             findings.append(
                 CoverageFinding(
                     code="COVERAGE_UNKNOWN_REQUIREMENT",
@@ -64,7 +76,7 @@ def validate_ledger(
                     artifact_id=item.id,
                 )
             )
-        if known_target_ids is not None and item.target_id not in known_target_ids.get(
+        if item.target_id not in known_target_ids.get(
             item.requirement_id, frozenset()
         ):
             findings.append(
@@ -74,7 +86,7 @@ def validate_ledger(
                     artifact_id=item.id,
                 )
             )
-        if viewpoint_ids is not None and item.viewpoint_id not in viewpoint_ids:
+        if item.viewpoint_id not in viewpoint_ids:
             findings.append(
                 CoverageFinding(
                     code="COVERAGE_UNKNOWN_VIEWPOINT",

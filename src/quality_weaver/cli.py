@@ -1,17 +1,18 @@
+from collections import Counter
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Annotated, Any, Never
 
 import typer
-from pydantic import ValidationError
+from pydantic import TypeAdapter, ValidationError
 from ruamel.yaml import YAML
 from ruamel.yaml.error import YAMLError
 
 from quality_weaver import __version__
 from quality_weaver.catalog import Catalog
-from quality_weaver.coverage import validate_ledger
+from quality_weaver.coverage import CoverageFinding, validate_ledger
 from quality_weaver.io import atomic_write_text
-from quality_weaver.models import CoverageLedger
+from quality_weaver.models import CoverageItem, CoverageLedger
 from quality_weaver.testmap import render_testmap
 from quality_weaver.workspace import Stage, StateError, Workspace
 
@@ -20,6 +21,7 @@ coverage_app = typer.Typer(no_args_is_help=True)
 testmap_app = typer.Typer(no_args_is_help=True)
 app.add_typer(coverage_app, name="coverage")
 app.add_typer(testmap_app, name="testmap")
+_COVERAGE_ITEMS = TypeAdapter(list[CoverageItem])
 
 
 @app.callback()
@@ -51,11 +53,10 @@ def _artifact_fail(kind: str, error: Exception) -> Never:
 def _load_ledger(path: Path) -> CoverageLedger:
     yaml = YAML(typ="safe")
     document: Any = yaml.load(path.read_text(encoding="utf-8"))
-    duplicate = _raw_duplicate(document)
+    items = _validated_raw_items(document)
+    duplicate = _duplicate_finding(items)
     if duplicate is not None:
-        raise ValueError(
-            f"COVERAGE_DUPLICATE_KEY {duplicate}: Coverage logical key is duplicated"
-        )
+        raise ValueError(f"{duplicate.code} {duplicate.artifact_id}: {duplicate.message}")
     return CoverageLedger.model_validate(document)
 
 
@@ -63,26 +64,38 @@ def _catalog(path: Path) -> Catalog:
     return Catalog.load(path)
 
 
-def _raw_duplicate(document: Any) -> str | None:
+def _validated_raw_items(document: Any) -> list[CoverageItem]:
     if not isinstance(document, Mapping) or not isinstance(document.get("items"), list):
+        return []
+    return _COVERAGE_ITEMS.validate_python(document["items"])
+
+
+def _duplicate_finding(items: list[CoverageItem]) -> CoverageFinding | None:
+    ids_by_key: dict[tuple[str, str, str, str], list[str]] = {}
+    for item in items:
+        ids_by_key.setdefault(item.logical_key, []).append(item.id)
+    findings = [
+        ("COVERAGE_DUPLICATE_KEY", min(coverage_ids), "Coverage logical key is duplicated")
+        for coverage_ids in ids_by_key.values()
+        if len(coverage_ids) > 1
+    ]
+    findings.extend(
+        ("COVERAGE_DUPLICATE_ID", coverage_id, "Coverage ID is duplicated")
+        for coverage_id, count in Counter(item.id for item in items).items()
+        if count > 1
+    )
+    if not findings:
         return None
-    seen: set[tuple[Any, Any, Any, Any]] = set()
-    for item in document["items"]:
-        if not isinstance(item, Mapping):
-            continue
-        key = (
-            item.get("requirement_id"),
-            item.get("target_id"),
-            item.get("viewpoint_id"),
-            item.get("condition"),
-        )
-        if not all(isinstance(value, str) for value in key):
-            continue
-        if key in seen:
-            artifact_id = item.get("id")
-            return str(artifact_id) if artifact_id is not None else "coverage-ledger"
-        seen.add(key)
-    return None
+    code, artifact_id, message = min(findings)
+    return CoverageFinding(code=code, artifact_id=artifact_id, message=message)
+
+
+def _ensure_safe_output(ledger_path: Path, catalog_path: Path, output_path: Path) -> None:
+    resolved_output = output_path.resolve()
+    resolved_ledger = ledger_path.resolve()
+    resolved_catalog = catalog_path.resolve()
+    if resolved_output == resolved_ledger or resolved_output.is_relative_to(resolved_catalog):
+        raise ValueError("output path collides with a protected input")
 
 
 def _target_ownership(
@@ -138,6 +151,7 @@ def testmap_render(
 ) -> None:
     """Render the deterministic Test Map projection."""
     try:
+        _ensure_safe_output(ledger_path, catalog_path, output_path)
         ledger = _load_ledger(ledger_path)
         catalog = _catalog(catalog_path)
         target_ownership = _target_ownership(requirement_ids, target_specs)

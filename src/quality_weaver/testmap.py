@@ -17,8 +17,8 @@ def render_testmap(
     ledger: CoverageLedger,
     catalog: Catalog,
     *,
-    known_requirement_ids: set[str] | frozenset[str] | None = None,
-    known_target_ids: Mapping[str, AbstractSet[str]] | None = None,
+    known_requirement_ids: AbstractSet[str],
+    known_target_ids: Mapping[str, AbstractSet[str]],
 ) -> str:
     """Render a deterministic Markdown projection of a typed coverage ledger."""
     findings = validate_ledger(
@@ -66,10 +66,17 @@ def render_testmap(
             else "ready"
         )
         lines.append(
-            f"| {unit} | {len(items)} | {decision_counts['Included']} | "
-            f"{decision_counts['Excluded']} | {decision_counts['Questions']} | "
-            f"{priority_counts['high']} | {priority_counts['medium']} | "
-            f"{priority_counts['low']} | {status} |"
+            _table_row(
+                unit,
+                len(items),
+                decision_counts["Included"],
+                decision_counts["Excluded"],
+                decision_counts["Questions"],
+                priority_counts["high"],
+                priority_counts["medium"],
+                priority_counts["low"],
+                status,
+            )
         )
 
     lines.extend(
@@ -90,8 +97,15 @@ def render_testmap(
         counts = _decision_counts(items)
         coverage_ids = ", ".join(sorted(item.id for item in items))
         lines.append(
-            f"| {group} | {unit} | {len(items)} | {counts['Included']} | "
-            f"{counts['Excluded']} | {counts['Questions']} | {coverage_ids} |"
+            _table_row(
+                group,
+                unit,
+                len(items),
+                counts["Included"],
+                counts["Excluded"],
+                counts["Questions"],
+                coverage_ids,
+            )
         )
 
     lines.extend(["", "## Anomalies", ""])
@@ -124,4 +138,23 @@ def _viewpoint_group(catalog: Catalog, viewpoint_id: str) -> str:
 
 
 def _finding_line(finding: CoverageFinding) -> str:
-    return f"- `{finding.code}` ({finding.artifact_id}): {finding.message}"
+    return (
+        f"- `{_markdown_text(finding.code)}` "
+        f"({_markdown_text(finding.artifact_id)}): {_markdown_text(finding.message)}"
+    )
+
+
+def _table_row(*values: object) -> str:
+    return "| " + " | ".join(_markdown_text(value) for value in values) + " |"
+
+
+def _markdown_text(value: object) -> str:
+    return (
+        str(value)
+        .replace("\\", "\\\\")
+        .replace("\r\n", " ")
+        .replace("\r", " ")
+        .replace("\n", " ")
+        .replace("|", "\\|")
+        .replace("`", "\\`")
+    )
