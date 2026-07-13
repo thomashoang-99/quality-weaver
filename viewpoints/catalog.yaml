@@ -1,0 +1,171 @@
+version: 1.0.0
+groups:
+  - name: ui-layout
+    file: local/ui-layout.yaml
+    entity_types:
+      - screen
+      - page
+      - ui
+    risks:
+      - layout
+      - responsive
+  - name: display-controls
+    file: local/display-controls.yaml
+    entity_types:
+      - label
+      - text
+      - heading
+      - title
+      - paragraph
+      - image
+      - video
+      - file-preview
+      - icon
+      - tooltip
+      - badge
+      - chip
+      - tag
+      - progress-bar
+      - alert
+      - banner
+      - snackbar
+      - toast
+      - dialog
+      - modal
+    risks:
+      - presentation
+      - accessibility
+  - name: data-visualization
+    file: local/data-visualization.yaml
+    entity_types:
+      - chart
+      - graph
+      - map
+      - heatmap
+      - calendar
+    risks:
+      - visualization
+  - name: container-structural
+    file: local/container-structural.yaml
+    entity_types:
+      - card
+      - accordion
+      - grid
+      - table
+      - list
+      - container
+    risks:
+      - structure
+  - name: input-validation
+    file: local/input-validation.yaml
+    entity_types:
+      - textbox
+      - input
+      - textarea
+      - number
+      - password
+      - date
+      - datetime
+      - radio
+      - checkbox
+      - toggle
+      - dropdown
+      - combobox
+      - file-upload
+    risks:
+      - validation
+      - data-quality
+  - name: action-controls
+    file: local/action-controls.yaml
+    entity_types:
+      - button
+      - action
+      - link
+    risks:
+      - duplicate-action
+      - submission
+  - name: advanced
+    file: local/advanced.yaml
+    entity_types:
+      - screen
+      - feature
+    risks:
+      - security
+      - performance
+      - concurrency
+      - accessibility
+  - name: api
+    file: local/api.yaml
+    entity_types:
+      - api
+      - endpoint
+    risks:
+      - api
+      - security
+      - integration
+  - name: keyboard-mouse
+    file: local/keyboard-mouse.yaml
+    entity_types:
+      - keyboard
+      - mouse
+      - textbox
+      - input
+    risks:
+      - accessibility
+      - input-device
+  - name: navigation
+    file: cross-requirement/navigation.yaml
+    entity_types:
+      - menu
+      - sidebar
+      - navigation
+      - tab
+      - pagination
+      - breadcrumb
+      - link
+      - screen
+      - page
+    risks:
+      - navigation
+  - name: data-continuity
+    file: cross-requirement/data-continuity.yaml
+    entity_types:
+      - screen
+      - flow
+    risks:
+      - data-continuity
+      - state-continuity
+  - name: it-flow
+    file: cross-requirement/it-flow.yaml
+    entity_types:
+      - flow
+      - integration
+    risks:
+      - integration
+      - data-continuity
+  - name: e2e-journey
+    file: cross-requirement/e2e-journey.yaml
+    entity_types:
+      - journey
+      - workflow
+    risks:
+      - end-to-end
+      - business-journey
+  - name: mobile
+    file: system-wide/mobile.yaml
+    entity_types:
+      - mobile-app
+      - mobile-screen
+    risks:
+      - mobile
+      - device
+      - interruption
+  - name: batch-job
+    file: system-wide/batch-job-cron.yaml
+    entity_types:
+      - batch-job
+      - cron
+      - scheduled-job
+    risks:
+      - batch
+      - scheduling

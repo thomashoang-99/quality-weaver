@@ -1,0 +1,216 @@
+  - id: VP-CONTAINER-STRUCTURAL-001
+    name: Title/text visibility & data accuracy
+    group: container-structural
+    scope: local
+    applies_to: &id001
+      - card
+      - accordion
+      - grid
+      - table
+      - list
+      - container
+    signals:
+      - Card
+      - Title/text visibility & data accuracy
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check card content vs. data source Expected: Clearly displayed, matches source exactly'
+  - id: VP-CONTAINER-STRUCTURAL-002
+    name: Collapse / Expand
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - Card
+      - Collapse / Expand
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check collapse and expand Expected: Content hides/shows correctly'
+  - id: VP-CONTAINER-STRUCTURAL-003
+    name: Action buttons
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - Card
+      - Action buttons
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check card action buttons Expected: Correct display and function'
+  - id: VP-CONTAINER-STRUCTURAL-004
+    name: Column headers & fixed header
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - Table
+      - Column headers & fixed header
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check header names/overflow, and header fixed on scroll Expected: Clear, correct names, no overflow; stays
+      fixed while scrolling'
+  - id: VP-CONTAINER-STRUCTURAL-005
+    name: Default state
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - Table
+      - Default state
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Check the table's default row count and sort order when the screen first loads Expected: Matches spec"
+  - id: VP-CONTAINER-STRUCTURAL-006
+    name: Sort cycle
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - Table
+      - Sort cycle
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check clicking a sortable column header repeatedly Expected: 1st click ascending, 2nd descending, 3rd resets
+      to default order; data order matches'
+  - id: VP-CONTAINER-STRUCTURAL-007
+    name: Filter / Search — applied, combined, cleared
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - Table
+      - Filter / Search — applied, combined, cleared
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check applying one filter, 2+ filters together, and clearing Expected: Updates to show exactly the rows matching
+      all active filters (AND); returns to unfiltered default on clear'
+  - id: VP-CONTAINER-STRUCTURAL-008
+    name: Empty filter result
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - Table
+      - Empty filter result
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check a filter combination matching no rows Expected: Explicit "no results" state, not a blank/broken table'
+  - id: VP-CONTAINER-STRUCTURAL-009
+    name: Data accuracy
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - Table
+      - Data accuracy
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check table data vs. data source Expected: Matches exactly'
+  - id: VP-CONTAINER-STRUCTURAL-010
+    name: Cell overflow
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - Table
+      - Cell overflow
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check long cell content Expected: Wrap/ellipsis per spec, no layout break'
+  - id: VP-CONTAINER-STRUCTURAL-011
+    name: Action buttons in row
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - Table
+      - Action buttons in row
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check row actions (edit/delete/status change) updating the grid Expected: Grid reflects the change immediately
+      (or on next refresh per spec), no full page reload'
+  - id: VP-CONTAINER-STRUCTURAL-012
+    name: Scrollbar & last-row visibility
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - Table
+      - Scrollbar & last-row visibility
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check a table/list with enough rows to require a scrollbar Expected: Scrollbar renders; the last row/column
+      is never partially clipped'
+  - id: VP-CONTAINER-STRUCTURAL-013
+    name: Data alignment & number formatting
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - Table
+      - Data alignment & number formatting
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check numeric/date columns vs. text columns Expected: Numbers/dates right-aligned, text left-aligned; numbers
+      use thousands separators per spec'
+  - id: VP-CONTAINER-STRUCTURAL-014
+    name: Correct item count & data accuracy
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - List View / Flat List
+      - Correct item count & data accuracy
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check item count and content vs. data source Expected: Matches exactly'
+  - id: VP-CONTAINER-STRUCTURAL-015
+    name: Grouped headers
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - List View / Flat List
+      - Grouped headers
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check group-header display Expected: Correct grouping and display'
+  - id: VP-CONTAINER-STRUCTURAL-016
+    name: Sorting
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - List View / Flat List
+      - Sorting
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check list sort Expected: Correct order per selected criteria'
+  - id: VP-CONTAINER-STRUCTURAL-017
+    name: Action icons
+    group: container-structural
+    scope: local
+    applies_to: *id001
+    signals:
+      - List View / Flat List
+      - Action icons
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check list-item action icons Expected: Clear display, correct function on click'

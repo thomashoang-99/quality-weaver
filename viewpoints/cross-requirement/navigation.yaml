@@ -1,0 +1,329 @@
+  - id: VP-NAVIGATION-001
+    name: Navigation correctness
+    group: navigation
+    scope: cross-requirement
+    applies_to: &id001
+      - menu
+      - sidebar
+      - navigation
+      - tab
+      - pagination
+      - breadcrumb
+      - link
+      - screen
+      - page
+    signals:
+      - Menu / Sidebar / Navigation Bar
+      - Navigation correctness
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check clicking a menu item Expected: Navigates to the correct screen/URL, no broken links'
+  - id: VP-NAVIGATION-002
+    name: Expand/Collapse
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Menu / Sidebar / Navigation Bar
+      - Expand/Collapse
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check collapsing/expanding Expected: Works correctly, state retained on reload if required'
+  - id: VP-NAVIGATION-003
+    name: Highlight current menu
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Menu / Sidebar / Navigation Bar
+      - Highlight current menu
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check active-menu highlighting across levels Expected: Clearly highlighted, matches spec at every nesting level'
+  - id: VP-NAVIGATION-004
+    name: Dropdown menu behavior
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Menu / Sidebar / Navigation Bar
+      - Dropdown menu behavior
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Check hover/click dropdown Expected: Opens correctly, doesn't cover content, closes on outside click"
+  - id: VP-NAVIGATION-005
+    name: Responsive collapse (☰)
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Menu / Sidebar / Navigation Bar
+      - Responsive collapse (☰)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check hamburger collapse on mobile/tablet Expected: Expands/closes correctly via tap'
+  - id: VP-NAVIGATION-006
+    name: Sticky vs non-sticky
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Menu / Sidebar / Navigation Bar
+      - Sticky vs non-sticky
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check nav behavior on scroll Expected: Matches design (fixed or disappearing)'
+  - id: VP-NAVIGATION-007
+    name: Logo click → Home
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Menu / Sidebar / Navigation Bar
+      - Logo click → Home
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Check logo click Expected: Returns to Home; new tab doesn't lose session"
+  - id: VP-NAVIGATION-008
+    name: Tab switch behavior
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Tabs
+      - Tab switch behavior
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check switching tabs Expected: Content changes correctly, no full reload on SPA'
+  - id: VP-NAVIGATION-009
+    name: Default active tab
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Tabs
+      - Default active tab
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the default tab on open Expected: Correct default per spec'
+  - id: VP-NAVIGATION-010
+    name: Visible / Hidden
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Tabs
+      - Visible / Hidden
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check tab visibility by permission/setting Expected: Shown/hidden correctly'
+  - id: VP-NAVIGATION-011
+    name: Path structure & clickability
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Breadcrumb
+      - Path structure & clickability
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check hierarchical path and click-to-navigate Expected: Correct structure (Home > Module > Page); each level
+      navigates correctly, no wrong-level skip'
+  - id: VP-NAVIGATION-012
+    name: Sequential navigation & step highlight
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Step Wizard / Stepper
+      - Sequential navigation & step highlight
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check going through steps; check current-step highlight Expected: Steps proceed in order; current step always
+      correctly highlighted, matching the screen shown'
+  - id: VP-NAVIGATION-013
+    name: Validation before proceeding
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Step Wizard / Stepper
+      - Validation before proceeding
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check moving to the next step before required data is complete Expected: Blocked with relevant validation errors;
+      Next stays disabled while invalid'
+  - id: VP-NAVIGATION-014
+    name: Backward navigation / re-entry
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Step Wizard / Stepper
+      - Backward navigation / re-entry
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check returning to a completed step and re-completing it with different data Expected: Prior data is intact
+      on return; going forward again uses the latest data — no duplication or stale leakage into later steps'
+  - id: VP-NAVIGATION-015
+    name: '"Change"/"Edit" return-to-search'
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Step Wizard / Stepper
+      - '"Change"/"Edit" return-to-search'
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check a control that returns the user to the search/criteria screen mid-flow Expected: Lands back on the criteria
+      screen with original criteria pre-filled for editing'
+  - id: VP-NAVIGATION-016
+    name: Deep link / direct URL access
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Step Wizard / Stepper
+      - Deep link / direct URL access
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check accessing a step/screen directly by URL without completing prior steps Expected: Redirects to the correct
+      starting point instead of rendering a broken/partial state'
+  - id: VP-NAVIGATION-017
+    name: Navigation correctness
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Back / Next Button
+      - Navigation correctness
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check Back/Next click Expected: Moves to the correct screen/step'
+  - id: VP-NAVIGATION-018
+    name: Disabled state
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Back / Next Button
+      - Disabled state
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check Back at the first step, Next at the last Expected: Correctly disabled at each boundary'
+  - id: VP-NAVIGATION-019
+    name: Visible after scroll threshold
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Scroll to Top Button
+      - Visible after scroll threshold
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check visibility trigger Expected: Appears only after scrolling past the threshold'
+  - id: VP-NAVIGATION-020
+    name: Navigation correctness
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Scroll to Top Button
+      - Navigation correctness
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check click behavior Expected: Scrolls smoothly to top, no jitter'
+  - id: VP-NAVIGATION-021
+    name: Current page highlight
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Pagination (widget mechanics)
+      - Current page highlight
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check highlight Expected: Current page clearly highlighted'
+  - id: VP-NAVIGATION-022
+    name: First/Last/Next/Prev buttons
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Pagination (widget mechanics)
+      - First/Last/Next/Prev buttons
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check button behavior and boundary disabling Expected: Page changes correctly; disabled on first/last page'
+  - id: VP-NAVIGATION-023
+    name: Items per page selector
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Pagination (widget mechanics)
+      - Items per page selector
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check changing page size Expected: Correct content change'
+  - id: VP-NAVIGATION-024
+    name: Jump to page
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Pagination (widget mechanics)
+      - Jump to page
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check direct page-number entry Expected: Jumps to the correct page'
+  - id: VP-NAVIGATION-025
+    name: Blank-row line styling
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Pagination (widget mechanics)
+      - Blank-row line styling
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Check the separator line rendering when a page has fewer rows than the page size Expected: Matches the design's
+      line/border treatment for blank trailing rows"
+  - id: VP-NAVIGATION-026
+    name: Scroll-based pagination (infinite/virtual scroll)
+    group: navigation
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Pagination (widget mechanics)
+      - Scroll-based pagination (infinite/virtual scroll)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Scroll down and up through the list instead of clicking page buttons Expected: Corresponding data loads/unloads
+      smoothly in each scroll direction'

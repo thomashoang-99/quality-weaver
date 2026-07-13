@@ -1,0 +1,576 @@
+  - id: VP-MOBILE-001
+    name: Rotating screen
+    group: mobile
+    scope: system-wide
+    applies_to: &id001
+      - mobile-app
+      - mobile-screen
+    signals:
+      - Screen Operation
+      - Rotating screen
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Rotate between portrait and landscape Expected: Displays correctly, no layout breakage'
+  - id: VP-MOBILE-002
+    name: Pull-to-refresh
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Screen Operation
+      - Pull-to-refresh
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Pull down to refresh Expected: Data updates to the latest available'
+  - id: VP-MOBILE-003
+    name: Swipe right/left
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Screen Operation
+      - Swipe right/left
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Swipe to switch screens/items Expected: Navigates to the correct screen'
+  - id: VP-MOBILE-004
+    name: Pinching in/out
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Screen Operation
+      - Pinching in/out
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Zoom in/out on the screen Expected: Content zooms correctly'
+  - id: VP-MOBILE-005
+    name: Home button & Kill app
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Device Operation
+      - Home button & Kill app
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Press Home then reopen; kill app then reopen Expected: Works normally without crashing; starts fresh on reopen'
+  - id: VP-MOBILE-006
+    name: Offline feature
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Device Operation
+      - Offline feature
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Disconnect internet Expected: Offline features work, or a clear "no internet" message shown'
+  - id: VP-MOBILE-007
+    name: Language change
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Device Operation
+      - Language change
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Change OS language Expected: App content updates to match'
+  - id: VP-MOBILE-008
+    name: Widget feature
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Device Operation
+      - Widget feature
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Add a home-screen widget Expected: Displays correctly'
+  - id: VP-MOBILE-009
+    name: Split-screen feature
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Device Operation
+      - Split-screen feature
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Open the app in split-screen mode Expected: Layout correct, no crash, no data loss'
+  - id: VP-MOBILE-010
+    name: GPS / Camera permission
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Device Operation
+      - GPS / Camera permission
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Grant/deny each permission Expected: Feature works, or shows the message appropriate to the permission state'
+  - id: VP-MOBILE-011
+    name: Online ⇄ Offline
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Device Operation
+      - Online ⇄ Offline
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Switch connectivity Expected: Re-syncs data without loss'
+  - id: VP-MOBILE-012
+    name: Background ⇄ Foreground
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Device Operation
+      - Background ⇄ Foreground
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Switch app state Expected: Resumes to the correct state'
+  - id: VP-MOBILE-013
+    name: Power saving / Sleep mode
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Device Operation
+      - Power saving / Sleep mode
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Enable each mode Expected: App remains stable; pauses/resumes correctly'
+  - id: VP-MOBILE-014
+    name: Dark mode
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Device Operation
+      - Dark mode
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Enable dark mode Expected: UI switches to the dark theme'
+  - id: VP-MOBILE-015
+    name: Successful authentication
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Face authentication
+      - Successful authentication
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Log in with a valid face Expected: Succeeds, grants access'
+  - id: VP-MOBILE-016
+    name: Retry & lockout
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Face authentication
+      - Retry & lockout
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Fail once then retry; fail repeatedly Expected: Retry allowed; locks and requires PIN/password beyond the limit'
+  - id: VP-MOBILE-017
+    name: ON/OFF biometric at OS level
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Face authentication
+      - ON/OFF biometric at OS level
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Disable/enable at OS level Expected: App detects state; hidden/disabled when OFF, usable when ON'
+  - id: VP-MOBILE-018
+    name: Ambient light / camera condition
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Face authentication
+      - Ambient light / camera condition
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Authenticate under low/back/bright light Expected: Camera still works; correct success/failure/retry message'
+  - id: VP-MOBILE-019
+    name: Face change (glasses, mask)
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Face authentication
+      - Face change (glasses, mask)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Authenticate with an altered face Expected: Recognizes correctly or fails safely with retry — never authenticates
+      the wrong person'
+  - id: VP-MOBILE-020
+    name: Successful authentication
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Fingerprint authentication
+      - Successful authentication
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Scan the correct registered fingerprint Expected: Succeeds, grants access'
+  - id: VP-MOBILE-021
+    name: Retry & lockout
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Fingerprint authentication
+      - Retry & lockout
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Scan wrong fingerprint 1-2 times then retry; exceed the configured limit (e.g. 5) Expected: Retry allowed;
+      locks and requires PIN/password beyond the limit'
+  - id: VP-MOBILE-022
+    name: ON/OFF biometric at OS level
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Fingerprint authentication
+      - ON/OFF biometric at OS level
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Enable/disable at OS level (Android/iOS) Expected: App detects state; hidden/disabled when OFF, usable when
+      ON'
+  - id: VP-MOBILE-023
+    name: Successful scan & valid/invalid QR code
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Camera Startup (QR/Barcode)
+      - Successful scan & valid/invalid QR code
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Scan under normal conditions; scan a valid vs. corrupted/blurry code Expected: Recognized and navigates correctly;
+      invalid code shows an error, no unintended action'
+  - id: VP-MOBILE-024
+    name: Supported QR code formats
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Camera Startup (QR/Barcode)
+      - Supported QR code formats
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Scan URL, text, vCard, Wi-Fi formats Expected: All supported formats processed correctly'
+  - id: VP-MOBILE-025
+    name: Security & data validation
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Camera Startup (QR/Barcode)
+      - Security & data validation
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Scan a QR code with malicious/non-standard data Expected: Rejected with a warning; dangerous action disabled'
+  - id: VP-MOBILE-026
+    name: Fallback & alternative input
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Camera Startup (QR/Barcode)
+      - Fallback & alternative input
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Camera not working/cannot scan Expected: Manual code entry or gallery-image selection available'
+  - id: VP-MOBILE-027
+    name: Cross-platform compatibility & detection accuracy
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Camera Startup (QR/Barcode)
+      - Cross-platform compatibility & detection accuracy
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Test on multiple devices/cameras; scan under low light/tilted angle/small code Expected: Works stably across
+      environments; recognizes accurately or shows a clear failure message'
+  - id: VP-MOBILE-028
+    name: Install / uninstall / update
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Install / uninstall / update
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Install from store, uninstall, and update to a new version Expected: Each completes cleanly; post-update, both
+      new and existing features work'
+  - id: VP-MOBILE-029
+    name: Hardware back repeated
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Hardware back repeated
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Press Android hardware Back / iOS swipe-back repeatedly and rapidly Expected: Navigates back one screen per
+      action; never crashes'
+  - id: VP-MOBILE-030
+    name: Interruption — incoming call/notification/alarm
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Interruption — incoming call/notification/alarm
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Trigger a call/notification/alarm mid-action, then return Expected: App resumes at the same screen/state, continuing
+      normally per spec'
+  - id: VP-MOBILE-031
+    name: Network loss/timeout mid-request
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Network loss/timeout mid-request
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Disconnect or force a slow connection while a request is in flight Expected: Clear connectivity/timeout message;
+      no crash, no silent hang'
+  - id: VP-MOBILE-032
+    name: In-flight request interrupted by Back/Home/multi-tap
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - In-flight request interrupted by Back/Home/multi-tap
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'While a request is loading, press Home, Back, or rapidly re-open the app Expected: Request continues client-side;
+      the Back/exit navigation is honored only after the request resolves (or per spec)'
+  - id: VP-MOBILE-033
+    name: OS "don't keep activities" / low-memory kill (Android)
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - OS "don't keep activities" / low-memory kill (Android)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Enable the developer option, background the app, then resume Expected: App restarts/restores its state cleanly,
+      no crash'
+  - id: VP-MOBILE-034
+    name: Runtime permission grant/deny
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Runtime permission grant/deny
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Trigger a permission-gated feature (camera, location, contacts); grant it, then deny it on a separate run Expected:
+      Granted: works, prompt doesn't reappear. Denied: returns to the prior screen gracefully, no crash"
+  - id: VP-MOBILE-035
+    name: Null/empty API response fields
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Null/empty API response fields
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Force an API response where fields are null/empty Expected: Renders a defined empty state per field, does not
+      crash'
+  - id: VP-MOBILE-036
+    name: Deep link / universal link — backgrounded or killed
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Deep link / universal link — backgrounded or killed
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Send the app to background, or kill it entirely, then tap a universal link for it Expected: Opens (warm or
+      cold) and navigates directly to the linked screen'
+  - id: VP-MOBILE-037
+    name: Rapid tab-bar switching
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Rapid tab-bar switching
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Switch between bottom/tab-bar items rapidly and repeatedly Expected: Screen shown always matches whichever
+      tab was tapped last — no lag mismatch, no crash'
+  - id: VP-MOBILE-038
+    name: Pull-to-refresh interrupted by backgrounding
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Pull-to-refresh interrupted by backgrounding
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Start a pull-to-refresh, then immediately press Home and return Expected: Refresh completes correctly; loading
+      indicator is cleared, not left stuck spinning'
+  - id: VP-MOBILE-039
+    name: Sort condition persists across refresh/load-more
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Sort condition persists across refresh/load-more
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Apply a sort order, then pull-to-refresh or trigger "load more" Expected: Refreshed/loaded rows still reflect
+      the previously applied sort condition'
+  - id: VP-MOBILE-040
+    name: Tap on a visually hidden element
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Tap on a visually hidden element
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Tap the screen area where a hidden control would be Expected: No action triggered; screen stays as-is'
+  - id: VP-MOBILE-041
+    name: Back button tap while a popup is open
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Back button tap while a popup is open
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'With a popup/dialog open, tap the device Back control Expected: No navigation occurs behind the popup, unless
+      spec says Back should close it'
+  - id: VP-MOBILE-042
+    name: Keyboard left open when navigating away
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Keyboard left open when navigating away
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Tap Submit/navigate without first dismissing the on-screen keyboard Expected: Keyboard auto-dismisses and navigation
+      proceeds correctly'
+  - id: VP-MOBILE-043
+    name: Low battery / low storage resilience
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Low battery / low storage resilience
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Exercise core screens under low battery or low free storage Expected: App keeps functioning per spec, no crash'
+  - id: VP-MOBILE-044
+    name: Backup and restore
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Backup and restore
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Back up app data, uninstall, reinstall, then restore Expected: Restored app shows the same data that existed
+      at backup time'
+  - id: VP-MOBILE-045
+    name: Camera-captured image upload — portrait vs. landscape
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Camera-captured image upload — portrait vs. landscape
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Capture a photo via the in-app camera upload flow in each orientation Expected: Uploaded thumbnail renders
+      correctly and unrotated in both orientations'
+  - id: VP-MOBILE-046
+    name: Volume button / silent mode
+    group: mobile
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - App Lifecycle & Interruptions
+      - Volume button / silent mode
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Adjust volume up/down, including in silent mode, during in-app playback Expected: Playback volume responds
+      correctly; no crash/misbehavior in silent mode'

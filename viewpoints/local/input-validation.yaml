@@ -1,0 +1,1007 @@
+  - id: VP-INPUT-VALIDATION-001
+    name: Initial value & placeholder
+    group: input-validation
+    scope: local
+    applies_to: &id001
+      - textbox
+      - input
+      - textarea
+      - number
+      - password
+      - date
+      - datetime
+      - radio
+      - checkbox
+      - toggle
+      - dropdown
+      - combobox
+      - file-upload
+    signals:
+      - Text Field
+      - Initial value & placeholder
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check initial value and placeholder Expected: Correct per design/default data'
+  - id: VP-INPUT-VALIDATION-002
+    name: Valid / Invalid input
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Text Field
+      - Valid / Invalid input
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check valid and invalid data entry Expected: Accepted/processed vs. appropriate error shown'
+  - id: VP-INPUT-VALIDATION-003
+    name: Blank — required vs. optional
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Text Field
+      - Blank — required vs. optional
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check leaving a required field blank, and an optional field blank Expected: Required-field error blocks submission;
+      optional field passes silently'
+  - id: VP-INPUT-VALIDATION-004
+    name: Numeric / special character input
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Text Field
+      - Numeric / special character input
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Check numeric and special-character entry Expected: Handled per the field's rule (allowed/error)"
+  - id: VP-INPUT-VALIDATION-005
+    name: Character set restriction
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Text Field
+      - Character set restriction
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Check characters outside the field's allowed set (letters in numeric field, symbols in name field, ...), including
+      halfwidth/fullwidth Japanese Expected: Rejected or shown per rule; halfwidth/fullwidth forms saved/displayed correctly
+      when both are allowed"
+  - id: VP-INPUT-VALIDATION-006
+    name: Maxlength / Minlength boundary
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Text Field
+      - Maxlength / Minlength boundary
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check length at exactly max, above max, exactly min, below min Expected: In-range accepted; out-of-range blocked
+      with the documented limit message'
+  - id: VP-INPUT-VALIDATION-007
+    name: Enabled / Disabled
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Text Field
+      - Enabled / Disabled
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check both states Expected: Data entry allowed/blocked accordingly'
+  - id: VP-INPUT-VALIDATION-008
+    name: Validation with DB (exists / unique)
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Text Field
+      - Validation with DB (exists / unique)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check a value that must be unique, or must exist in DB Expected: Duplicate/uniqueness error shown when required;
+      accepted when valid against DB'
+  - id: VP-INPUT-VALIDATION-009
+    name: Invalid combination across fields
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Text Field
+      - Invalid combination across fields
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check a combination of individually-valid fields that is jointly invalid (return date before departure date,
+      infants outnumbering adults, ...) Expected: Blocked with a clear message before submission is allowed'
+  - id: VP-INPUT-VALIDATION-010
+    name: Validation message
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Text Field
+      - Validation message
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check error message display Expected: Clear, correctly positioned and formatted'
+  - id: VP-INPUT-VALIDATION-011
+    name: Client-side constraint tampering
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Text Field
+      - Client-side constraint tampering
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check submitting a value that violates `minlength`/`maxlength` after removing/editing that HTML attribute via
+      DOM/Inspect-Element Expected: Rejected server-side too, with the same length-range error message — the client attribute
+      is not the only line of defense'
+  - id: VP-INPUT-VALIDATION-012
+    name: Leading/trailing space auto-trim
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Text Field
+      - Leading/trailing space auto-trim
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check a value with leading/trailing spaces, and a value that is spaces only Expected: Auto-trimmed before validation/DB
+      write; an all-space value is treated as empty'
+  - id: VP-INPUT-VALIDATION-013
+    name: Copy-paste / drag-drop bypass
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Text Field
+      - Copy-paste / drag-drop bypass
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check copy-paste and drag-drop of both a valid and an invalid value Expected: Same validation rules apply as
+      direct typing — no bypass via paste or drag-drop'
+  - id: VP-INPUT-VALIDATION-014
+    name: BB code / SQL / HTML injection
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Text Field
+      - BB code / SQL / HTML injection
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check input like `<input type="text">` or `<script>...</script>` Expected: Neither executed nor stored raw
+      as executable markup; validation still runs against the sanitized value'
+  - id: VP-INPUT-VALIDATION-015
+    name: Positive / Negative / Decimal / Zero
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Number Field
+      - Positive / Negative / Decimal / Zero
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check each value type Expected: Handled per rule (accepted / error shown)'
+  - id: VP-INPUT-VALIDATION-016
+    name: Min/Max value boundary
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Number Field
+      - Min/Max value boundary
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check at min, below min, at max, above max Expected: In-range accepted; out-of-range errors'
+  - id: VP-INPUT-VALIDATION-017
+    name: Invalid characters
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Number Field
+      - Invalid characters
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check letters/symbols Expected: Rejected or error shown'
+  - id: VP-INPUT-VALIDATION-018
+    name: Input spinner
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Number Field
+      - Input spinner
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check increase/decrease via spinner Expected: Changes correctly per step size'
+  - id: VP-INPUT-VALIDATION-019
+    name: Validation message
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Number Field
+      - Validation message
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check error display Expected: Clear, correctly positioned'
+  - id: VP-INPUT-VALIDATION-020
+    name: Valid / Invalid format
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Email Input
+      - Valid / Invalid format
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check valid vs. malformed email (missing `@`, missing domain) Expected: Accepted vs. format-error message shown'
+  - id: VP-INPUT-VALIDATION-021
+    name: Confirm-email match
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Email Input
+      - Confirm-email match
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check leaving `[Confirm Email]` empty, mismatched, and matched vs. `[Email]` Expected: Empty/mismatch blocked
+      with a specific message; match proceeds'
+  - id: VP-INPUT-VALIDATION-022
+    name: Uniqueness
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Email Input
+      - Uniqueness
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check submitting an email that already exists in DB Expected: Rejected even though the format is valid'
+  - id: VP-INPUT-VALIDATION-023
+    name: Valid / Invalid format
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Password Field
+      - Valid / Invalid format
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check valid vs. incorrectly formatted password Expected: Accepted vs. format error'
+  - id: VP-INPUT-VALIDATION-024
+    name: Masking & show/hide toggle
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Password Field
+      - Masking & show/hide toggle
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check masking and the show/hide control Expected: Displayed masked (●/*); toggle correctly shows/hides'
+  - id: VP-INPUT-VALIDATION-025
+    name: Copy/Paste disabled while masked
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Password Field
+      - Copy/Paste disabled while masked
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check copy/paste on the masked field Expected: Not allowed while masked'
+  - id: VP-INPUT-VALIDATION-026
+    name: Confirm-password match
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Password Field
+      - Confirm-password match
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check leaving `[Password Confirm]` empty, mismatched, and matched vs. `[Password]` Expected: Empty/mismatch
+      blocked with a specific message; match proceeds'
+  - id: VP-INPUT-VALIDATION-027
+    name: Password-vs-username collision
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Password Field
+      - Password-vs-username collision
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check setting the password equal to the username Expected: Rejected with a specific message'
+  - id: VP-INPUT-VALIDATION-028
+    name: Strength meter
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Password Field
+      - Strength meter
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Input a lowercase-only, then lowercase+digit, then lowercase+uppercase+digit+special password Expected: Strength
+      indicator shows Weak/Medium/Strong respectively, if spec requires a strength meter'
+  - id: VP-INPUT-VALIDATION-029
+    name: Valid / Invalid format
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - URL Input
+      - Valid / Invalid format
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check valid vs. malformed URL Expected: Accepted vs. format error'
+  - id: VP-INPUT-VALIDATION-030
+    name: Initial value & placeholder
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Textarea
+      - Initial value & placeholder
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check both Expected: Displayed correctly'
+  - id: VP-INPUT-VALIDATION-031
+    name: Multi-line input
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Textarea
+      - Multi-line input
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check entering multiple lines Expected: Line breaks render correctly'
+  - id: VP-INPUT-VALIDATION-032
+    name: Blank — required vs. optional
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Textarea
+      - Blank — required vs. optional
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check both Expected: Error vs. accepted'
+  - id: VP-INPUT-VALIDATION-033
+    name: Maxlength / Minlength boundary
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Textarea
+      - Maxlength / Minlength boundary
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check all 4 boundary cases Expected: Accepted in-range, error/blocked out-of-range'
+  - id: VP-INPUT-VALIDATION-034
+    name: Scrollbar & resize
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Textarea
+      - Scrollbar & resize
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check overflow scrollbar, and drag-resize Expected: Displays/functions correctly, no layout break'
+  - id: VP-INPUT-VALIDATION-035
+    name: Enabled / Disabled
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Textarea
+      - Enabled / Disabled
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check both states Expected: Entry allowed/blocked'
+  - id: VP-INPUT-VALIDATION-036
+    name: Validation message
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Textarea
+      - Validation message
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check error display Expected: Clear, correctly positioned'
+  - id: VP-INPUT-VALIDATION-037
+    name: Manual input & UI picker
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Color Picker
+      - Manual input & UI picker
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check typed value (HEX/RGB/HSL) and picker selection Expected: Valid value accepted and correctly rendered'
+  - id: VP-INPUT-VALIDATION-038
+    name: Invalid color codes
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Color Picker
+      - Invalid color codes
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check malformed code Expected: Error shown, color not applied'
+  - id: VP-INPUT-VALIDATION-039
+    name: Initial value & blank (required/optional)
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Date / Time / Datetime Picker
+      - Initial value & blank (required/optional)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check default value; check blank submission Expected: Correct default; required blocked, optional passes'
+  - id: VP-INPUT-VALIDATION-040
+    name: Format display & invalid format input
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Date / Time / Datetime Picker
+      - Format display & invalid format input
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check display format and malformed manual entry Expected: Matches configured format; error/rejection on bad
+      format'
+  - id: VP-INPUT-VALIDATION-041
+    name: Manual input & picker selection
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Date / Time / Datetime Picker
+      - Manual input & picker selection
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check keyboard entry and UI-picker selection Expected: Both accept/display valid values correctly'
+  - id: VP-INPUT-VALIDATION-042
+    name: Disabled past/future dates & allowed ranges
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Date / Time / Datetime Picker
+      - Disabled past/future dates & allowed ranges
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check date-range restrictions Expected: Disabled dates unselectable; only in-range dates selectable'
+  - id: VP-INPUT-VALIDATION-043
+    name: Leap year
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Date / Time / Datetime Picker
+      - Leap year
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check Feb 29 of a leap year vs. non-leap year Expected: Accepted in leap year; rejected/handled correctly otherwise'
+  - id: VP-INPUT-VALIDATION-044
+    name: Timezone
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Date / Time / Datetime Picker
+      - Timezone
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check timezone display Expected: Correct per timezone'
+  - id: VP-INPUT-VALIDATION-045
+    name: Clear/Reset
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Date / Time / Datetime Picker
+      - Clear/Reset
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the clear/reset control Expected: Value returns to empty/default'
+  - id: VP-INPUT-VALIDATION-046
+    name: Initial value & blank (required/optional)
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Dropdown
+      - Initial value & blank (required/optional)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check default and blank submission Expected: Correct default; required blocked, optional passes'
+  - id: VP-INPUT-VALIDATION-047
+    name: Options — source & completeness
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Dropdown
+      - Options — source & completeness
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the options list, including master-data-driven sourcing (common code, config table) Expected: Fully accurate;
+      exactly matches the current master/reference data including additions/removals'
+  - id: VP-INPUT-VALIDATION-048
+    name: Single / Multi select
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Dropdown
+      - Single / Multi select
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check both modes Expected: Enforced correctly per config'
+  - id: VP-INPUT-VALIDATION-049
+    name: Autocomplete
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Dropdown
+      - Autocomplete
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check typing for suggestions Expected: Correct suggestion list; selection performs correctly'
+  - id: VP-INPUT-VALIDATION-050
+    name: Client-side option tampering
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Dropdown
+      - Client-side option tampering
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Check submitting a value not in the actual options list (added via DOM tampering) Expected: Rejected server-side
+      as an invalid selection, even though the client-side control can't normally produce that value"
+  - id: VP-INPUT-VALIDATION-051
+    name: Initial value & blank (required/optional)
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Radio Button
+      - Initial value & blank (required/optional)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check default and blank submission Expected: Correct default; required blocked, optional passes'
+  - id: VP-INPUT-VALIDATION-052
+    name: Options
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Radio Button
+      - Options
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the option list Expected: Fully accurate'
+  - id: VP-INPUT-VALIDATION-053
+    name: Only one selectable
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Radio Button
+      - Only one selectable
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check selecting multiple in sequence Expected: Only the last-clicked option stays selected'
+  - id: VP-INPUT-VALIDATION-054
+    name: Initial state & blank (required/optional)
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Checkbox
+      - Initial state & blank (required/optional)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check default and blank submission Expected: Correct default; required blocked, optional passes'
+  - id: VP-INPUT-VALIDATION-055
+    name: Options
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Checkbox
+      - Options
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the checkbox list Expected: Fully accurate'
+  - id: VP-INPUT-VALIDATION-056
+    name: Check / Uncheck & multiple selectable
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Checkbox
+      - Check / Uncheck & multiple selectable
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check toggling and multi-select Expected: State changes correctly; multiple values selectable'
+  - id: VP-INPUT-VALIDATION-057
+    name: Bulk select/unselect ("Select all")
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Checkbox
+      - Bulk select/unselect ("Select all")
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the select-all control Expected: All items toggle together correctly'
+  - id: VP-INPUT-VALIDATION-058
+    name: Initial state & On/Off toggle
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Switch (Toggle)
+      - Initial state & On/Off toggle
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check default state and toggling Expected: Displayed and switched correctly'
+  - id: VP-INPUT-VALIDATION-059
+    name: Initial value, blank, selection, read-only
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Rating Stars
+      - Initial value, blank, selection, read-only
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check all four states Expected: Correct display; required/optional enforced; selection updates; read-only blocks
+      change'
+  - id: VP-INPUT-VALIDATION-060
+    name: Load, expiry, refresh, incorrect handling
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Captcha
+      - Load, expiry, refresh, incorrect handling
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check all four cases Expected: Displays correctly; expires and requires new entry; refresh works; wrong answer
+      errors and re-issues a challenge'
+  - id: VP-INPUT-VALIDATION-061
+    name: Single / Multi select & drag-drop
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - File Upload
+      - Single / Multi select & drag-drop
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check all three input methods Expected: Upload succeeds for each'
+  - id: VP-INPUT-VALIDATION-062
+    name: File type & size limit
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - File Upload
+      - File type & size limit
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check disallowed format and over-limit size Expected: Rejected with a clear error in each case'
+  - id: VP-INPUT-VALIDATION-063
+    name: Remove uploaded file & overwrite
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - File Upload
+      - Remove uploaded file & overwrite
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check removal and duplicate-name upload Expected: Removed from list; overwrite/rename handled correctly'
+  - id: VP-INPUT-VALIDATION-064
+    name: Upload progress & preview
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - File Upload
+      - Upload progress & preview
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check progress bar and preview (image/PDF) Expected: Accurate progress display; correct preview content'
+  - id: VP-INPUT-VALIDATION-065
+    name: Drag handle & min/max & tooltip
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Range Slider
+      - Drag handle & min/max & tooltip
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check dragging, boundary values, and value tooltip Expected: Value changes correctly; min/max enforced; current
+      value displayed'
+  - id: VP-INPUT-VALIDATION-066
+    name: Any character other than 0/1
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Bit Field (0/1 only)
+      - Any character other than 0/1
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check letters, symbols, 2-byte digits, and empty input Expected: Rejected as invalid; only `0`/`1` sequences
+      accepted'
+  - id: VP-INPUT-VALIDATION-067
+    name: Cross-field ordering
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - '`[From]`–`[To]` Range Pair'
+      - Cross-field ordering
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Check `From > To`, `From = To`, `From < To`, only one side filled, non-numeric in either side Expected: `From
+      > To` rejected as invalid; equal or ascending pairs accepted; partial-fill behavior and message follow the project's
+      own spec"
+  - id: VP-INPUT-VALIDATION-068
+    name: Show/hide by condition
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Conditional Field/Section Behavior
+      - Show/hide by condition
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Check a section/field appearing or disappearing based on one or more other fields' values (AND/OR combined)
+      Expected: Shown only when the full condition is true, hidden otherwise, with no leftover data from the hidden state"
+  - id: VP-INPUT-VALIDATION-069
+    name: Enable/disable by selection
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Conditional Field/Section Behavior
+      - Enable/disable by selection
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check that selecting one option enables one control and disables another Expected: Exactly the specified controls
+      change enabled state; unrelated controls unaffected'
+  - id: VP-INPUT-VALIDATION-070
+    name: Required-ness driven by condition
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Conditional Field/Section Behavior
+      - Required-ness driven by condition
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check a field that is required only when another field/condition is set (e.g. passport required unless destination
+      is a specific country) Expected: Required/optional enforced exactly per the stated condition'
+  - id: VP-INPUT-VALIDATION-071
+    name: Dependent field options
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Conditional Field/Section Behavior
+      - Dependent field options
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Check a field's available options/value changing when a related field changes (e.g. cabin class depends on
+      trip type) Expected: Updates immediately and correctly when the driving field changes"
+  - id: VP-INPUT-VALIDATION-072
+    name: Reverting the condition
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Conditional Field/Section Behavior
+      - Reverting the condition
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check switching the driving condition back to its original value after a dependent field/section was shown
+      Expected: Dependent field/section reverts (hides/resets) correctly, no stale data left visible'
+  - id: VP-INPUT-VALIDATION-073
+    name: Username uniqueness
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Registration Flow
+      - Username uniqueness
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check submitting a username that already exists in DB Expected: Rejected with a specific "already exists" message'
+  - id: VP-INPUT-VALIDATION-074
+    name: Date of birth — required-ness by context
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Registration Flow
+      - Date of birth — required-ness by context
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check leaving Day/Month/Year empty when the field is documented as required Expected: Rejected with a specific
+      message'
+  - id: VP-INPUT-VALIDATION-075
+    name: Gender — default & toggle
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Registration Flow
+      - Gender — default & toggle
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the default selected value on load, clicking a different option, and clicking its label Expected: Default
+      matches design; selection updates correctly either way'
+  - id: VP-INPUT-VALIDATION-076
+    name: Leading/trailing-space exemption
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Registration Flow
+      - Leading/trailing-space exemption
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check a field the spec explicitly exempts from auto-trim (e.g. `[Username]`) Expected: Trim is NOT applied
+      to that field, unlike the general rule'
+  - id: VP-INPUT-VALIDATION-077
+    name: '`[Register]` button'
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Registration Flow
+      - '`[Register]` button'
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Click Register once all fields are valid Expected: Values written to DB into the documented table/columns;
+      a success message is shown'
+  - id: VP-INPUT-VALIDATION-078
+    name: '`[Cancel]` button'
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Registration Flow
+      - '`[Cancel]` button'
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Click Cancel after entering data Expected: No record saved; screen resets to initial state'
+  - id: VP-INPUT-VALIDATION-079
+    name: '`[Back]` button — single-page registration'
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Registration Flow
+      - '`[Back]` button — single-page registration'
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Fill the page, move to Confirm, then click Back (in-app and browser) Expected: Returns to the registration
+      page with previously entered values still populated, per spec'
+  - id: VP-INPUT-VALIDATION-080
+    name: '`[Back]` button — multi-page/wizard registration'
+    group: input-validation
+    scope: local
+    applies_to: *id001
+    signals:
+      - Registration Flow
+      - '`[Back]` button — multi-page/wizard registration'
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Fill page 1 → Next → page 2 → Next → page 3, then click Back (in-app and browser) Expected: Returns to page
+      2 with page 2's previously entered values still populated, per spec"

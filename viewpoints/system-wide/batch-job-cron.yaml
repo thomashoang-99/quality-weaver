@@ -1,0 +1,140 @@
+  - id: VP-BATCH-JOB-001
+    name: Manual trigger
+    group: batch-job
+    scope: system-wide
+    applies_to: &id001
+      - batch-job
+      - cron
+      - scheduled-job
+    signals:
+      - Job Trigger
+      - Manual trigger
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check running the job manually Expected: Correct logic, expected data processing, complete and accurate output'
+  - id: VP-BATCH-JOB-002
+    name: Scheduled (cron/daily/weekly/monthly)
+    group: batch-job
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Job Trigger
+      - Scheduled (cron/daily/weekly/monthly)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the job on schedule Expected: Runs automatically on schedule, no delay or wrong-time run'
+  - id: VP-BATCH-JOB-003
+    name: Event-based trigger
+    group: batch-job
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Job Trigger
+      - Event-based trigger
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check triggering by an event (data update, API call, ...) Expected: Triggered accurately on the event, no extra/missing
+      triggers'
+  - id: VP-BATCH-JOB-004
+    name: Input validation
+    group: batch-job
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Input / Output Handling
+      - Input validation
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check invalid input (wrong format, missing, null, invalid) Expected: Rejected or handled correctly, with full
+      warning/error logs'
+  - id: VP-BATCH-JOB-005
+    name: Data source availability
+    group: batch-job
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Input / Output Handling
+      - Data source availability
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check behavior when the data source (file/DB/API) is unavailable Expected: Stops or retries per the correct
+      mechanism; reads accurately when available'
+  - id: VP-BATCH-JOB-006
+    name: Output file / DB update correctness
+    group: batch-job
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Input / Output Handling
+      - Output file / DB update correctness
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check output file and DB update Expected: Correct file format/complete data; correct insert/update/delete logic'
+  - id: VP-BATCH-JOB-007
+    name: Logging
+    group: batch-job
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Error Handling & Recovery
+      - Logging
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check logs on a run (info/warning/error) Expected: Fully captures start/end/record count/errors in a consistent,
+      searchable format'
+  - id: VP-BATCH-JOB-008
+    name: Retry on failure
+    group: batch-job
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Error Handling & Recovery
+      - Retry on failure
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the retry mechanism Expected: Retries the correct number of times, at the correct interval, per config'
+  - id: VP-BATCH-JOB-009
+    name: Notification/alert on error
+    group: batch-job
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Error Handling & Recovery
+      - Notification/alert on error
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the failure notification Expected: Sent to the correct channel with enough detail to investigate'
+  - id: VP-BATCH-JOB-010
+    name: Job status & history
+    group: batch-job
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Monitoring & Audit
+      - Job status & history
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check status (success/fail, start/end time) and history tracking Expected: Accurately viewable; fully recorded
+      without data loss'
+  - id: VP-BATCH-JOB-011
+    name: Audit log
+    group: batch-job
+    scope: system-wide
+    applies_to: *id001
+    signals:
+      - Monitoring & Audit
+      - Audit log
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Check the job's audit log Expected: Records who ran it, when, and config changes made"

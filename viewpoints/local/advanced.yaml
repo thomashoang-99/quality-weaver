@@ -1,0 +1,782 @@
+  - id: VP-ADVANCED-001
+    name: Trigger methods
+    group: advanced
+    scope: local
+    applies_to: &id001
+      - screen
+      - feature
+    signals:
+      - Search
+      - Trigger methods
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check Enter key, icon/button click Expected: Both trigger correctly'
+  - id: VP-ADVANCED-002
+    name: Icon state on empty input
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Search
+      - Icon state on empty input
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the search icon/button when the search box is empty Expected: Disabled by default, unless spec says otherwise'
+  - id: VP-ADVANCED-003
+    name: Clear (×) button
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Search
+      - Clear (×) button
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check clearing the keyword Expected: Resets to initial state'
+  - id: VP-ADVANCED-004
+    name: Auto-suggest
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Search
+      - Auto-suggest
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check suggestions while typing Expected: Correct list; selection searches accurately'
+  - id: VP-ADVANCED-005
+    name: Match modes — LIKE, =, range
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Search
+      - Match modes — LIKE, =, range
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check partial match, exact match, and range search (date/number/price) Expected: Each returns the correctly
+      scoped result set'
+  - id: VP-ADVANCED-006
+    name: Blank search
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Search
+      - Blank search
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check submitting with no keyword Expected: Shows all results or a message, per business rule'
+  - id: VP-ADVANCED-007
+    name: IME / IME-converted input
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Search
+      - IME / IME-converted input
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check keyword entered via IME (Japanese, etc.) Expected: Accurate results based on the post-conversion characters'
+  - id: VP-ADVANCED-008
+    name: Special characters
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Search
+      - Special characters
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check keywords with `!@#`, etc. Expected: Handled safely, no SQL errors, accurate results'
+  - id: VP-ADVANCED-009
+    name: Case sensitivity
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Search
+      - Case sensitivity
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Search using all-uppercase, all-lowercase, and mixed-case forms of the same term Expected: Matches all case
+      variants unless spec explicitly requires exact-case matching'
+  - id: VP-ADVANCED-010
+    name: Accent/diacritic sensitivity
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Search
+      - Accent/diacritic sensitivity
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Search with and without diacritics for the same word (e.g. Vietnamese) Expected: Matches both variants unless
+      spec explicitly requires exact-diacritic matching'
+  - id: VP-ADVANCED-011
+    name: Half-width / full-width sensitivity
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Search
+      - Half-width / full-width sensitivity
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Search using half-width vs. full-width forms of the same characters (CJK contexts) Expected: Matches both variants
+      unless spec explicitly requires exact-width matching'
+  - id: VP-ADVANCED-012
+    name: Over-length input
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Search
+      - Over-length input
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Input a search string beyond the field's max length Expected: Shows a length-limit message rather than silently
+      truncating or erroring"
+  - id: VP-ADVANCED-013
+    name: Nearest-match focus
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Search
+      - Nearest-match focus
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Submit a search that returns results, on a jump-to-match style field Expected: Cursor/focus lands on the closest
+      matching value, sorted ascending by default'
+  - id: VP-ADVANCED-014
+    name: Barcode/QR scan input
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Search
+      - Barcode/QR scan input
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Scan an invalid/unrecognizable code, a valid code with no DB match, and a valid code with a DB match Expected:
+      Unrecognizable: scan error. No match: "code not found" message. Match: correct record displayed'
+  - id: VP-ADVANCED-015
+    name: No-result state
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Search
+      - No-result state
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Submit a search guaranteed to match nothing Expected: Shows an explicit "no results" state, not a blank/broken
+      list'
+  - id: VP-ADVANCED-016
+    name: Initial state, clear/reset, AND/OR logic, apply button
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Filter
+      - Initial state, clear/reset, AND/OR logic, apply button
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check all four aspects of the filter function Expected: Results always match the current filter condition correctly'
+  - id: VP-ADVANCED-017
+    name: Role-based UI visibility & unauthorized redirect
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Access & Permission
+      - Role-based UI visibility & unauthorized redirect
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check UI per role, and access to a disallowed page/action Expected: Only role-appropriate elements shown; unauthorized
+      attempts redirected/error-messaged, and rejected server-side too'
+  - id: VP-ADVANCED-018
+    name: Enable/disable for restricted controls
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Access & Permission
+      - Enable/disable for restricted controls
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check a button/function without sufficient permission Expected: Disabled/hidden, cannot be bypassed via dev
+      tools'
+  - id: VP-ADVANCED-019
+    name: Wrong credentials
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Access & Permission
+      - Wrong credentials
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check wrong username, wrong password, blank username, and blank password Expected: All four show the same generic
+      message — never reveal which specific field was wrong'
+  - id: VP-ADVANCED-020
+    name: Unauthenticated deep-link access
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Access & Permission
+      - Unauthenticated deep-link access
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'While logged out, directly navigate to a URL that requires login Expected: Redirected to the Login screen instead
+      of the requested page'
+  - id: VP-ADVANCED-021
+    name: Session/token expiry
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Access & Permission
+      - Session/token expiry
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the session/token expiring while active on a screen, mid-flow, or on an API call Expected: The user is
+      redirected to login at the point the invalid session is detected; in-progress data is preserved or clearly discarded
+      per spec, never silently lost'
+  - id: VP-ADVANCED-022
+    name: Permission change mid-session
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Access & Permission
+      - Permission change mid-session
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check a role/permission change applied to a user already logged in Expected: Takes effect at the next permission
+      check — the user cannot keep using a revoked permission indefinitely'
+  - id: VP-ADVANCED-023
+    name: Lockout threshold
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Access & Permission
+      - Lockout threshold
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check login failing 1–2 times, then check failing ≥3 times Expected: Under threshold: retry allowed. At/above
+      threshold: account locked for the documented duration'
+  - id: VP-ADVANCED-024
+    name: Social login
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Access & Permission
+      - Social login
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Click a third-party login option (Facebook/Google/...) Expected: Opens the provider's popup and completes login
+      as that account"
+  - id: VP-ADVANCED-025
+    name: Concurrent sessions — same account, multiple devices/tabs
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Access & Permission
+      - Concurrent sessions — same account, multiple devices/tabs
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Log in as the same account on device A, then device B (or a second browser tab) Expected: Per spec: either
+      both sessions stay valid, or logging in on B logs A out — must be an explicit, deliberate spec decision'
+  - id: VP-ADVANCED-026
+    name: Login load/stress test
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Access & Permission
+      - Login load/stress test
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Log in with a very large number of concurrent simulated users at, then beyond, documented capacity Expected:
+      Under capacity: all logins succeed. Beyond: degrades to a timeout/queue message, no crash or session corruption'
+  - id: VP-ADVANCED-027
+    name: Repeated-failure account-recovery prompt
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Access & Permission
+      - Repeated-failure account-recovery prompt
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Fail login with the same account 5 times in a row Expected: A security-question or recovery prompt is shown
+      before allowing a password reset, if spec defines it'
+  - id: VP-ADVANCED-028
+    name: Change-password current-password check
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Access & Permission
+      - Change-password current-password check
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Submit a wrong "current password" value on a change-password form Expected: Rejected with a specific "current
+      password incorrect" message, distinct from the "new password invalid" messages'
+  - id: VP-ADVANCED-029
+    name: Change-password cross-device session invalidation
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Access & Permission
+      - Change-password cross-device session invalidation
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Log in as the same account on device A and B; change the password on A; then make any request from B Expected:
+      B is force-logged-out on its next request after the password changes on A'
+  - id: VP-ADVANCED-030
+    name: Method selection, valid/invalid data, confirmation
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Payment
+      - Method selection, valid/invalid data, confirmation
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check selecting a method, entering valid/invalid data, and the pre-submit confirmation screen Expected: Correct
+      list and selection; success/receipt vs. error shown; user confirms before submit'
+  - id: VP-ADVANCED-031
+    name: Gateway integration, timeout, error handling
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Payment
+      - Gateway integration, timeout, error handling
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check gateway connection, a timed-out transaction, and a gateway error Expected: Processed and returned accurately;
+      timeout shows message with no charge; gateway error shown with no record created'
+  - id: VP-ADVANCED-032
+    name: Retry & duplicate-submission prevention
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Payment
+      - Retry & duplicate-submission prevention
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check retrying after failure, and rapid multi-click submit Expected: Retry allowed without duplicate transaction;
+      only one transaction recorded, button disables after first click'
+  - id: VP-ADVANCED-033
+    name: Sensitive data handling
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Payment
+      - Sensitive data handling
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check encryption and card-info storage Expected: Not shown in plaintext, PCI-DSS compliant; card info not stored
+      (or only tokenized)'
+  - id: VP-ADVANCED-034
+    name: Refund / Cancel
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Payment
+      - Refund / Cancel
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check refund/cancel handling Expected: Processed correctly, balance updates accurately'
+  - id: VP-ADVANCED-035
+    name: Trigger, timing, personalization
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Notifications (Email, SMS, Push, In-app)
+      - Trigger, timing, personalization
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check notification on event, delivery timing, and personalized content Expected: Sent when required, on time,
+      with correct personalized data'
+  - id: VP-ADVANCED-036
+    name: Link/button behavior & OTP
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Notifications (Email, SMS, Push, In-app)
+      - Link/button behavior & OTP
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check link/button click, OTP validity, and resend restriction Expected: Navigates correctly; OTP expires/cannot
+      be reused; resend rate-limited'
+  - id: VP-ADVANCED-037
+    name: Badge, read/unread, grouping, deep link
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Notifications (Email, SMS, Push, In-app)
+      - Badge, read/unread, grouping, deep link
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check all four in-app aspects Expected: Correct count; accurate status; correct grouping; deep link opens the
+      correct screen'
+  - id: VP-ADVANCED-038
+    name: Click behavior
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Notifications (Email, SMS, Push, In-app)
+      - Click behavior
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the behavior when clicking a notification Expected: Opens the correct related content/screen and marks
+      it as read if applicable'
+  - id: VP-ADVANCED-039
+    name: Selection methods
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Import
+      - Selection methods
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check single-file, multi-file, and drag-drop selection Expected: Each succeeds'
+  - id: VP-ADVANCED-040
+    name: Format/content validation
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Import
+      - Format/content validation
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check required fields, wrong file type, empty file, invalid headers, wrong encoding, wrong column order, missing
+      columns, wrong date/number/boolean format Expected: Each shows a specific error and blocks the import'
+  - id: VP-ADVANCED-041
+    name: Duplicate data & row-level errors
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Import
+      - Duplicate data & row-level errors
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check duplicate rows within the file, and rows with bad data Expected: Warned/skipped per spec; bad rows skipped
+      or flagged, not silently imported'
+  - id: VP-ADVANCED-042
+    name: DB persistence & field mapping
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Import
+      - DB persistence & field mapping
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check data saved to DB and mapped to correct columns Expected: Accurate save; correct field-to-column mapping'
+  - id: VP-ADVANCED-043
+    name: Result notification
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Import
+      - Result notification
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the post-import message Expected: Success/failure shown per case'
+  - id: VP-ADVANCED-044
+    name: BOM character in file
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Import
+      - BOM character in file
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Import a file containing a BOM marker Expected: Rejected with a content-format error, same as other format
+      violations'
+  - id: VP-ADVANCED-045
+    name: Atomicity on partial failure
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Import
+      - Atomicity on partial failure
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Import a file where one row has a format error Expected: The entire import rolls back — no partial write; a
+      specific error is shown'
+  - id: VP-ADVANCED-046
+    name: Image upload — size/extension/filename
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Import
+      - Image upload — size/extension/filename
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Upload an image at/under/over the max size; with an allowed vs. disallowed extension; with a long or 2-byte
+      filename Expected: Within limits and allowed extension: succeeds with correct thumbnail. Over limit or disallowed: rejected
+      with a specific message. Long/2-byte filename: still succeeds unless spec restricts it'
+  - id: VP-ADVANCED-047
+    name: Format options & filters
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Export
+      - Format options & filters
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check CSV/Excel/PDF export, all-rows vs. filtered export Expected: Correct format; filtered export contains
+      only matching rows'
+  - id: VP-ADVANCED-048
+    name: Multiple simultaneous exports
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Export
+      - Multiple simultaneous exports
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check exporting multiple files at once Expected: All files are exported correctly'
+  - id: VP-ADVANCED-049
+    name: Filename, encoding, headers
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Export
+      - Filename, encoding, headers
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check filename format, encoding (UTF-8/Shift JIS), and column headers Expected: Match required format/template'
+  - id: VP-ADVANCED-050
+    name: Data consistency & large datasets
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Export
+      - Data consistency & large datasets
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check exported values vs. UI, and a large-dataset export Expected: Matches displayed data; completes without
+      timing out'
+  - id: VP-ADVANCED-051
+    name: Sheet-name length limit
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Export
+      - Sheet-name length limit
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Export to a format with a naming constraint (e.g. Excel's 31-character sheet-name limit) Expected: Rejected/renamed
+      per the target format's own limit, with a clear message — not a silent corrupt file"
+  - id: VP-ADVANCED-052
+    name: Generation, accuracy, real-time update, export, print
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Analytics / Reporting
+      - Generation, accuracy, real-time update, export, print
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check all five aspects of a report Expected: Complete and accurate generation; matches DB; updates live; exports/prints
+      correctly'
+  - id: VP-ADVANCED-053
+    name: Language switch, currency, date format, units
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Localization / Globalization
+      - Language switch, currency, date format, units
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check all four aspects Expected: Each displays correctly per selected locale'
+  - id: VP-ADVANCED-054
+    name: Backend/API failure surfaced
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Errors & Network Resilience
+      - Backend/API failure surfaced
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check a case that fails at the API/business-rule level (invalid state, exceeded server-side constraint) Expected:
+      The specific failure reason is surfaced to the user, not a generic error'
+  - id: VP-ADVANCED-055
+    name: Network/timeout during a critical action
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Errors & Network Resilience
+      - Network/timeout during a critical action
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check losing connectivity or a timeout during a critical submit action Expected: Clear error/timeout message;
+      no charge/record created; retry possible'
+  - id: VP-ADVANCED-056
+    name: UI-level XSS via URL or text input
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Errors & Network Resilience
+      - UI-level XSS via URL or text input
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Inject `<script>alert(...)</script>` / `<img src=...>` / `javascript:` payloads into a URL param, POST body,
+      or text field that gets re-rendered Expected: Never executes; either escaped/sanitized on output or explicitly rejected
+      at input — must be a deliberate choice'
+  - id: VP-ADVANCED-057
+    name: UI-level SQL injection via login fields
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Errors & Network Resilience
+      - UI-level SQL injection via login fields
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Input classic injection strings (`' or 1=1 --`, `'; DROP TABLE ...`) into username/password Expected: Login
+      fails cleanly; no table dropped, no auth bypass"
+  - id: VP-ADVANCED-058
+    name: Automated security scan
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Errors & Network Resilience
+      - Automated security scan
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Run OWASP ZAP or Burp Suite against the app Expected: No High/Medium severity findings'
+  - id: VP-ADVANCED-059
+    name: Sensitive file upload (virus/executable)
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Errors & Network Resilience
+      - Sensitive file upload (virus/executable)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Attempt to upload an executable (`.exe`) or a virus-flagged file Expected: Blocked by extension allowlist and/or
+      virus scan'
+  - id: VP-ADVANCED-060
+    name: Sensitive-data change propagation
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Errors & Network Resilience
+      - Sensitive-data change propagation
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Edit sensitive account data (username, password, credit card number) Expected: Reflected immediately and completely
+      everywhere that value is used — no stale cached copy'
+  - id: VP-ADVANCED-061
+    name: Security-relevant audit logging
+    group: advanced
+    scope: local
+    applies_to: *id001
+    signals:
+      - Errors & Network Resilience
+      - Security-relevant audit logging
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Trigger a failed login, a system error, or a suspicious access attempt Expected: Logged to the server-side
+      log with enough detail to investigate later'

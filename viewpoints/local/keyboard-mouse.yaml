@@ -1,0 +1,168 @@
+  - id: VP-KEYBOARD-MOUSE-001
+    name: Tab order
+    group: keyboard-mouse
+    scope: local
+    applies_to: &id001
+      - keyboard
+      - mouse
+      - textbox
+      - input
+    signals:
+      - ''
+      - Tab order
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Press `TAB` repeatedly from screen load Expected: Focus moves left-to-right, top-to-bottom per the design's
+      documented order; first `TAB` lands on the first editable field"
+  - id: VP-KEYBOARD-MOUSE-002
+    name: Tab skips read-only fields
+    group: keyboard-mouse
+    scope: local
+    applies_to: *id001
+    signals:
+      - ''
+      - Tab skips read-only fields
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Press `TAB` through a screen with read-only fields Expected: Focus skips every read-only field'
+  - id: VP-KEYBOARD-MOUSE-003
+    name: Shift+Tab
+    group: keyboard-mouse
+    scope: local
+    applies_to: *id001
+    signals:
+      - ''
+      - Shift+Tab
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Press `SHIFT+TAB` Expected: Focus moves back to the previous focusable element'
+  - id: VP-KEYBOARD-MOUSE-004
+    name: Cursor position across popups/tab-switch
+    group: keyboard-mouse
+    scope: local
+    applies_to: *id001
+    signals:
+      - ''
+      - Cursor position across popups/tab-switch
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Focus an item, open a sub-screen/popup/message box (or `ALT+TAB` to another program), then return Expected:
+      Focus returns to exactly the item that was focused before'
+  - id: VP-KEYBOARD-MOUSE-005
+    name: Enter / Arrow-key navigation
+    group: keyboard-mouse
+    scope: local
+    applies_to: *id001
+    signals:
+      - ''
+      - Enter / Arrow-key navigation
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Press `ENTER`, `↓`, or `↑` to move between fields Expected: Moves per the design's field order; never lands
+      on a read-only field"
+  - id: VP-KEYBOARD-MOUSE-006
+    name: Navigation wrap at first/last field
+    group: keyboard-mouse
+    scope: local
+    applies_to: *id001
+    signals:
+      - ''
+      - Navigation wrap at first/last field
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Press `ENTER`/`↓` at the last field, or `↑` at the first field Expected: Wraps per spec; default holds position
+      at the first field for `↑`'
+  - id: VP-KEYBOARD-MOUSE-007
+    name: Copy / Paste / Cut / Undo
+    group: keyboard-mouse
+    scope: local
+    applies_to: *id001
+    signals:
+      - ''
+      - Copy / Paste / Cut / Undo
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: '`CTRL+C`/`CTRL+V` between textboxes; `CTRL+X` to cut; `CTRL+Z` to undo Expected: Paste inserts into the focused
+      textbox; cut removes selected text; undo restores the pre-change value'
+  - id: VP-KEYBOARD-MOUSE-008
+    name: Copy/Cut blocked on read-only
+    group: keyboard-mouse
+    scope: local
+    applies_to: *id001
+    signals:
+      - ''
+      - Copy/Cut blocked on read-only
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: '`CTRL+V`/`CTRL+X` targeting a read-only field Expected: No paste/cut applied'
+  - id: VP-KEYBOARD-MOUSE-009
+    name: Browser zoom shortcuts disabled
+    group: keyboard-mouse
+    scope: local
+    applies_to: *id001
+    signals:
+      - ''
+      - Browser zoom shortcuts disabled
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "`CTRL+ +`/`CTRL+ -`/`CTRL+scroll-click` on the app's own controls Expected: No zoom triggered by the app itself"
+  - id: VP-KEYBOARD-MOUSE-010
+    name: Grid paging shortcuts
+    group: keyboard-mouse
+    scope: local
+    applies_to: *id001
+    signals:
+      - ''
+      - Grid paging shortcuts
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: '`CTRL+PageDown`/`CTRL+PageUp` on a Grid screen vs. non-Grid screen Expected: Grid: moves page and highlights
+      its first row. Non-Grid: no-op'
+  - id: VP-KEYBOARD-MOUSE-011
+    name: Multiple checkbox/radio selection
+    group: keyboard-mouse
+    scope: local
+    applies_to: *id001
+    signals:
+      - ''
+      - Multiple checkbox/radio selection
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Select several checkboxes at once; click a different radio in the same group Expected: All selected checkboxes
+      flip to checked; radio group moves to the newly clicked option'
+  - id: VP-KEYBOARD-MOUSE-012
+    name: Combobox selection feedback
+    group: keyboard-mouse
+    scope: local
+    applies_to: *id001
+    signals:
+      - ''
+      - Combobox selection feedback
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Select any value from a combobox's list Expected: Renders fully in the display area, never truncated"
+  - id: VP-KEYBOARD-MOUSE-013
+    name: Multi-tab / multi-browser session
+    group: keyboard-mouse
+    scope: local
+    applies_to: *id001
+    signals:
+      - ''
+      - Multi-tab / multi-browser session
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Open the same page in two tabs, and in two different browsers, simultaneously Expected: Both instances work
+      correctly per spec (either both usable, or the app enforces re-login)'

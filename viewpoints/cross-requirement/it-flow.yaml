@@ -1,0 +1,225 @@
+  - id: VP-IT-FLOW-001
+    name: Screen transition
+    group: it-flow
+    scope: cross-requirement
+    applies_to: &id001
+      - flow
+      - integration
+    signals:
+      - Basic case
+      - Screen transition
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check that navigating from screen A to screen B carries the expected data (id, filter, selection) Expected:
+      Screen B receives and correctly renders the data passed from screen A'
+  - id: VP-IT-FLOW-002
+    name: Data round-trip
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Basic case
+      - Data round-trip
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check that data submitted on screen A is saved via API and correctly reflected on screen B / in the DB Expected:
+      Data shown on screen B / stored in the DB matches exactly what was submitted on screen A'
+  - id: VP-IT-FLOW-003
+    name: Back navigation
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Basic case
+      - Back navigation
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the browser/app back action mid-flow Expected: Returning to the previous screen keeps its prior state/selection
+      (no double-submit, no data loss)'
+  - id: VP-IT-FLOW-004
+    name: Full main flow
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Happy case
+      - Full main flow
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the entire main flow from the entry screen to completion Expected: Every screen transitions correctly;
+      the final state (DB, balance, status) matches the business rule'
+  - id: VP-IT-FLOW-005
+    name: Cross-screen calculated value
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Happy case
+      - Cross-screen calculated value
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Check a calculated value shown on multiple screens (total, balance, quota) Expected: The value stays consistent
+      everywhere it's displayed"
+  - id: VP-IT-FLOW-006
+    name: Session/token continuity
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Happy case
+      - Session/token continuity
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check that the session/token stays valid across the whole flow Expected: The user is not logged out unexpectedly
+      mid-flow'
+  - id: VP-IT-FLOW-007
+    name: Admin/back-office config → user-facing effect
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Happy case
+      - Admin/back-office config → user-facing effect
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check a back-office/admin configuration change (e.g. markup, supplier setting) followed by the corresponding
+      user-facing screen, both exercised via real API+DB Expected: The user-facing screen reflects the admin change correctly
+      end to end, with the correct value/behavior'
+  - id: VP-IT-FLOW-008
+    name: Round-trip create → verify → modify
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Happy case
+      - Round-trip create → verify → modify
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Check creating a record on one screen, re-opening the same record on another screen to modify it, then verifying
+      the update Expected: Each stage's changes are visible and correct in the next stage — no stale reads, no lost updates"
+  - id: VP-IT-FLOW-009
+    name: Forward → back → forward again
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Edge case
+      - Forward → back → forward again
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check re-entering a step after going back Expected: Data/state is not duplicated or corrupted; the flow can
+      still complete normally'
+  - id: VP-IT-FLOW-010
+    name: Data changed mid-flow by another process
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Edge case
+      - Data changed mid-flow by another process
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the underlying data changing between two steps (another user/admin edits it) Expected: The flow either
+      detects the change (reload/refetch/warn) or fails gracefully — it must never silently save stale data'
+  - id: VP-IT-FLOW-011
+    name: Concurrent / double-submit
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Edge case
+      - Concurrent / double-submit
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check submitting the same step twice quickly (double click, two tabs) Expected: Only 1 transaction is created;
+      no duplicate record/side-effect'
+  - id: VP-IT-FLOW-012
+    name: Permission changes mid-flow
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Edge case
+      - Permission changes mid-flow
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Check the user's role/permission being revoked partway through the flow Expected: The flow blocks/redirects
+      appropriately at the next screen that requires that permission"
+  - id: VP-IT-FLOW-013
+    name: Alternate-path branching
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Edge case
+      - Alternate-path branching
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check a flow that branches into a named alternate path when a mid-flow condition changes (e.g. price change,
+      item becomes unavailable) Expected: The flow branches correctly at the decision point and reaches the correct alternate
+      final state, without corrupting the main-path data'
+  - id: VP-IT-FLOW-014
+    name: Network loss mid-flow
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Abnormal case
+      - Network loss mid-flow
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check losing connectivity between two steps Expected: A clear error is shown; no partial/corrupt data is saved;
+      retry is possible'
+  - id: VP-IT-FLOW-015
+    name: Token/session expired mid-flow
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Abnormal case
+      - Token/session expired mid-flow
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the token expiring while on step k Expected: The user is redirected to login; in-progress step data is
+      not silently lost/corrupted (warn or preserve per spec)'
+  - id: VP-IT-FLOW-016
+    name: API/DB error at any step
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Abnormal case
+      - API/DB error at any step
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check any API in the flow returning an error/timeout Expected: The flow shows an appropriate error and does
+      not proceed to the next screen with invalid state'
+  - id: VP-IT-FLOW-017
+    name: Boundary data crossing screens
+    group: it-flow
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Abnormal case
+      - Boundary data crossing screens
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check boundary values (max length, max quantity, zero, negative) as they pass between screens Expected: Boundary
+      values are validated consistently at every screen/API in the flow, not only at the first one'

@@ -1,0 +1,159 @@
+  - id: VP-E2E-JOURNEY-001
+    name: Persona happy path
+    group: e2e-journey
+    scope: cross-requirement
+    applies_to: &id001
+      - journey
+      - workflow
+    signals:
+      - Basic case
+      - Persona happy path
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the shortest complete path for 1 persona (e.g. sign up → search → apply) Expected: The user completes
+      the journey with no dead end and no missing action to move to the next feature'
+  - id: VP-E2E-JOURNEY-002
+    name: Cross-feature data continuity
+    group: e2e-journey
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Basic case
+      - Cross-feature data continuity
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Check data created in feature A appears correctly in feature B (profile, order, application) Expected: The
+      data is consistent and up to date everywhere it's shown downstream"
+  - id: VP-E2E-JOURNEY-003
+    name: Full main business journey
+    group: e2e-journey
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Happy case
+      - Full main business journey
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the entire journey including every mandatory business branch (e.g. apply → work → get paid) Expected:
+      Every feature hands off correctly; the final state (balance, history, status) matches the business rule end-to-end'
+  - id: VP-E2E-JOURNEY-004
+    name: Notification / external side-effect
+    group: e2e-journey
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Happy case
+      - Notification / external side-effect
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check emails/SMS/push notifications triggered at each journey milestone Expected: Each notification fires at
+      the correct milestone, with correct content/recipient'
+  - id: VP-E2E-JOURNEY-005
+    name: Multi-session continuity
+    group: e2e-journey
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Happy case
+      - Multi-session continuity
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check resuming the journey in a new session (logout/login, new device) Expected: Progress/state is preserved
+      correctly, matching what was left off'
+  - id: VP-E2E-JOURNEY-006
+    name: Alternate business branch
+    group: e2e-journey
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Edge case
+      - Alternate business branch
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Check a valid but less common business branch (e.g. cancel then reapply, partial refund) Expected: The alternate
+      branch completes correctly and doesn't corrupt data from the main branch"
+  - id: VP-E2E-JOURNEY-007
+    name: Multi-actor interaction
+    group: e2e-journey
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Edge case
+      - Multi-actor interaction
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Check a journey requiring 2+ roles interacting (e.g. employer approves, worker confirms) Expected: Each actor's
+      action is reflected correctly and promptly for the other actor"
+  - id: VP-E2E-JOURNEY-008
+    name: Time-based condition
+    group: e2e-journey
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Edge case
+      - Time-based condition
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check journeys depending on a scheduled job/cron or an expiry (e.g. shift starts, offer expires) Expected:
+      The journey behaves correctly right before/at/after the time boundary'
+  - id: VP-E2E-JOURNEY-009
+    name: Full status-lifecycle walk (if documented)
+    group: e2e-journey
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Edge case
+      - Full status-lifecycle walk (if documented)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "If this journey's record has a documented status lifecycle (see a supplied domain rules file, e.g. `rules/domains/example-booking.md`),
+      check driving it through the entire lifecycle in one journey pass Expected: Every transition matches the documented
+      valid-transition table, ending at the documented terminal status"
+  - id: VP-E2E-JOURNEY-010
+    name: Interruption mid-journey
+    group: e2e-journey
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Abnormal case
+      - Interruption mid-journey
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check closing the app/tab or losing network mid-journey, then resuming Expected: The user can resume/redo safely;
+      no duplicate transaction, no stuck state'
+  - id: VP-E2E-JOURNEY-011
+    name: External system failure
+    group: e2e-journey
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Abnormal case
+      - External system failure
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check a downstream integration failing mid-journey (payment gateway down, 3rd-party API error) Expected: The
+      journey fails gracefully with a clear message; earlier completed steps are not corrupted'
+  - id: VP-E2E-JOURNEY-012
+    name: Conflicting concurrent actions
+    group: e2e-journey
+    scope: cross-requirement
+    applies_to: *id001
+    signals:
+      - Abnormal case
+      - Conflicting concurrent actions
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check 2 actors acting on the same journey at the same time (e.g. both cancel and confirm simultaneously) Expected:
+      Only 1 consistent final state results; no lost update'

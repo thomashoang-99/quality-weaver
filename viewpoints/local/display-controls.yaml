@@ -1,0 +1,638 @@
+  - id: VP-DISPLAY-CONTROLS-001
+    name: Visible / Hidden
+    group: display-controls
+    scope: local
+    applies_to: &id001
+      - label
+      - text
+      - heading
+      - title
+      - paragraph
+      - image
+      - video
+      - file-preview
+      - icon
+      - tooltip
+      - badge
+      - chip
+      - tag
+      - progress-bar
+      - alert
+      - banner
+      - snackbar
+      - toast
+      - dialog
+      - modal
+    signals:
+      - Label / Text / Heading / Title / Paragraph
+      - Visible / Hidden
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check that the text is shown/hidden correctly per Figma/spec Expected: Text, title, and label name are hidden/shown
+      correctly'
+  - id: VP-DISPLAY-CONTROLS-002
+    name: Correct text
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Label / Text / Heading / Title / Paragraph
+      - Correct text
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check that the text content matches Figma/spec Expected: Displayed correctly per requirements'
+  - id: VP-DISPLAY-CONTROLS-003
+    name: Line breaks / wrapping
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Label / Text / Heading / Title / Paragraph
+      - Line breaks / wrapping
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check that long text wraps correctly per spec Expected: Wraps at the max character count with no lost characters'
+  - id: VP-DISPLAY-CONTROLS-004
+    name: Alignment
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Label / Text / Heading / Title / Paragraph
+      - Alignment
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check text alignment matches the spec Expected: Labels/inputs/buttons align per guideline; form label+textbox
+      share a line; table/grid cells share baseline/width'
+  - id: VP-DISPLAY-CONTROLS-005
+    name: Truncation or overflow
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Label / Text / Heading / Title / Paragraph
+      - Truncation or overflow
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check whether long text or special characters overflow Expected: Truncated with `...` per spec; never breaks
+      layout'
+  - id: VP-DISPLAY-CONTROLS-006
+    name: Load success
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Image / Thumbnail / Avatar
+      - Load success
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the display state of the image Expected: The uploaded image/data displays and loads correctly'
+  - id: VP-DISPLAY-CONTROLS-007
+    name: Correct image displayed
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Image / Thumbnail / Avatar
+      - Correct image displayed
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the image after a successful upload Expected: Correct URL/image ID, no cross-user mixup, refreshes immediately
+      after save'
+  - id: VP-DISPLAY-CONTROLS-008
+    name: Format / size / MIME type
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Image / Thumbnail / Avatar
+      - Format / size / MIME type
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check file format, size, and MIME type of the image Expected: Only supported formats accepted; disguised extensions
+      rejected; within size limit'
+  - id: VP-DISPLAY-CONTROLS-009
+    name: Broken image fallback
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Image / Thumbnail / Avatar
+      - Broken image fallback
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check fallback handling when an image fails to load Expected: A defined fallback is shown on 404/deleted file'
+  - id: VP-DISPLAY-CONTROLS-010
+    name: Aspect ratio maintained
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Image / Thumbnail / Avatar
+      - Aspect ratio maintained
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check image display on resize/responsive Expected: Not distorted; correct crop/fit on thumbnails'
+  - id: VP-DISPLAY-CONTROLS-011
+    name: Click to view details
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Image / Thumbnail / Avatar
+      - Click to view details
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check image click behavior Expected: Opens preview (lightbox/modal/zoom); gallery next/prev works; closing
+      returns to correct context'
+  - id: VP-DISPLAY-CONTROLS-012
+    name: Play / Pause
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Video Player
+      - Play / Pause
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check play/pause, including keyboard shortcut Expected: Starts/stops correctly; icon toggles accordingly'
+  - id: VP-DISPLAY-CONTROLS-013
+    name: Play progress
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Video Player
+      - Play progress
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the progress bar and time display Expected: Accurate position/time; reaches 100% at end'
+  - id: VP-DISPLAY-CONTROLS-014
+    name: Seek bar
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Video Player
+      - Seek bar
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check dragging/clicking the seek bar, and arrow-key seek Expected: Jumps/plays from the correct position'
+  - id: VP-DISPLAY-CONTROLS-015
+    name: Volume control
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Video Player
+      - Volume control
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check volume slider/button, mute at 0 Expected: Correct icon state; volume retained on reload if required'
+  - id: VP-DISPLAY-CONTROLS-016
+    name: Playback speed
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Video Player
+      - Playback speed
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check speed options (0.5x–2x) Expected: Plays at selected speed without audio distortion'
+  - id: VP-DISPLAY-CONTROLS-017
+    name: Fullscreen
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Video Player
+      - Fullscreen
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check entering/exiting fullscreen Expected: Switches correctly via button, ESC, or back'
+  - id: VP-DISPLAY-CONTROLS-018
+    name: Replay
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Video Player
+      - Replay
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check replay after end, and auto-replay if enabled Expected: Replays from start; loops if auto-replay is on'
+  - id: VP-DISPLAY-CONTROLS-019
+    name: Format compatibility
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Video Player
+      - Format compatibility
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check MP4/WebM/OGG playback across browsers/devices Expected: Plays correctly, or shows fallback for unsupported
+      formats'
+  - id: VP-DISPLAY-CONTROLS-020
+    name: Thumbnail preview
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Video Player
+      - Thumbnail preview
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check hover-preview on the seek bar Expected: Correct frame shown, no lag on the main video'
+  - id: VP-DISPLAY-CONTROLS-021
+    name: File name display
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - File Preview
+      - File name display
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Check the uploaded file's name rendering Expected: Correct name+extension; ellipsis/wrap if too long"
+  - id: VP-DISPLAY-CONTROLS-022
+    name: File content display
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - File Preview
+      - File content display
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check rendered content (fonts, colors, tables, images, multi-language) Expected: Fully rendered, original formatting
+      preserved'
+  - id: VP-DISPLAY-CONTROLS-023
+    name: Unsupported format
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - File Preview
+      - Unsupported format
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check checking an unsupported format (.exe, .zip) Expected: Clear error message, no UI crash'
+  - id: VP-DISPLAY-CONTROLS-024
+    name: Page navigation
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - File Preview
+      - Page navigation
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check multi-page file navigation (PDF/DOCX) Expected: Correct page/total display, navigable'
+  - id: VP-DISPLAY-CONTROLS-025
+    name: Zoom in/out
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - File Preview
+      - Zoom in/out
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check zoom without breaking layout Expected: Accurate zoom % display'
+  - id: VP-DISPLAY-CONTROLS-026
+    name: Scroll
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - File Preview
+      - Scroll
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check scrolling long files Expected: Smooth, no lag; scrollbar matches content'
+  - id: VP-DISPLAY-CONTROLS-027
+    name: Download
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - File Preview
+      - Download
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check download button Expected: Correct format/size, uncorrupted, correct filename'
+  - id: VP-DISPLAY-CONTROLS-028
+    name: Print
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - File Preview
+      - Print
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check print button Expected: Matches original; landscape/portrait and partial/full print work'
+  - id: VP-DISPLAY-CONTROLS-029
+    name: Correct icon displayed
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Icon
+      - Correct icon displayed
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check icon per design across states (normal/hover/disabled/active) and themes Expected: Matches design; correct
+      icon for the function'
+  - id: VP-DISPLAY-CONTROLS-030
+    name: Hover effect
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Icon
+      - Hover effect
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check hover state/tooltip Expected: Changes per design, no jitter, tooltip fully visible'
+  - id: VP-DISPLAY-CONTROLS-031
+    name: Clickable
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Icon
+      - Clickable
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check click/tap behavior, including disabled state Expected: Correct action triggers; no dead area; disabled
+      icons non-clickable'
+  - id: VP-DISPLAY-CONTROLS-032
+    name: Appears on hover / tap-hold
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Tooltip
+      - Appears on hover / tap-hold
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check tooltip appearance Expected: Appears on hover (desktop) / tap-hold (mobile)'
+  - id: VP-DISPLAY-CONTROLS-033
+    name: Auto-dismiss on blur
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Tooltip
+      - Auto-dismiss on blur
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check dismiss on blur Expected: Disappears when mouse leaves / focus lost'
+  - id: VP-DISPLAY-CONTROLS-034
+    name: Correct text
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Tooltip
+      - Correct text
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check tooltip content Expected: Matches design, not truncated, no spelling errors'
+  - id: VP-DISPLAY-CONTROLS-035
+    name: Correct text or icon
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Badge / Chip / Tag
+      - Correct text or icon
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check displayed content Expected: Correct count/status/tag shown'
+  - id: VP-DISPLAY-CONTROLS-036
+    name: Clickable
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Badge / Chip / Tag
+      - Clickable
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check click/tap on interactive badge Expected: Correct action triggers'
+  - id: VP-DISPLAY-CONTROLS-037
+    name: Visible during loading
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Progress Bar
+      - Visible during loading
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check display through the whole process Expected: Always shown while in progress'
+  - id: VP-DISPLAY-CONTROLS-038
+    name: Progress accuracy (%)
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Progress Bar
+      - Progress accuracy (%)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check percentage updates Expected: Updates correctly, no erratic jumps'
+  - id: VP-DISPLAY-CONTROLS-039
+    name: Min/Max value support
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Progress Bar
+      - Min/Max value support
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the value range Expected: Stays within 0–100 (or defined range)'
+  - id: VP-DISPLAY-CONTROLS-040
+    name: Icon / content / type correctness
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Alert / Message Box / Banner
+      - Icon / content / type correctness
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check icon, content, and type (Success/Error/Info/Warning) Expected: Matches spec; distinct color+icon+text
+      per type; no wrong-type display'
+  - id: VP-DISPLAY-CONTROLS-041
+    name: Auto-triggered by a time/backend condition
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Alert / Message Box / Banner
+      - Auto-triggered by a time/backend condition
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check an alert that appears automatically from a time-based or backend-data condition (session inactivity,
+      price changed, item sold out, session invalidated) Expected: Shows the correct message at the correct trigger point
+      and blocks/redirects appropriately — the user is never left silently proceeding on stale data'
+  - id: VP-DISPLAY-CONTROLS-042
+    name: Singleton popup guard
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Alert / Message Box / Banner
+      - Singleton popup guard
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check triggering the same popup/alert condition twice in a row Expected: Only one instance is shown at a time'
+  - id: VP-DISPLAY-CONTROLS-043
+    name: Message content
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Snackbar / Toast
+      - Message content
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check content completeness Expected: Not truncated; matches spec'
+  - id: VP-DISPLAY-CONTROLS-044
+    name: Auto-disappear
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Snackbar / Toast
+      - Auto-disappear
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check auto-dismiss timing and stacking Expected: Disappears in the defined window (~3–5s); multiple toasts
+      stack properly'
+  - id: VP-DISPLAY-CONTROLS-045
+    name: Manual dismiss
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Snackbar / Toast
+      - Manual dismiss
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Check close button Expected: Dismisses on click, doesn't reappear"
+  - id: VP-DISPLAY-CONTROLS-046
+    name: Position on screen
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Snackbar / Toast
+      - Position on screen
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Check on-screen position, incl. mobile Expected: Matches design; doesn't cover important controls"
+  - id: VP-DISPLAY-CONTROLS-047
+    name: Chrome consistency
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Dialog / Modal
+      - Chrome consistency
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check every dialog has a title bar and a `[Close]` button; confirm-type dialogs also have `[Yes]`/`[No]` Expected:
+      Consistent chrome across all dialogs in the system'
+  - id: VP-DISPLAY-CONTROLS-048
+    name: Resize/minimize/maximize blocked
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Dialog / Modal
+      - Resize/minimize/maximize blocked
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Try to resize, minimize, or maximize a dialog Expected: Dialog keeps its original size; none of these operations
+      are possible unless spec says otherwise'
+  - id: VP-DISPLAY-CONTROLS-049
+    name: Blocks background interaction
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Dialog / Modal
+      - Blocks background interaction
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'While a modal dialog/alert is open, try to click or edit a control behind it Expected: No interaction reaches
+      the background controls, unless spec explicitly allows it'
+  - id: VP-DISPLAY-CONTROLS-050
+    name: Cursor shape on editable field
+    group: display-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Dialog / Modal
+      - Cursor shape on editable field
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Hover/click into a textbox that accepts input Expected: Mouse cursor changes to the text-insertion (I-beam)
+      shape'

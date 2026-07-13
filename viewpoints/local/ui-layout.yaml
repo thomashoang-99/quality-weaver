@@ -1,0 +1,108 @@
+  - id: VP-UI-LAYOUT-001
+    name: Compare UI with Design
+    group: ui-layout
+    scope: local
+    applies_to: &id001
+      - screen
+      - page
+      - ui
+    signals:
+      - Layout
+      - Compare UI with Design
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check whether the displayed UI matches the design (Figma, Design Spec, etc.) Expected: The UI is displayed
+      correctly according to the design'
+  - id: VP-UI-LAYOUT-002
+    name: Empty / first-time state
+    group: ui-layout
+    scope: local
+    applies_to: *id001
+    signals:
+      - Layout
+      - Empty / first-time state
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the display when there is no data (no prior data, first visit, no search yet) Expected: The empty state
+      is displayed correctly per design (icon/text clearly describing the state), not an error or broken layout'
+  - id: VP-UI-LAYOUT-003
+    name: ZoomIn / ZoomOut
+    group: ui-layout
+    scope: local
+    applies_to: *id001
+    signals:
+      - Layout
+      - ZoomIn / ZoomOut
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the ability to zoom in / zoom out the UI Expected: The UI does not break and the layout remains reasonable
+      when zooming'
+  - id: VP-UI-LAYOUT-004
+    name: Responsive (mobile/desktop)
+    group: ui-layout
+    scope: local
+    applies_to: *id001
+    signals:
+      - Layout
+      - Responsive (mobile/desktop)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check that the UI displays well on multiple devices (mobile/desktop) Expected: The UI is compatible and has
+      no display errors or broken layout on different devices'
+  - id: VP-UI-LAYOUT-005
+    name: Loading Spinner / Skeleton Loader
+    group: ui-layout
+    scope: local
+    applies_to: *id001
+    signals:
+      - Initial Display
+      - Loading Spinner / Skeleton Loader
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check whether a spinner/skeleton is displayed while data is loading; interactive controls during that window
+      Expected: The loader is displayed in the correct position and disappears once data has finished loading; controls stay
+      disabled until the request resolves'
+  - id: VP-UI-LAYOUT-006
+    name: Initial display / screen load
+    group: ui-layout
+    scope: local
+    applies_to: *id001
+    signals:
+      - Initial Display
+      - Initial display / screen load
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Check the screen/route loads successfully with the expected URL and every expected component initialized and
+      populated Expected: The screen renders without error, matching the design's initial content and format"
+  - id: VP-UI-LAYOUT-007
+    name: Access route parameters
+    group: ui-layout
+    scope: local
+    applies_to: *id001
+    signals:
+      - Initial Display
+      - Access route parameters
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check accessing the screen with valid route/query parameters (id, session_id, code, ...) Expected: The correct
+      data is fetched and rendered based on those parameters'
+  - id: VP-UI-LAYOUT-008
+    name: Default field/tab value
+    group: ui-layout
+    scope: local
+    applies_to: *id001
+    signals:
+      - Initial Display
+      - Default field/tab value
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the default value of a field/toggle/dropdown/tab when the screen first opens Expected: The default matches
+      the spec (e.g. today + N days, a specific option, the default tab pre-loaded)'

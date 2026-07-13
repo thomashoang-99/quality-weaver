@@ -1,0 +1,15 @@
+  - id: VP-DATA-CONTINUITY-001
+    name: Data carried from previous screen
+    group: data-continuity
+    scope: cross-requirement
+    applies_to:
+      - screen
+      - flow
+    signals:
+      - Initial Display
+      - Data carried from previous screen
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check data passed in from the previous screen or step (search criteria, selection, filter, id) Expected: The
+      destination screen receives and correctly pre-fills/restores that exact data, not a blank/reset state'

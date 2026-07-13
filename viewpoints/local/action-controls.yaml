@@ -1,0 +1,224 @@
+  - id: VP-ACTION-CONTROLS-001
+    name: Visible/Hidden by permission or condition
+    group: action-controls
+    scope: local
+    applies_to: &id001
+      - button
+      - action
+      - link
+    signals:
+      - Submit Button
+      - Visible/Hidden by permission or condition
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check button visibility by role and by data condition Expected: Correct per role/condition'
+  - id: VP-ACTION-CONTROLS-002
+    name: Correct label
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Submit Button
+      - Correct label
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check label text Expected: Accurate, no errors'
+  - id: VP-ACTION-CONTROLS-003
+    name: Enabled/Disabled by validation
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Submit Button
+      - Enabled/Disabled by validation
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check state when data valid vs. invalid Expected: Enabled only when all required validations/selections pass'
+  - id: VP-ACTION-CONTROLS-004
+    name: Prevents double submit
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Submit Button
+      - Prevents double submit
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check clicking rapidly multiple times Expected: Exactly one request sent; button disables or shows loading'
+  - id: VP-ACTION-CONTROLS-005
+    name: Mandatory field / format / unique-constraint validation
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Submit Button
+      - Mandatory field / format / unique-constraint validation
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check blank required field, malformed input, duplicate value Expected: Each shows its specific error and blocks
+      the request'
+  - id: VP-ACTION-CONTROLS-006
+    name: Submits correct data & DB verification
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Submit Button
+      - Submits correct data & DB verification
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check submit with valid data, then verify DB Expected: Request sent correctly; DB stores accurately with no
+      duplicate'
+  - id: VP-ACTION-CONTROLS-007
+    name: Role/Permission check
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Submit Button
+      - Role/Permission check
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check submit attempt without sufficient permission Expected: Hidden/disabled client-side, and 403 server-side'
+  - id: VP-ACTION-CONTROLS-008
+    name: Fallback message on server error
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Submit Button
+      - Fallback message on server error
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check submit during a timeout/500 Expected: Clear error message shown'
+  - id: VP-ACTION-CONTROLS-009
+    name: Post-submission navigation & message
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Submit Button
+      - Post-submission navigation & message
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check what happens right after success Expected: Navigates to the expected screen; shows a success message/notification'
+  - id: VP-ACTION-CONTROLS-010
+    name: Confirmation on click with unsaved changes
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Close / Cancel Button
+      - Confirmation on click with unsaved changes
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check Cancel after data has changed Expected: Confirmation popup shown per spec'
+  - id: VP-ACTION-CONTROLS-011
+    name: Discards unsaved changes
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Close / Cancel Button
+      - Discards unsaved changes
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check confirming discard Expected: Data not saved, form resets'
+  - id: VP-ACTION-CONTROLS-012
+    name: No data submission before save
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Close / Cancel Button
+      - No data submission before save
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check Cancel before saving Expected: No request sent'
+  - id: VP-ACTION-CONTROLS-013
+    name: Closes modal
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Close / Cancel Button
+      - Closes modal
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check Cancel inside a modal Expected: Modal closes correctly'
+  - id: VP-ACTION-CONTROLS-014
+    name: Opens layer/popup with correct pre-fill
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Secondary / Opening Action
+      - Opens layer/popup with correct pre-fill
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check clicking a control that opens a layer, dropdown, or popup (traveler selector, filter panel, fare rules,
+      ...) Expected: Opens with correct current values pre-filled and correct content/options'
+  - id: VP-ACTION-CONTROLS-015
+    name: Confirm action on popup
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Secondary / Opening Action
+      - Confirm action on popup
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check clicking the confirm/OK button on a popup Expected: Popup closes and the confirmed action proceeds'
+  - id: VP-ACTION-CONTROLS-016
+    name: Dropdown opens & actions trigger
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Split Button (Dropdown Button)
+      - Dropdown opens & actions trigger
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check clicking the main button, then each option Expected: Dropdown opens fully; each option performs its function
+      correctly'
+  - id: VP-ACTION-CONTROLS-017
+    name: Navigates to correct URL & tab behavior
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Link
+      - Navigates to correct URL & tab behavior
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check click destination and new-tab/same-tab config Expected: Correct URL; opens per configuration'
+  - id: VP-ACTION-CONTROLS-018
+    name: Trigger correct action, incl. heavy operations
+    group: action-controls
+    scope: local
+    applies_to: *id001
+    signals:
+      - Others
+      - Trigger correct action, incl. heavy operations
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check clicking performs the correct function; check with a large data volume (e.g. importing a file) Expected:
+      Correct function, no errors; clear loading/progress indicator for heavy operations'

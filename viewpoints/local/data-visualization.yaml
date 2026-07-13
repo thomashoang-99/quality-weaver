@@ -1,0 +1,446 @@
+  - id: VP-DATA-VISUALIZATION-001
+    name: Data accuracy
+    group: data-visualization
+    scope: local
+    applies_to: &id001
+      - chart
+      - graph
+      - map
+      - heatmap
+      - calendar
+    signals:
+      - Chart / Graph
+      - Data accuracy
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the data displayed in the chart Expected: Values match the spec; no rounding errors; handles null/negative/outlier
+      values'
+  - id: VP-DATA-VISUALIZATION-002
+    name: Axis labels
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Chart / Graph
+      - Axis labels
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the axis labels Expected: Complete, correct units; no overlap/truncation on long labels'
+  - id: VP-DATA-VISUALIZATION-003
+    name: Legend visibility
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Chart / Graph
+      - Legend visibility
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check legend display and toggling Expected: Names/colors match the data plot; toggle on/off if specified; never
+      obscured'
+  - id: VP-DATA-VISUALIZATION-004
+    name: Scale correctness
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Chart / Graph
+      - Scale correctness
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the scale display Expected: Correct scale (linear/log/%); accurate min/max; correct auto-scaling'
+  - id: VP-DATA-VISUALIZATION-005
+    name: Tooltip on hover
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Chart / Graph
+      - Tooltip on hover
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Check tooltip on hover/tap Expected: Correct value/label/date-time; doesn't cover the point; works on mobile"
+  - id: VP-DATA-VISUALIZATION-006
+    name: Overflow / truncation
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Chart / Graph
+      - Overflow / truncation
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check layout with a large amount of data Expected: No layout break; long data wraps/truncates; no unwanted
+      scrollbar'
+  - id: VP-DATA-VISUALIZATION-007
+    name: Export chart
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Chart / Graph
+      - Export chart
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check export to PNG/JPG/PDF/SVG Expected: Correct format, clear quality, exported data matches displayed chart'
+  - id: VP-DATA-VISUALIZATION-008
+    name: Update with filter
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Chart / Graph
+      - Update with filter
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check chart update on filter change Expected: Correct data update; clear loading state; no stale-cache reuse'
+  - id: VP-DATA-VISUALIZATION-009
+    name: Interactive behavior
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Chart / Graph
+      - Interactive behavior
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check click/hover drill-down, zoom/pan Expected: Opens details correctly; zoom/pan work'
+  - id: VP-DATA-VISUALIZATION-010
+    name: Color & accessibility
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Chart / Graph
+      - Color & accessibility
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check chart colors Expected: Clear distinction between groups; sufficient contrast; matches spec'
+  - id: VP-DATA-VISUALIZATION-011
+    name: Time zone & localization
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Chart / Graph
+      - Time zone & localization
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check timezone/locale display Expected: Correct per user timezone/locale; stays in sync on change'
+  - id: VP-DATA-VISUALIZATION-012
+    name: Empty / error state
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Chart / Graph
+      - Empty / error state
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check the empty/error state Expected: No crash on empty data; appropriate message on API error/null'
+  - id: VP-DATA-VISUALIZATION-013
+    name: Zoom in/out
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Map
+      - Zoom in/out
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check zoom via mouse/trackpad/pinch Expected: Matches spec min/max zoom; no distortion or lost markers'
+  - id: VP-DATA-VISUALIZATION-014
+    name: Pan / Drag
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Map
+      - Pan / Drag
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Check dragging the map Expected: Smooth on desktop/mobile; doesn't get stuck at edges"
+  - id: VP-DATA-VISUALIZATION-015
+    name: Marker rendering
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Map
+      - Marker rendering
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check marker position/overlap Expected: Accurate lat/long; no overlap when zoomed out'
+  - id: VP-DATA-VISUALIZATION-016
+    name: Info window on marker click
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Map
+      - Info window on marker click
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check clicking a marker Expected: Correct content shown; only one info window open at a time if required'
+  - id: VP-DATA-VISUALIZATION-017
+    name: Geolocation
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Map
+      - Geolocation
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check GPS/browser location, permission denial, and incorrect location Expected: Correct location retrieved;
+      appropriate message on denial; falls back to default on error'
+  - id: VP-DATA-VISUALIZATION-018
+    name: Search location
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Map
+      - Search location
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check address/name search and autocomplete Expected: Correct location shown; accurate suggestions; handles
+      invalid address'
+  - id: VP-DATA-VISUALIZATION-019
+    name: Boundary limits
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Map
+      - Boundary limits
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check restricted-area panning/zooming Expected: Blocked outside the allowed area with a clear message'
+  - id: VP-DATA-VISUALIZATION-020
+    name: Responsive & orientation
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Map
+      - Responsive & orientation
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check display across devices and orientation change Expected: Correct display; no misalignment or lost markers'
+  - id: VP-DATA-VISUALIZATION-021
+    name: Custom controls
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Map
+      - Custom controls
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check home/reset-zoom/switch-layer buttons Expected: Work correctly'
+  - id: VP-DATA-VISUALIZATION-022
+    name: Offline & error handling
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Map
+      - Offline & error handling
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check network loss and API/key errors Expected: Clear message on connectivity loss; handled gracefully on API
+      error'
+  - id: VP-DATA-VISUALIZATION-023
+    name: Color intensity reflects data
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Heatmap
+      - Color intensity reflects data
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check colors vs. data values Expected: Accurately reflects values; high/low clearly distinguishable'
+  - id: VP-DATA-VISUALIZATION-024
+    name: Tooltip / value on hover
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Heatmap
+      - Tooltip / value on hover
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Check hover/tap-hold tooltip Expected: Correct value at cell/point; doesn't cover important data"
+  - id: VP-DATA-VISUALIZATION-025
+    name: Legend visibility
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Heatmap
+      - Legend visibility
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check legend scale and toggle Expected: Full color scale/range shown; no overflow when responsive'
+  - id: VP-DATA-VISUALIZATION-026
+    name: Range scaling (min/max)
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Heatmap
+      - Range scaling (min/max)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check auto/fixed scaling, equal values, and outliers Expected: Scales appropriately; handles equal-value and
+      outlier cases correctly'
+  - id: VP-DATA-VISUALIZATION-027
+    name: Export as image/PDF
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Heatmap
+      - Export as image/PDF
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check export Expected: Retains colors, legend, and scale in PNG/JPEG/PDF'
+  - id: VP-DATA-VISUALIZATION-028
+    name: Update with filter
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Heatmap
+      - Update with filter
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check filtering, incl. empty result Expected: Updates immediately with correct colors/legend; handles empty
+      filter result'
+  - id: VP-DATA-VISUALIZATION-029
+    name: Day / Week / Month mode
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Calendar
+      - Day / Week / Month mode
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check switching views Expected: Correct data and layout per mode'
+  - id: VP-DATA-VISUALIZATION-030
+    name: Navigation (< >)
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Calendar
+      - Navigation (< >)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check prev/next navigation, incl. rapid jumps Expected: Moves to the correct period each time'
+  - id: VP-DATA-VISUALIZATION-031
+    name: Timezone accuracy
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Calendar
+      - Timezone accuracy
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check event times across timezone changes Expected: Correct per user timezone; stays in sync with server'
+  - id: VP-DATA-VISUALIZATION-032
+    name: Multi-day events
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Calendar
+      - Multi-day events
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check events spanning multiple days Expected: Displayed continuously, not cut off, correct across view changes'
+  - id: VP-DATA-VISUALIZATION-033
+    name: Event overlap
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Calendar
+      - Event overlap
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: "Check many overlapping events (5–10 at once) Expected: Layout doesn't overlap incorrectly; small events stay
+      clickable"
+  - id: VP-DATA-VISUALIZATION-034
+    name: Event tooltip / popup
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Calendar
+      - Event tooltip / popup
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check hover/tap event details Expected: Correct content; correct open/close logic; not obscured'
+  - id: VP-DATA-VISUALIZATION-035
+    name: Click to view details
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Calendar
+      - Click to view details
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check clicking an event Expected: Navigates to the correct detail view'
+  - id: VP-DATA-VISUALIZATION-036
+    name: Event coloring by category
+    group: data-visualization
+    scope: local
+    applies_to: *id001
+    signals:
+      - Calendar
+      - Event coloring by category
+    exclusions: []
+    clarification_prompts: []
+    default_priority: medium
+    guidance: 'Check category-based coloring Expected: Correct color per category; correct legend'

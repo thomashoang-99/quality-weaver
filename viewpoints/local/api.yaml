@@ -1,0 +1,210 @@
+  - id: VP-API-001
+    name: Endpoint/method, headers, params, body contract
+    group: api
+    scope: local
+    applies_to: &id001
+      - api
+      - endpoint
+    signals:
+      - Basic
+      - Endpoint/method, headers, params, body contract
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check all four request-shape aspects Expected: Server accepts and processes correctly per spec'
+  - id: VP-API-002
+    name: Response status, schema, business data, defaults, empty result
+    group: api
+    scope: local
+    applies_to: *id001
+    signals:
+      - Basic
+      - Response status, schema, business data, defaults, empty result
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check all five response aspects Expected: Matches spec exactly; empty filter returns `[]`/`{}`, never `null`
+      or an error'
+  - id: VP-API-003
+    name: Request triggered exactly once
+    group: api
+    scope: local
+    applies_to: *id001
+    signals:
+      - Basic
+      - Request triggered exactly once
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check that the triggering UI action calls the expected endpoint with correct method/params Expected: Fires
+      exactly once, correct endpoint, params matching UI state'
+  - id: VP-API-004
+    name: Response drives UI
+    group: api
+    scope: local
+    applies_to: *id001
+    signals:
+      - Basic
+      - Response drives UI
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the screen renders using the actual response, not cached/stale/hardcoded data Expected: Every value on
+      screen traces back to a response field'
+  - id: VP-API-005
+    name: Missing field, invalid type, boundary, null, invalid format, special char, unexpected field, duplicate, large
+      payload, UTF-8
+    group: api
+    scope: local
+    applies_to: *id001
+    signals:
+      - Validation
+      - Missing field, invalid type, boundary, null, invalid format, special char, unexpected field, duplicate, large
+        payload, UTF-8
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check all ten input-validation edge cases Expected: 400 on invalid input (never 500); boundary values accepted
+      in-range only; UTF-8/multi-byte round-trips intact'
+  - id: VP-API-006
+    name: No token, expired token, invalid token
+    group: api
+    scope: local
+    applies_to: *id001
+    signals:
+      - Authentication
+      - No token, expired token, invalid token
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check all three Expected: 401 in each case, with an "expired" message where applicable'
+  - id: VP-API-007
+    name: Role/permission, cross-user access, session timeout, refresh token
+    group: api
+    scope: local
+    applies_to: *id001
+    signals:
+      - Authorization
+      - Role/permission, cross-user access, session timeout, refresh token
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check all four Expected: 403/404 without leaking data; expired session requires re-login; refresh issues a
+      new valid token'
+  - id: VP-API-008
+    name: Happy path, business-rule violation, invalid state transition
+    group: api
+    scope: local
+    applies_to: *id001
+    signals:
+      - Business Logic
+      - Happy path, business-rule violation, invalid state transition
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check all three Expected: Correct processing; rule violations rejected with a clear message; invalid transitions
+      rejected, state unchanged'
+  - id: VP-API-009
+    name: Duplicate operation & idempotency
+    group: api
+    scope: local
+    applies_to: *id001
+    signals:
+      - Business Logic
+      - Duplicate operation & idempotency
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check duplicate create requests, and repeated PUT/PATCH Expected: 409/idempotency-key blocked; repeated PUT/PATCH
+      yields the same final result'
+  - id: VP-API-010
+    name: Concurrent request & transaction rollback
+    group: api
+    scope: local
+    applies_to: *id001
+    signals:
+      - Business Logic
+      - Concurrent request & transaction rollback
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check 2–5 concurrent writes to the same resource, and a mid-operation failure Expected: No data loss/race condition;
+      entire transaction rolls back on failure'
+  - id: VP-API-011
+    name: Persisted change, audit log, timestamp/timezone, field mapping
+    group: api
+    scope: local
+    applies_to: *id001
+    signals:
+      - Database
+      - Persisted change, audit log, timestamp/timezone, field mapping
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check all four Expected: Change persists correctly; audit record created; correct ISO 8601 timestamp; response
+      fields map to correct DB columns'
+  - id: VP-API-012
+    name: Currency/unit conversion at storage
+    group: api
+    scope: local
+    applies_to: *id001
+    signals:
+      - Database
+      - Currency/unit conversion at storage
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check a monetary or unit field that must be converted before storage (exchange rate, tax-inclusive total, ...)
+      Expected: Conversion applied exactly once, correct rate/formula, no double- or missed conversion'
+  - id: VP-API-013
+    name: Third-party supplier field passthrough
+    group: api
+    scope: local
+    applies_to: *id001
+    signals:
+      - Database
+      - Third-party supplier field passthrough
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: "Check a field sourced from a third-party supplier/GDS response before being normalized into the system's own
+      schema Expected: Mapped/normalized correctly and consistently, including when the supplier's field is absent or null"
+  - id: VP-API-014
+    name: Failure does not partially persist
+    group: api
+    scope: local
+    applies_to: *id001
+    signals:
+      - Database
+      - Failure does not partially persist
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check the DB state and user-facing message when an API call fails partway Expected: Specific failure reason
+      surfaced; no partial/inconsistent row left — the write either fully succeeds or nothing is written'
+  - id: VP-API-015
+    name: Full HTTP status catalog (200/201/204/400/401/403/404/409/415/429/500)
+    group: api
+    scope: local
+    applies_to: *id001
+    signals:
+      - Error Handling
+      - Full HTTP status catalog (200/201/204/400/401/403/404/409/415/429/500)
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check each documented status case Expected: Correct status per case, consistent error format, no sensitive
+      info exposed (no stack trace/SQL/internal paths)'
+  - id: VP-API-016
+    name: SQL injection, XSS payload, mass assignment, HTTPS enforcement, rate limit
+    group: api
+    scope: local
+    applies_to: *id001
+    signals:
+      - Security
+      - SQL injection, XSS payload, mass assignment, HTTPS enforcement, rate limit
+    exclusions: []
+    clarification_prompts: []
+    default_priority: high
+    guidance: 'Check all five Expected: Rejected/sanitized safely, never 500; HTTP redirects/rejects; rate limit returns 429
+      with `Retry-After`'
