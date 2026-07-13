@@ -49,9 +49,10 @@ class Catalog:
         group_names: set[str] = set()
         for raw_group in raw_groups:
             group = _parse_group(raw_group)
-            if group.name in group_names:
+            normalized_group_name = group.name.casefold()
+            if normalized_group_name in group_names:
                 raise ValueError(f"duplicate catalog group: {group.name}")
-            group_names.add(group.name)
+            group_names.add(normalized_group_name)
             groups.append(group)
 
             path = _catalog_child(root, group.file)

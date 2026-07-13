@@ -1,0 +1,2517 @@
+schema_version: quality-weaver/legacy-viewpoint-inventory/v1
+inventory_version: 1.0.0
+files:
+  - path: rules/viewpoints/01-ui.md
+    sha256: 94c156f80d85869c8e1c8eac3cd0c2c6ed37257191d107a9e1ca9da2ec728298
+    rows:
+      - source_row_id: rules/viewpoints/01-ui.md::Layout::Compare UI with Design
+        path: rules/viewpoints/01-ui.md
+        heading: Layout
+        aspect: Compare UI with Design
+        viewpoint: Check whether the displayed UI matches the design (Figma, Design Spec, etc.)
+        expected_result: The UI is displayed correctly according to the design
+      - source_row_id: rules/viewpoints/01-ui.md::Layout::Empty / first-time state
+        path: rules/viewpoints/01-ui.md
+        heading: Layout
+        aspect: Empty / first-time state
+        viewpoint: Check the display when there is no data (no prior data, first visit, no search yet)
+        expected_result: The empty state is displayed correctly per design (icon/text clearly describing the state), not an error or broken layout
+      - source_row_id: rules/viewpoints/01-ui.md::Layout::ZoomIn / ZoomOut
+        path: rules/viewpoints/01-ui.md
+        heading: Layout
+        aspect: ZoomIn / ZoomOut
+        viewpoint: Check the ability to zoom in / zoom out the UI
+        expected_result: The UI does not break and the layout remains reasonable when zooming
+      - source_row_id: rules/viewpoints/01-ui.md::Layout::Responsive (mobile/desktop)
+        path: rules/viewpoints/01-ui.md
+        heading: Layout
+        aspect: Responsive (mobile/desktop)
+        viewpoint: Check that the UI displays well on multiple devices (mobile/desktop)
+        expected_result: The UI is compatible and has no display errors or broken layout on different devices
+      - source_row_id: rules/viewpoints/01-ui.md::Initial Display::Loading Spinner / Skeleton Loader
+        path: rules/viewpoints/01-ui.md
+        heading: Initial Display
+        aspect: Loading Spinner / Skeleton Loader
+        viewpoint: Check whether a spinner/skeleton is displayed while data is loading; interactive controls during that window
+        expected_result: The loader is displayed in the correct position and disappears once data has finished loading; controls stay disabled until the request resolves
+      - source_row_id: rules/viewpoints/01-ui.md::Initial Display::Initial display / screen load
+        path: rules/viewpoints/01-ui.md
+        heading: Initial Display
+        aspect: Initial display / screen load
+        viewpoint: Check the screen/route loads successfully with the expected URL and every expected component initialized and populated
+        expected_result: The screen renders without error, matching the design's initial content and format
+      - source_row_id: rules/viewpoints/01-ui.md::Initial Display::Access route parameters
+        path: rules/viewpoints/01-ui.md
+        heading: Initial Display
+        aspect: Access route parameters
+        viewpoint: Check accessing the screen with valid route/query parameters (id, session_id, code, ...)
+        expected_result: The correct data is fetched and rendered based on those parameters
+      - source_row_id: rules/viewpoints/01-ui.md::Initial Display::Default field/tab value
+        path: rules/viewpoints/01-ui.md
+        heading: Initial Display
+        aspect: Default field/tab value
+        viewpoint: Check the default value of a field/toggle/dropdown/tab when the screen first opens
+        expected_result: The default matches the spec (e.g. today + N days, a specific option, the default tab pre-loaded)
+      - source_row_id: rules/viewpoints/01-ui.md::Initial Display::Data carried from previous screen
+        path: rules/viewpoints/01-ui.md
+        heading: Initial Display
+        aspect: Data carried from previous screen
+        viewpoint: Check data passed in from the previous screen or step (search criteria, selection, filter, id)
+        expected_result: The destination screen receives and correctly pre-fills/restores that exact data, not a blank/reset state
+  - path: rules/viewpoints/02-display-controls.md
+    sha256: 302ed6936f49ad22fdba35f03ce97c08827e7ba1a70c96a0744c69347cda3c5e
+    rows:
+      - source_row_id: rules/viewpoints/02-display-controls.md::Label / Text / Heading / Title / Paragraph::Visible / Hidden
+        path: rules/viewpoints/02-display-controls.md
+        heading: Label / Text / Heading / Title / Paragraph
+        aspect: Visible / Hidden
+        viewpoint: Check that the text is shown/hidden correctly per Figma/spec
+        expected_result: Text, title, and label name are hidden/shown correctly
+      - source_row_id: rules/viewpoints/02-display-controls.md::Label / Text / Heading / Title / Paragraph::Correct text
+        path: rules/viewpoints/02-display-controls.md
+        heading: Label / Text / Heading / Title / Paragraph
+        aspect: Correct text
+        viewpoint: Check that the text content matches Figma/spec
+        expected_result: Displayed correctly per requirements
+      - source_row_id: rules/viewpoints/02-display-controls.md::Label / Text / Heading / Title / Paragraph::Line breaks / wrapping
+        path: rules/viewpoints/02-display-controls.md
+        heading: Label / Text / Heading / Title / Paragraph
+        aspect: Line breaks / wrapping
+        viewpoint: Check that long text wraps correctly per spec
+        expected_result: Wraps at the max character count with no lost characters
+      - source_row_id: rules/viewpoints/02-display-controls.md::Label / Text / Heading / Title / Paragraph::Alignment
+        path: rules/viewpoints/02-display-controls.md
+        heading: Label / Text / Heading / Title / Paragraph
+        aspect: Alignment
+        viewpoint: Check text alignment matches the spec
+        expected_result: Labels/inputs/buttons align per guideline; form label+textbox share a line; table/grid cells share baseline/width
+      - source_row_id: rules/viewpoints/02-display-controls.md::Label / Text / Heading / Title / Paragraph::Truncation or overflow
+        path: rules/viewpoints/02-display-controls.md
+        heading: Label / Text / Heading / Title / Paragraph
+        aspect: Truncation or overflow
+        viewpoint: Check whether long text or special characters overflow
+        expected_result: Truncated with `...` per spec; never breaks layout
+      - source_row_id: rules/viewpoints/02-display-controls.md::Image / Thumbnail / Avatar::Load success
+        path: rules/viewpoints/02-display-controls.md
+        heading: Image / Thumbnail / Avatar
+        aspect: Load success
+        viewpoint: Check the display state of the image
+        expected_result: The uploaded image/data displays and loads correctly
+      - source_row_id: rules/viewpoints/02-display-controls.md::Image / Thumbnail / Avatar::Correct image displayed
+        path: rules/viewpoints/02-display-controls.md
+        heading: Image / Thumbnail / Avatar
+        aspect: Correct image displayed
+        viewpoint: Check the image after a successful upload
+        expected_result: Correct URL/image ID, no cross-user mixup, refreshes immediately after save
+      - source_row_id: rules/viewpoints/02-display-controls.md::Image / Thumbnail / Avatar::Format / size / MIME type
+        path: rules/viewpoints/02-display-controls.md
+        heading: Image / Thumbnail / Avatar
+        aspect: Format / size / MIME type
+        viewpoint: Check file format, size, and MIME type of the image
+        expected_result: Only supported formats accepted; disguised extensions rejected; within size limit
+      - source_row_id: rules/viewpoints/02-display-controls.md::Image / Thumbnail / Avatar::Broken image fallback
+        path: rules/viewpoints/02-display-controls.md
+        heading: Image / Thumbnail / Avatar
+        aspect: Broken image fallback
+        viewpoint: Check fallback handling when an image fails to load
+        expected_result: A defined fallback is shown on 404/deleted file
+      - source_row_id: rules/viewpoints/02-display-controls.md::Image / Thumbnail / Avatar::Aspect ratio maintained
+        path: rules/viewpoints/02-display-controls.md
+        heading: Image / Thumbnail / Avatar
+        aspect: Aspect ratio maintained
+        viewpoint: Check image display on resize/responsive
+        expected_result: Not distorted; correct crop/fit on thumbnails
+      - source_row_id: rules/viewpoints/02-display-controls.md::Image / Thumbnail / Avatar::Click to view details
+        path: rules/viewpoints/02-display-controls.md
+        heading: Image / Thumbnail / Avatar
+        aspect: Click to view details
+        viewpoint: Check image click behavior
+        expected_result: Opens preview (lightbox/modal/zoom); gallery next/prev works; closing returns to correct context
+      - source_row_id: rules/viewpoints/02-display-controls.md::Video Player::Play / Pause
+        path: rules/viewpoints/02-display-controls.md
+        heading: Video Player
+        aspect: Play / Pause
+        viewpoint: Check play/pause, including keyboard shortcut
+        expected_result: Starts/stops correctly; icon toggles accordingly
+      - source_row_id: rules/viewpoints/02-display-controls.md::Video Player::Play progress
+        path: rules/viewpoints/02-display-controls.md
+        heading: Video Player
+        aspect: Play progress
+        viewpoint: Check the progress bar and time display
+        expected_result: Accurate position/time; reaches 100% at end
+      - source_row_id: rules/viewpoints/02-display-controls.md::Video Player::Seek bar
+        path: rules/viewpoints/02-display-controls.md
+        heading: Video Player
+        aspect: Seek bar
+        viewpoint: Check dragging/clicking the seek bar, and arrow-key seek
+        expected_result: Jumps/plays from the correct position
+      - source_row_id: rules/viewpoints/02-display-controls.md::Video Player::Volume control
+        path: rules/viewpoints/02-display-controls.md
+        heading: Video Player
+        aspect: Volume control
+        viewpoint: Check volume slider/button, mute at 0
+        expected_result: Correct icon state; volume retained on reload if required
+      - source_row_id: rules/viewpoints/02-display-controls.md::Video Player::Playback speed
+        path: rules/viewpoints/02-display-controls.md
+        heading: Video Player
+        aspect: Playback speed
+        viewpoint: Check speed options (0.5x–2x)
+        expected_result: Plays at selected speed without audio distortion
+      - source_row_id: rules/viewpoints/02-display-controls.md::Video Player::Fullscreen
+        path: rules/viewpoints/02-display-controls.md
+        heading: Video Player
+        aspect: Fullscreen
+        viewpoint: Check entering/exiting fullscreen
+        expected_result: Switches correctly via button, ESC, or back
+      - source_row_id: rules/viewpoints/02-display-controls.md::Video Player::Replay
+        path: rules/viewpoints/02-display-controls.md
+        heading: Video Player
+        aspect: Replay
+        viewpoint: Check replay after end, and auto-replay if enabled
+        expected_result: Replays from start; loops if auto-replay is on
+      - source_row_id: rules/viewpoints/02-display-controls.md::Video Player::Format compatibility
+        path: rules/viewpoints/02-display-controls.md
+        heading: Video Player
+        aspect: Format compatibility
+        viewpoint: Check MP4/WebM/OGG playback across browsers/devices
+        expected_result: Plays correctly, or shows fallback for unsupported formats
+      - source_row_id: rules/viewpoints/02-display-controls.md::Video Player::Thumbnail preview
+        path: rules/viewpoints/02-display-controls.md
+        heading: Video Player
+        aspect: Thumbnail preview
+        viewpoint: Check hover-preview on the seek bar
+        expected_result: Correct frame shown, no lag on the main video
+      - source_row_id: rules/viewpoints/02-display-controls.md::File Preview::File name display
+        path: rules/viewpoints/02-display-controls.md
+        heading: File Preview
+        aspect: File name display
+        viewpoint: Check the uploaded file's name rendering
+        expected_result: Correct name+extension; ellipsis/wrap if too long
+      - source_row_id: rules/viewpoints/02-display-controls.md::File Preview::File content display
+        path: rules/viewpoints/02-display-controls.md
+        heading: File Preview
+        aspect: File content display
+        viewpoint: Check rendered content (fonts, colors, tables, images, multi-language)
+        expected_result: Fully rendered, original formatting preserved
+      - source_row_id: rules/viewpoints/02-display-controls.md::File Preview::Unsupported format
+        path: rules/viewpoints/02-display-controls.md
+        heading: File Preview
+        aspect: Unsupported format
+        viewpoint: Check checking an unsupported format (.exe, .zip)
+        expected_result: Clear error message, no UI crash
+      - source_row_id: rules/viewpoints/02-display-controls.md::File Preview::Page navigation
+        path: rules/viewpoints/02-display-controls.md
+        heading: File Preview
+        aspect: Page navigation
+        viewpoint: Check multi-page file navigation (PDF/DOCX)
+        expected_result: Correct page/total display, navigable
+      - source_row_id: rules/viewpoints/02-display-controls.md::File Preview::Zoom in/out
+        path: rules/viewpoints/02-display-controls.md
+        heading: File Preview
+        aspect: Zoom in/out
+        viewpoint: Check zoom without breaking layout
+        expected_result: Accurate zoom % display
+      - source_row_id: rules/viewpoints/02-display-controls.md::File Preview::Scroll
+        path: rules/viewpoints/02-display-controls.md
+        heading: File Preview
+        aspect: Scroll
+        viewpoint: Check scrolling long files
+        expected_result: Smooth, no lag; scrollbar matches content
+      - source_row_id: rules/viewpoints/02-display-controls.md::File Preview::Download
+        path: rules/viewpoints/02-display-controls.md
+        heading: File Preview
+        aspect: Download
+        viewpoint: Check download button
+        expected_result: Correct format/size, uncorrupted, correct filename
+      - source_row_id: rules/viewpoints/02-display-controls.md::File Preview::Print
+        path: rules/viewpoints/02-display-controls.md
+        heading: File Preview
+        aspect: Print
+        viewpoint: Check print button
+        expected_result: Matches original; landscape/portrait and partial/full print work
+      - source_row_id: rules/viewpoints/02-display-controls.md::Icon::Correct icon displayed
+        path: rules/viewpoints/02-display-controls.md
+        heading: Icon
+        aspect: Correct icon displayed
+        viewpoint: Check icon per design across states (normal/hover/disabled/active) and themes
+        expected_result: Matches design; correct icon for the function
+      - source_row_id: rules/viewpoints/02-display-controls.md::Icon::Hover effect
+        path: rules/viewpoints/02-display-controls.md
+        heading: Icon
+        aspect: Hover effect
+        viewpoint: Check hover state/tooltip
+        expected_result: Changes per design, no jitter, tooltip fully visible
+      - source_row_id: rules/viewpoints/02-display-controls.md::Icon::Clickable
+        path: rules/viewpoints/02-display-controls.md
+        heading: Icon
+        aspect: Clickable
+        viewpoint: Check click/tap behavior, including disabled state
+        expected_result: Correct action triggers; no dead area; disabled icons non-clickable
+      - source_row_id: rules/viewpoints/02-display-controls.md::Tooltip::Appears on hover / tap-hold
+        path: rules/viewpoints/02-display-controls.md
+        heading: Tooltip
+        aspect: Appears on hover / tap-hold
+        viewpoint: Check tooltip appearance
+        expected_result: Appears on hover (desktop) / tap-hold (mobile)
+      - source_row_id: rules/viewpoints/02-display-controls.md::Tooltip::Auto-dismiss on blur
+        path: rules/viewpoints/02-display-controls.md
+        heading: Tooltip
+        aspect: Auto-dismiss on blur
+        viewpoint: Check dismiss on blur
+        expected_result: Disappears when mouse leaves / focus lost
+      - source_row_id: rules/viewpoints/02-display-controls.md::Tooltip::Correct text
+        path: rules/viewpoints/02-display-controls.md
+        heading: Tooltip
+        aspect: Correct text
+        viewpoint: Check tooltip content
+        expected_result: Matches design, not truncated, no spelling errors
+      - source_row_id: rules/viewpoints/02-display-controls.md::Badge / Chip / Tag::Correct text or icon
+        path: rules/viewpoints/02-display-controls.md
+        heading: Badge / Chip / Tag
+        aspect: Correct text or icon
+        viewpoint: Check displayed content
+        expected_result: Correct count/status/tag shown
+      - source_row_id: rules/viewpoints/02-display-controls.md::Badge / Chip / Tag::Clickable
+        path: rules/viewpoints/02-display-controls.md
+        heading: Badge / Chip / Tag
+        aspect: Clickable
+        viewpoint: Check click/tap on interactive badge
+        expected_result: Correct action triggers
+      - source_row_id: rules/viewpoints/02-display-controls.md::Progress Bar::Visible during loading
+        path: rules/viewpoints/02-display-controls.md
+        heading: Progress Bar
+        aspect: Visible during loading
+        viewpoint: Check display through the whole process
+        expected_result: Always shown while in progress
+      - source_row_id: rules/viewpoints/02-display-controls.md::Progress Bar::Progress accuracy (%)
+        path: rules/viewpoints/02-display-controls.md
+        heading: Progress Bar
+        aspect: Progress accuracy (%)
+        viewpoint: Check percentage updates
+        expected_result: Updates correctly, no erratic jumps
+      - source_row_id: rules/viewpoints/02-display-controls.md::Progress Bar::Min/Max value support
+        path: rules/viewpoints/02-display-controls.md
+        heading: Progress Bar
+        aspect: Min/Max value support
+        viewpoint: Check the value range
+        expected_result: Stays within 0–100 (or defined range)
+      - source_row_id: rules/viewpoints/02-display-controls.md::Alert / Message Box / Banner::Icon / content / type correctness
+        path: rules/viewpoints/02-display-controls.md
+        heading: Alert / Message Box / Banner
+        aspect: Icon / content / type correctness
+        viewpoint: Check icon, content, and type (Success/Error/Info/Warning)
+        expected_result: Matches spec; distinct color+icon+text per type; no wrong-type display
+      - source_row_id: rules/viewpoints/02-display-controls.md::Alert / Message Box / Banner::Auto-triggered by a time/backend condition
+        path: rules/viewpoints/02-display-controls.md
+        heading: Alert / Message Box / Banner
+        aspect: Auto-triggered by a time/backend condition
+        viewpoint: Check an alert that appears automatically from a time-based or backend-data condition (session inactivity, price changed, item sold out, session invalidated)
+        expected_result: Shows the correct message at the correct trigger point and blocks/redirects appropriately — the user is never left silently proceeding on stale data
+      - source_row_id: rules/viewpoints/02-display-controls.md::Alert / Message Box / Banner::Singleton popup guard
+        path: rules/viewpoints/02-display-controls.md
+        heading: Alert / Message Box / Banner
+        aspect: Singleton popup guard
+        viewpoint: Check triggering the same popup/alert condition twice in a row
+        expected_result: Only one instance is shown at a time
+      - source_row_id: rules/viewpoints/02-display-controls.md::Snackbar / Toast::Message content
+        path: rules/viewpoints/02-display-controls.md
+        heading: Snackbar / Toast
+        aspect: Message content
+        viewpoint: Check content completeness
+        expected_result: Not truncated; matches spec
+      - source_row_id: rules/viewpoints/02-display-controls.md::Snackbar / Toast::Auto-disappear
+        path: rules/viewpoints/02-display-controls.md
+        heading: Snackbar / Toast
+        aspect: Auto-disappear
+        viewpoint: Check auto-dismiss timing and stacking
+        expected_result: Disappears in the defined window (~3–5s); multiple toasts stack properly
+      - source_row_id: rules/viewpoints/02-display-controls.md::Snackbar / Toast::Manual dismiss
+        path: rules/viewpoints/02-display-controls.md
+        heading: Snackbar / Toast
+        aspect: Manual dismiss
+        viewpoint: Check close button
+        expected_result: Dismisses on click, doesn't reappear
+      - source_row_id: rules/viewpoints/02-display-controls.md::Snackbar / Toast::Position on screen
+        path: rules/viewpoints/02-display-controls.md
+        heading: Snackbar / Toast
+        aspect: Position on screen
+        viewpoint: Check on-screen position, incl. mobile
+        expected_result: Matches design; doesn't cover important controls
+      - source_row_id: rules/viewpoints/02-display-controls.md::Dialog / Modal::Chrome consistency
+        path: rules/viewpoints/02-display-controls.md
+        heading: Dialog / Modal
+        aspect: Chrome consistency
+        viewpoint: Check every dialog has a title bar and a `[Close]` button; confirm-type dialogs also have `[Yes]`/`[No]`
+        expected_result: Consistent chrome across all dialogs in the system
+      - source_row_id: rules/viewpoints/02-display-controls.md::Dialog / Modal::Resize/minimize/maximize blocked
+        path: rules/viewpoints/02-display-controls.md
+        heading: Dialog / Modal
+        aspect: Resize/minimize/maximize blocked
+        viewpoint: Try to resize, minimize, or maximize a dialog
+        expected_result: Dialog keeps its original size; none of these operations are possible unless spec says otherwise
+      - source_row_id: rules/viewpoints/02-display-controls.md::Dialog / Modal::Blocks background interaction
+        path: rules/viewpoints/02-display-controls.md
+        heading: Dialog / Modal
+        aspect: Blocks background interaction
+        viewpoint: While a modal dialog/alert is open, try to click or edit a control behind it
+        expected_result: No interaction reaches the background controls, unless spec explicitly allows it
+      - source_row_id: rules/viewpoints/02-display-controls.md::Dialog / Modal::Cursor shape on editable field
+        path: rules/viewpoints/02-display-controls.md
+        heading: Dialog / Modal
+        aspect: Cursor shape on editable field
+        viewpoint: Hover/click into a textbox that accepts input
+        expected_result: Mouse cursor changes to the text-insertion (I-beam) shape
+  - path: rules/viewpoints/03-data-visualization-controls.md
+    sha256: 5c9106222259565664eec1ba54b53fd44cab44afcd297aabb27fcc12fd936673
+    rows:
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Chart / Graph::Data accuracy
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Chart / Graph
+        aspect: Data accuracy
+        viewpoint: Check the data displayed in the chart
+        expected_result: Values match the spec; no rounding errors; handles null/negative/outlier values
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Chart / Graph::Axis labels
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Chart / Graph
+        aspect: Axis labels
+        viewpoint: Check the axis labels
+        expected_result: Complete, correct units; no overlap/truncation on long labels
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Chart / Graph::Legend visibility
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Chart / Graph
+        aspect: Legend visibility
+        viewpoint: Check legend display and toggling
+        expected_result: Names/colors match the data plot; toggle on/off if specified; never obscured
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Chart / Graph::Scale correctness
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Chart / Graph
+        aspect: Scale correctness
+        viewpoint: Check the scale display
+        expected_result: Correct scale (linear/log/%); accurate min/max; correct auto-scaling
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Chart / Graph::Tooltip on hover
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Chart / Graph
+        aspect: Tooltip on hover
+        viewpoint: Check tooltip on hover/tap
+        expected_result: Correct value/label/date-time; doesn't cover the point; works on mobile
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Chart / Graph::Overflow / truncation
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Chart / Graph
+        aspect: Overflow / truncation
+        viewpoint: Check layout with a large amount of data
+        expected_result: No layout break; long data wraps/truncates; no unwanted scrollbar
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Chart / Graph::Export chart
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Chart / Graph
+        aspect: Export chart
+        viewpoint: Check export to PNG/JPG/PDF/SVG
+        expected_result: Correct format, clear quality, exported data matches displayed chart
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Chart / Graph::Update with filter
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Chart / Graph
+        aspect: Update with filter
+        viewpoint: Check chart update on filter change
+        expected_result: Correct data update; clear loading state; no stale-cache reuse
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Chart / Graph::Interactive behavior
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Chart / Graph
+        aspect: Interactive behavior
+        viewpoint: Check click/hover drill-down, zoom/pan
+        expected_result: Opens details correctly; zoom/pan work
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Chart / Graph::Color & accessibility
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Chart / Graph
+        aspect: Color & accessibility
+        viewpoint: Check chart colors
+        expected_result: Clear distinction between groups; sufficient contrast; matches spec
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Chart / Graph::Time zone & localization
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Chart / Graph
+        aspect: Time zone & localization
+        viewpoint: Check timezone/locale display
+        expected_result: Correct per user timezone/locale; stays in sync on change
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Chart / Graph::Empty / error state
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Chart / Graph
+        aspect: Empty / error state
+        viewpoint: Check the empty/error state
+        expected_result: No crash on empty data; appropriate message on API error/null
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Map::Zoom in/out
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Map
+        aspect: Zoom in/out
+        viewpoint: Check zoom via mouse/trackpad/pinch
+        expected_result: Matches spec min/max zoom; no distortion or lost markers
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Map::Pan / Drag
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Map
+        aspect: Pan / Drag
+        viewpoint: Check dragging the map
+        expected_result: Smooth on desktop/mobile; doesn't get stuck at edges
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Map::Marker rendering
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Map
+        aspect: Marker rendering
+        viewpoint: Check marker position/overlap
+        expected_result: Accurate lat/long; no overlap when zoomed out
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Map::Info window on marker click
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Map
+        aspect: Info window on marker click
+        viewpoint: Check clicking a marker
+        expected_result: Correct content shown; only one info window open at a time if required
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Map::Geolocation
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Map
+        aspect: Geolocation
+        viewpoint: Check GPS/browser location, permission denial, and incorrect location
+        expected_result: Correct location retrieved; appropriate message on denial; falls back to default on error
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Map::Search location
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Map
+        aspect: Search location
+        viewpoint: Check address/name search and autocomplete
+        expected_result: Correct location shown; accurate suggestions; handles invalid address
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Map::Boundary limits
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Map
+        aspect: Boundary limits
+        viewpoint: Check restricted-area panning/zooming
+        expected_result: Blocked outside the allowed area with a clear message
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Map::Responsive & orientation
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Map
+        aspect: Responsive & orientation
+        viewpoint: Check display across devices and orientation change
+        expected_result: Correct display; no misalignment or lost markers
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Map::Custom controls
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Map
+        aspect: Custom controls
+        viewpoint: Check home/reset-zoom/switch-layer buttons
+        expected_result: Work correctly
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Map::Offline & error handling
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Map
+        aspect: Offline & error handling
+        viewpoint: Check network loss and API/key errors
+        expected_result: Clear message on connectivity loss; handled gracefully on API error
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Heatmap::Color intensity reflects data
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Heatmap
+        aspect: Color intensity reflects data
+        viewpoint: Check colors vs. data values
+        expected_result: Accurately reflects values; high/low clearly distinguishable
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Heatmap::Tooltip / value on hover
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Heatmap
+        aspect: Tooltip / value on hover
+        viewpoint: Check hover/tap-hold tooltip
+        expected_result: Correct value at cell/point; doesn't cover important data
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Heatmap::Legend visibility
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Heatmap
+        aspect: Legend visibility
+        viewpoint: Check legend scale and toggle
+        expected_result: Full color scale/range shown; no overflow when responsive
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Heatmap::Range scaling (min/max)
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Heatmap
+        aspect: Range scaling (min/max)
+        viewpoint: Check auto/fixed scaling, equal values, and outliers
+        expected_result: Scales appropriately; handles equal-value and outlier cases correctly
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Heatmap::Export as image/PDF
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Heatmap
+        aspect: Export as image/PDF
+        viewpoint: Check export
+        expected_result: Retains colors, legend, and scale in PNG/JPEG/PDF
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Heatmap::Update with filter
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Heatmap
+        aspect: Update with filter
+        viewpoint: Check filtering, incl. empty result
+        expected_result: Updates immediately with correct colors/legend; handles empty filter result
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Calendar::Day / Week / Month mode
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Calendar
+        aspect: Day / Week / Month mode
+        viewpoint: Check switching views
+        expected_result: Correct data and layout per mode
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Calendar::Navigation (< >)
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Calendar
+        aspect: Navigation (< >)
+        viewpoint: Check prev/next navigation, incl. rapid jumps
+        expected_result: Moves to the correct period each time
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Calendar::Timezone accuracy
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Calendar
+        aspect: Timezone accuracy
+        viewpoint: Check event times across timezone changes
+        expected_result: Correct per user timezone; stays in sync with server
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Calendar::Multi-day events
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Calendar
+        aspect: Multi-day events
+        viewpoint: Check events spanning multiple days
+        expected_result: Displayed continuously, not cut off, correct across view changes
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Calendar::Event overlap
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Calendar
+        aspect: Event overlap
+        viewpoint: Check many overlapping events (5–10 at once)
+        expected_result: Layout doesn't overlap incorrectly; small events stay clickable
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Calendar::Event tooltip / popup
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Calendar
+        aspect: Event tooltip / popup
+        viewpoint: Check hover/tap event details
+        expected_result: Correct content; correct open/close logic; not obscured
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Calendar::Click to view details
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Calendar
+        aspect: Click to view details
+        viewpoint: Check clicking an event
+        expected_result: Navigates to the correct detail view
+      - source_row_id: rules/viewpoints/03-data-visualization-controls.md::Calendar::Event coloring by category
+        path: rules/viewpoints/03-data-visualization-controls.md
+        heading: Calendar
+        aspect: Event coloring by category
+        viewpoint: Check category-based coloring
+        expected_result: Correct color per category; correct legend
+  - path: rules/viewpoints/04-navigation.md
+    sha256: 45ebf7ed2da59629b26049a692205576eb5e52f19219850fb701ff2902cf23d9
+    rows:
+      - source_row_id: rules/viewpoints/04-navigation.md::Menu / Sidebar / Navigation Bar::Navigation correctness
+        path: rules/viewpoints/04-navigation.md
+        heading: Menu / Sidebar / Navigation Bar
+        aspect: Navigation correctness
+        viewpoint: Check clicking a menu item
+        expected_result: Navigates to the correct screen/URL, no broken links
+      - source_row_id: rules/viewpoints/04-navigation.md::Menu / Sidebar / Navigation Bar::Expand/Collapse
+        path: rules/viewpoints/04-navigation.md
+        heading: Menu / Sidebar / Navigation Bar
+        aspect: Expand/Collapse
+        viewpoint: Check collapsing/expanding
+        expected_result: Works correctly, state retained on reload if required
+      - source_row_id: rules/viewpoints/04-navigation.md::Menu / Sidebar / Navigation Bar::Highlight current menu
+        path: rules/viewpoints/04-navigation.md
+        heading: Menu / Sidebar / Navigation Bar
+        aspect: Highlight current menu
+        viewpoint: Check active-menu highlighting across levels
+        expected_result: Clearly highlighted, matches spec at every nesting level
+      - source_row_id: rules/viewpoints/04-navigation.md::Menu / Sidebar / Navigation Bar::Dropdown menu behavior
+        path: rules/viewpoints/04-navigation.md
+        heading: Menu / Sidebar / Navigation Bar
+        aspect: Dropdown menu behavior
+        viewpoint: Check hover/click dropdown
+        expected_result: Opens correctly, doesn't cover content, closes on outside click
+      - source_row_id: rules/viewpoints/04-navigation.md::Menu / Sidebar / Navigation Bar::Responsive collapse (☰)
+        path: rules/viewpoints/04-navigation.md
+        heading: Menu / Sidebar / Navigation Bar
+        aspect: Responsive collapse (☰)
+        viewpoint: Check hamburger collapse on mobile/tablet
+        expected_result: Expands/closes correctly via tap
+      - source_row_id: rules/viewpoints/04-navigation.md::Menu / Sidebar / Navigation Bar::Sticky vs non-sticky
+        path: rules/viewpoints/04-navigation.md
+        heading: Menu / Sidebar / Navigation Bar
+        aspect: Sticky vs non-sticky
+        viewpoint: Check nav behavior on scroll
+        expected_result: Matches design (fixed or disappearing)
+      - source_row_id: rules/viewpoints/04-navigation.md::Menu / Sidebar / Navigation Bar::Logo click → Home
+        path: rules/viewpoints/04-navigation.md
+        heading: Menu / Sidebar / Navigation Bar
+        aspect: Logo click → Home
+        viewpoint: Check logo click
+        expected_result: Returns to Home; new tab doesn't lose session
+      - source_row_id: rules/viewpoints/04-navigation.md::Tabs::Tab switch behavior
+        path: rules/viewpoints/04-navigation.md
+        heading: Tabs
+        aspect: Tab switch behavior
+        viewpoint: Check switching tabs
+        expected_result: Content changes correctly, no full reload on SPA
+      - source_row_id: rules/viewpoints/04-navigation.md::Tabs::Default active tab
+        path: rules/viewpoints/04-navigation.md
+        heading: Tabs
+        aspect: Default active tab
+        viewpoint: Check the default tab on open
+        expected_result: Correct default per spec
+      - source_row_id: rules/viewpoints/04-navigation.md::Tabs::Visible / Hidden
+        path: rules/viewpoints/04-navigation.md
+        heading: Tabs
+        aspect: Visible / Hidden
+        viewpoint: Check tab visibility by permission/setting
+        expected_result: Shown/hidden correctly
+      - source_row_id: rules/viewpoints/04-navigation.md::Breadcrumb::Path structure & clickability
+        path: rules/viewpoints/04-navigation.md
+        heading: Breadcrumb
+        aspect: Path structure & clickability
+        viewpoint: Check hierarchical path and click-to-navigate
+        expected_result: Correct structure (Home > Module > Page); each level navigates correctly, no wrong-level skip
+      - source_row_id: rules/viewpoints/04-navigation.md::Step Wizard / Stepper::Sequential navigation & step highlight
+        path: rules/viewpoints/04-navigation.md
+        heading: Step Wizard / Stepper
+        aspect: Sequential navigation & step highlight
+        viewpoint: Check going through steps; check current-step highlight
+        expected_result: Steps proceed in order; current step always correctly highlighted, matching the screen shown
+      - source_row_id: rules/viewpoints/04-navigation.md::Step Wizard / Stepper::Validation before proceeding
+        path: rules/viewpoints/04-navigation.md
+        heading: Step Wizard / Stepper
+        aspect: Validation before proceeding
+        viewpoint: Check moving to the next step before required data is complete
+        expected_result: Blocked with relevant validation errors; Next stays disabled while invalid
+      - source_row_id: rules/viewpoints/04-navigation.md::Step Wizard / Stepper::Backward navigation / re-entry
+        path: rules/viewpoints/04-navigation.md
+        heading: Step Wizard / Stepper
+        aspect: Backward navigation / re-entry
+        viewpoint: Check returning to a completed step and re-completing it with different data
+        expected_result: Prior data is intact on return; going forward again uses the latest data — no duplication or stale leakage into later steps
+      - source_row_id: rules/viewpoints/04-navigation.md::Step Wizard / Stepper::"Change"/"Edit" return-to-search
+        path: rules/viewpoints/04-navigation.md
+        heading: Step Wizard / Stepper
+        aspect: '"Change"/"Edit" return-to-search'
+        viewpoint: Check a control that returns the user to the search/criteria screen mid-flow
+        expected_result: Lands back on the criteria screen with original criteria pre-filled for editing
+      - source_row_id: rules/viewpoints/04-navigation.md::Step Wizard / Stepper::Deep link / direct URL access
+        path: rules/viewpoints/04-navigation.md
+        heading: Step Wizard / Stepper
+        aspect: Deep link / direct URL access
+        viewpoint: Check accessing a step/screen directly by URL without completing prior steps
+        expected_result: Redirects to the correct starting point instead of rendering a broken/partial state
+      - source_row_id: rules/viewpoints/04-navigation.md::Back / Next Button::Navigation correctness
+        path: rules/viewpoints/04-navigation.md
+        heading: Back / Next Button
+        aspect: Navigation correctness
+        viewpoint: Check Back/Next click
+        expected_result: Moves to the correct screen/step
+      - source_row_id: rules/viewpoints/04-navigation.md::Back / Next Button::Disabled state
+        path: rules/viewpoints/04-navigation.md
+        heading: Back / Next Button
+        aspect: Disabled state
+        viewpoint: Check Back at the first step, Next at the last
+        expected_result: Correctly disabled at each boundary
+      - source_row_id: rules/viewpoints/04-navigation.md::Scroll to Top Button::Visible after scroll threshold
+        path: rules/viewpoints/04-navigation.md
+        heading: Scroll to Top Button
+        aspect: Visible after scroll threshold
+        viewpoint: Check visibility trigger
+        expected_result: Appears only after scrolling past the threshold
+      - source_row_id: rules/viewpoints/04-navigation.md::Scroll to Top Button::Navigation correctness
+        path: rules/viewpoints/04-navigation.md
+        heading: Scroll to Top Button
+        aspect: Navigation correctness
+        viewpoint: Check click behavior
+        expected_result: Scrolls smoothly to top, no jitter
+      - source_row_id: rules/viewpoints/04-navigation.md::Pagination (widget mechanics)::Current page highlight
+        path: rules/viewpoints/04-navigation.md
+        heading: Pagination (widget mechanics)
+        aspect: Current page highlight
+        viewpoint: Check highlight
+        expected_result: Current page clearly highlighted
+      - source_row_id: rules/viewpoints/04-navigation.md::Pagination (widget mechanics)::First/Last/Next/Prev buttons
+        path: rules/viewpoints/04-navigation.md
+        heading: Pagination (widget mechanics)
+        aspect: First/Last/Next/Prev buttons
+        viewpoint: Check button behavior and boundary disabling
+        expected_result: Page changes correctly; disabled on first/last page
+      - source_row_id: rules/viewpoints/04-navigation.md::Pagination (widget mechanics)::Items per page selector
+        path: rules/viewpoints/04-navigation.md
+        heading: Pagination (widget mechanics)
+        aspect: Items per page selector
+        viewpoint: Check changing page size
+        expected_result: Correct content change
+      - source_row_id: rules/viewpoints/04-navigation.md::Pagination (widget mechanics)::Jump to page
+        path: rules/viewpoints/04-navigation.md
+        heading: Pagination (widget mechanics)
+        aspect: Jump to page
+        viewpoint: Check direct page-number entry
+        expected_result: Jumps to the correct page
+      - source_row_id: rules/viewpoints/04-navigation.md::Pagination (widget mechanics)::Blank-row line styling
+        path: rules/viewpoints/04-navigation.md
+        heading: Pagination (widget mechanics)
+        aspect: Blank-row line styling
+        viewpoint: Check the separator line rendering when a page has fewer rows than the page size
+        expected_result: Matches the design's line/border treatment for blank trailing rows
+      - source_row_id: rules/viewpoints/04-navigation.md::Pagination (widget mechanics)::Scroll-based pagination (infinite/virtual scroll)
+        path: rules/viewpoints/04-navigation.md
+        heading: Pagination (widget mechanics)
+        aspect: Scroll-based pagination (infinite/virtual scroll)
+        viewpoint: Scroll down and up through the list instead of clicking page buttons
+        expected_result: Corresponding data loads/unloads smoothly in each scroll direction
+  - path: rules/viewpoints/05-container-structural-controls.md
+    sha256: 558a043c9ac6e84b11b8fedfcbd5cb42774a4918ca4bb4d6d6882b6baa73deca
+    rows:
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::Card::Title/text visibility & data accuracy
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: Card
+        aspect: Title/text visibility & data accuracy
+        viewpoint: Check card content vs. data source
+        expected_result: Clearly displayed, matches source exactly
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::Card::Collapse / Expand
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: Card
+        aspect: Collapse / Expand
+        viewpoint: Check collapse and expand
+        expected_result: Content hides/shows correctly
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::Card::Action buttons
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: Card
+        aspect: Action buttons
+        viewpoint: Check card action buttons
+        expected_result: Correct display and function
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::Table::Column headers & fixed header
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: Table
+        aspect: Column headers & fixed header
+        viewpoint: Check header names/overflow, and header fixed on scroll
+        expected_result: Clear, correct names, no overflow; stays fixed while scrolling
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::Table::Default state
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: Table
+        aspect: Default state
+        viewpoint: Check the table's default row count and sort order when the screen first loads
+        expected_result: Matches spec
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::Table::Sort cycle
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: Table
+        aspect: Sort cycle
+        viewpoint: Check clicking a sortable column header repeatedly
+        expected_result: 1st click ascending, 2nd descending, 3rd resets to default order; data order matches
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::Table::Filter / Search — applied, combined, cleared
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: Table
+        aspect: Filter / Search — applied, combined, cleared
+        viewpoint: Check applying one filter, 2+ filters together, and clearing
+        expected_result: Updates to show exactly the rows matching all active filters (AND); returns to unfiltered default on clear
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::Table::Empty filter result
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: Table
+        aspect: Empty filter result
+        viewpoint: Check a filter combination matching no rows
+        expected_result: Explicit "no results" state, not a blank/broken table
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::Table::Data accuracy
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: Table
+        aspect: Data accuracy
+        viewpoint: Check table data vs. data source
+        expected_result: Matches exactly
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::Table::Cell overflow
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: Table
+        aspect: Cell overflow
+        viewpoint: Check long cell content
+        expected_result: Wrap/ellipsis per spec, no layout break
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::Table::Action buttons in row
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: Table
+        aspect: Action buttons in row
+        viewpoint: Check row actions (edit/delete/status change) updating the grid
+        expected_result: Grid reflects the change immediately (or on next refresh per spec), no full page reload
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::Table::Scrollbar & last-row visibility
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: Table
+        aspect: Scrollbar & last-row visibility
+        viewpoint: Check a table/list with enough rows to require a scrollbar
+        expected_result: Scrollbar renders; the last row/column is never partially clipped
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::Table::Data alignment & number formatting
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: Table
+        aspect: Data alignment & number formatting
+        viewpoint: Check numeric/date columns vs. text columns
+        expected_result: Numbers/dates right-aligned, text left-aligned; numbers use thousands separators per spec
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::List View / Flat List::Correct item count & data accuracy
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: List View / Flat List
+        aspect: Correct item count & data accuracy
+        viewpoint: Check item count and content vs. data source
+        expected_result: Matches exactly
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::List View / Flat List::Grouped headers
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: List View / Flat List
+        aspect: Grouped headers
+        viewpoint: Check group-header display
+        expected_result: Correct grouping and display
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::List View / Flat List::Sorting
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: List View / Flat List
+        aspect: Sorting
+        viewpoint: Check list sort
+        expected_result: Correct order per selected criteria
+      - source_row_id: rules/viewpoints/05-container-structural-controls.md::List View / Flat List::Action icons
+        path: rules/viewpoints/05-container-structural-controls.md
+        heading: List View / Flat List
+        aspect: Action icons
+        viewpoint: Check list-item action icons
+        expected_result: Clear display, correct function on click
+  - path: rules/viewpoints/06-input-controls.md
+    sha256: 4a19b64469e309df7c266437e5034badef10aed92a385a0756df2c29595cf2df
+    rows:
+      - source_row_id: rules/viewpoints/06-input-controls.md::Text Field::Initial value & placeholder
+        path: rules/viewpoints/06-input-controls.md
+        heading: Text Field
+        aspect: Initial value & placeholder
+        viewpoint: Check initial value and placeholder
+        expected_result: Correct per design/default data
+      - source_row_id: rules/viewpoints/06-input-controls.md::Text Field::Valid / Invalid input
+        path: rules/viewpoints/06-input-controls.md
+        heading: Text Field
+        aspect: Valid / Invalid input
+        viewpoint: Check valid and invalid data entry
+        expected_result: Accepted/processed vs. appropriate error shown
+      - source_row_id: rules/viewpoints/06-input-controls.md::Text Field::Blank — required vs. optional
+        path: rules/viewpoints/06-input-controls.md
+        heading: Text Field
+        aspect: Blank — required vs. optional
+        viewpoint: Check leaving a required field blank, and an optional field blank
+        expected_result: Required-field error blocks submission; optional field passes silently
+      - source_row_id: rules/viewpoints/06-input-controls.md::Text Field::Numeric / special character input
+        path: rules/viewpoints/06-input-controls.md
+        heading: Text Field
+        aspect: Numeric / special character input
+        viewpoint: Check numeric and special-character entry
+        expected_result: Handled per the field's rule (allowed/error)
+      - source_row_id: rules/viewpoints/06-input-controls.md::Text Field::Character set restriction
+        path: rules/viewpoints/06-input-controls.md
+        heading: Text Field
+        aspect: Character set restriction
+        viewpoint: Check characters outside the field's allowed set (letters in numeric field, symbols in name field, ...), including halfwidth/fullwidth Japanese
+        expected_result: Rejected or shown per rule; halfwidth/fullwidth forms saved/displayed correctly when both are allowed
+      - source_row_id: rules/viewpoints/06-input-controls.md::Text Field::Maxlength / Minlength boundary
+        path: rules/viewpoints/06-input-controls.md
+        heading: Text Field
+        aspect: Maxlength / Minlength boundary
+        viewpoint: Check length at exactly max, above max, exactly min, below min
+        expected_result: In-range accepted; out-of-range blocked with the documented limit message
+      - source_row_id: rules/viewpoints/06-input-controls.md::Text Field::Enabled / Disabled
+        path: rules/viewpoints/06-input-controls.md
+        heading: Text Field
+        aspect: Enabled / Disabled
+        viewpoint: Check both states
+        expected_result: Data entry allowed/blocked accordingly
+      - source_row_id: rules/viewpoints/06-input-controls.md::Text Field::Validation with DB (exists / unique)
+        path: rules/viewpoints/06-input-controls.md
+        heading: Text Field
+        aspect: Validation with DB (exists / unique)
+        viewpoint: Check a value that must be unique, or must exist in DB
+        expected_result: Duplicate/uniqueness error shown when required; accepted when valid against DB
+      - source_row_id: rules/viewpoints/06-input-controls.md::Text Field::Invalid combination across fields
+        path: rules/viewpoints/06-input-controls.md
+        heading: Text Field
+        aspect: Invalid combination across fields
+        viewpoint: Check a combination of individually-valid fields that is jointly invalid (return date before departure date, infants outnumbering adults, ...)
+        expected_result: Blocked with a clear message before submission is allowed
+      - source_row_id: rules/viewpoints/06-input-controls.md::Text Field::Validation message
+        path: rules/viewpoints/06-input-controls.md
+        heading: Text Field
+        aspect: Validation message
+        viewpoint: Check error message display
+        expected_result: Clear, correctly positioned and formatted
+      - source_row_id: rules/viewpoints/06-input-controls.md::Text Field::Client-side constraint tampering
+        path: rules/viewpoints/06-input-controls.md
+        heading: Text Field
+        aspect: Client-side constraint tampering
+        viewpoint: Check submitting a value that violates `minlength`/`maxlength` after removing/editing that HTML attribute via DOM/Inspect-Element
+        expected_result: Rejected server-side too, with the same length-range error message — the client attribute is not the only line of defense
+      - source_row_id: rules/viewpoints/06-input-controls.md::Text Field::Leading/trailing space auto-trim
+        path: rules/viewpoints/06-input-controls.md
+        heading: Text Field
+        aspect: Leading/trailing space auto-trim
+        viewpoint: Check a value with leading/trailing spaces, and a value that is spaces only
+        expected_result: Auto-trimmed before validation/DB write; an all-space value is treated as empty
+      - source_row_id: rules/viewpoints/06-input-controls.md::Text Field::Copy-paste / drag-drop bypass
+        path: rules/viewpoints/06-input-controls.md
+        heading: Text Field
+        aspect: Copy-paste / drag-drop bypass
+        viewpoint: Check copy-paste and drag-drop of both a valid and an invalid value
+        expected_result: Same validation rules apply as direct typing — no bypass via paste or drag-drop
+      - source_row_id: rules/viewpoints/06-input-controls.md::Text Field::BB code / SQL / HTML injection
+        path: rules/viewpoints/06-input-controls.md
+        heading: Text Field
+        aspect: BB code / SQL / HTML injection
+        viewpoint: Check input like `<input type="text">` or `<script>...</script>`
+        expected_result: Neither executed nor stored raw as executable markup; validation still runs against the sanitized value
+      - source_row_id: rules/viewpoints/06-input-controls.md::Number Field::Positive / Negative / Decimal / Zero
+        path: rules/viewpoints/06-input-controls.md
+        heading: Number Field
+        aspect: Positive / Negative / Decimal / Zero
+        viewpoint: Check each value type
+        expected_result: Handled per rule (accepted / error shown)
+      - source_row_id: rules/viewpoints/06-input-controls.md::Number Field::Min/Max value boundary
+        path: rules/viewpoints/06-input-controls.md
+        heading: Number Field
+        aspect: Min/Max value boundary
+        viewpoint: Check at min, below min, at max, above max
+        expected_result: In-range accepted; out-of-range errors
+      - source_row_id: rules/viewpoints/06-input-controls.md::Number Field::Invalid characters
+        path: rules/viewpoints/06-input-controls.md
+        heading: Number Field
+        aspect: Invalid characters
+        viewpoint: Check letters/symbols
+        expected_result: Rejected or error shown
+      - source_row_id: rules/viewpoints/06-input-controls.md::Number Field::Input spinner
+        path: rules/viewpoints/06-input-controls.md
+        heading: Number Field
+        aspect: Input spinner
+        viewpoint: Check increase/decrease via spinner
+        expected_result: Changes correctly per step size
+      - source_row_id: rules/viewpoints/06-input-controls.md::Number Field::Validation message
+        path: rules/viewpoints/06-input-controls.md
+        heading: Number Field
+        aspect: Validation message
+        viewpoint: Check error display
+        expected_result: Clear, correctly positioned
+      - source_row_id: rules/viewpoints/06-input-controls.md::Email Input::Valid / Invalid format
+        path: rules/viewpoints/06-input-controls.md
+        heading: Email Input
+        aspect: Valid / Invalid format
+        viewpoint: Check valid vs. malformed email (missing `@`, missing domain)
+        expected_result: Accepted vs. format-error message shown
+      - source_row_id: rules/viewpoints/06-input-controls.md::Email Input::Confirm-email match
+        path: rules/viewpoints/06-input-controls.md
+        heading: Email Input
+        aspect: Confirm-email match
+        viewpoint: Check leaving `[Confirm Email]` empty, mismatched, and matched vs. `[Email]`
+        expected_result: Empty/mismatch blocked with a specific message; match proceeds
+      - source_row_id: rules/viewpoints/06-input-controls.md::Email Input::Uniqueness
+        path: rules/viewpoints/06-input-controls.md
+        heading: Email Input
+        aspect: Uniqueness
+        viewpoint: Check submitting an email that already exists in DB
+        expected_result: Rejected even though the format is valid
+      - source_row_id: rules/viewpoints/06-input-controls.md::Password Field::Valid / Invalid format
+        path: rules/viewpoints/06-input-controls.md
+        heading: Password Field
+        aspect: Valid / Invalid format
+        viewpoint: Check valid vs. incorrectly formatted password
+        expected_result: Accepted vs. format error
+      - source_row_id: rules/viewpoints/06-input-controls.md::Password Field::Masking & show/hide toggle
+        path: rules/viewpoints/06-input-controls.md
+        heading: Password Field
+        aspect: Masking & show/hide toggle
+        viewpoint: Check masking and the show/hide control
+        expected_result: Displayed masked (●/*); toggle correctly shows/hides
+      - source_row_id: rules/viewpoints/06-input-controls.md::Password Field::Copy/Paste disabled while masked
+        path: rules/viewpoints/06-input-controls.md
+        heading: Password Field
+        aspect: Copy/Paste disabled while masked
+        viewpoint: Check copy/paste on the masked field
+        expected_result: Not allowed while masked
+      - source_row_id: rules/viewpoints/06-input-controls.md::Password Field::Confirm-password match
+        path: rules/viewpoints/06-input-controls.md
+        heading: Password Field
+        aspect: Confirm-password match
+        viewpoint: Check leaving `[Password Confirm]` empty, mismatched, and matched vs. `[Password]`
+        expected_result: Empty/mismatch blocked with a specific message; match proceeds
+      - source_row_id: rules/viewpoints/06-input-controls.md::Password Field::Password-vs-username collision
+        path: rules/viewpoints/06-input-controls.md
+        heading: Password Field
+        aspect: Password-vs-username collision
+        viewpoint: Check setting the password equal to the username
+        expected_result: Rejected with a specific message
+      - source_row_id: rules/viewpoints/06-input-controls.md::Password Field::Strength meter
+        path: rules/viewpoints/06-input-controls.md
+        heading: Password Field
+        aspect: Strength meter
+        viewpoint: Input a lowercase-only, then lowercase+digit, then lowercase+uppercase+digit+special password
+        expected_result: Strength indicator shows Weak/Medium/Strong respectively, if spec requires a strength meter
+      - source_row_id: rules/viewpoints/06-input-controls.md::URL Input::Valid / Invalid format
+        path: rules/viewpoints/06-input-controls.md
+        heading: URL Input
+        aspect: Valid / Invalid format
+        viewpoint: Check valid vs. malformed URL
+        expected_result: Accepted vs. format error
+      - source_row_id: rules/viewpoints/06-input-controls.md::Textarea::Initial value & placeholder
+        path: rules/viewpoints/06-input-controls.md
+        heading: Textarea
+        aspect: Initial value & placeholder
+        viewpoint: Check both
+        expected_result: Displayed correctly
+      - source_row_id: rules/viewpoints/06-input-controls.md::Textarea::Multi-line input
+        path: rules/viewpoints/06-input-controls.md
+        heading: Textarea
+        aspect: Multi-line input
+        viewpoint: Check entering multiple lines
+        expected_result: Line breaks render correctly
+      - source_row_id: rules/viewpoints/06-input-controls.md::Textarea::Blank — required vs. optional
+        path: rules/viewpoints/06-input-controls.md
+        heading: Textarea
+        aspect: Blank — required vs. optional
+        viewpoint: Check both
+        expected_result: Error vs. accepted
+      - source_row_id: rules/viewpoints/06-input-controls.md::Textarea::Maxlength / Minlength boundary
+        path: rules/viewpoints/06-input-controls.md
+        heading: Textarea
+        aspect: Maxlength / Minlength boundary
+        viewpoint: Check all 4 boundary cases
+        expected_result: Accepted in-range, error/blocked out-of-range
+      - source_row_id: rules/viewpoints/06-input-controls.md::Textarea::Scrollbar & resize
+        path: rules/viewpoints/06-input-controls.md
+        heading: Textarea
+        aspect: Scrollbar & resize
+        viewpoint: Check overflow scrollbar, and drag-resize
+        expected_result: Displays/functions correctly, no layout break
+      - source_row_id: rules/viewpoints/06-input-controls.md::Textarea::Enabled / Disabled
+        path: rules/viewpoints/06-input-controls.md
+        heading: Textarea
+        aspect: Enabled / Disabled
+        viewpoint: Check both states
+        expected_result: Entry allowed/blocked
+      - source_row_id: rules/viewpoints/06-input-controls.md::Textarea::Validation message
+        path: rules/viewpoints/06-input-controls.md
+        heading: Textarea
+        aspect: Validation message
+        viewpoint: Check error display
+        expected_result: Clear, correctly positioned
+      - source_row_id: rules/viewpoints/06-input-controls.md::Color Picker::Manual input & UI picker
+        path: rules/viewpoints/06-input-controls.md
+        heading: Color Picker
+        aspect: Manual input & UI picker
+        viewpoint: Check typed value (HEX/RGB/HSL) and picker selection
+        expected_result: Valid value accepted and correctly rendered
+      - source_row_id: rules/viewpoints/06-input-controls.md::Color Picker::Invalid color codes
+        path: rules/viewpoints/06-input-controls.md
+        heading: Color Picker
+        aspect: Invalid color codes
+        viewpoint: Check malformed code
+        expected_result: Error shown, color not applied
+      - source_row_id: rules/viewpoints/06-input-controls.md::Date / Time / Datetime Picker::Initial value & blank (required/optional)
+        path: rules/viewpoints/06-input-controls.md
+        heading: Date / Time / Datetime Picker
+        aspect: Initial value & blank (required/optional)
+        viewpoint: Check default value; check blank submission
+        expected_result: Correct default; required blocked, optional passes
+      - source_row_id: rules/viewpoints/06-input-controls.md::Date / Time / Datetime Picker::Format display & invalid format input
+        path: rules/viewpoints/06-input-controls.md
+        heading: Date / Time / Datetime Picker
+        aspect: Format display & invalid format input
+        viewpoint: Check display format and malformed manual entry
+        expected_result: Matches configured format; error/rejection on bad format
+      - source_row_id: rules/viewpoints/06-input-controls.md::Date / Time / Datetime Picker::Manual input & picker selection
+        path: rules/viewpoints/06-input-controls.md
+        heading: Date / Time / Datetime Picker
+        aspect: Manual input & picker selection
+        viewpoint: Check keyboard entry and UI-picker selection
+        expected_result: Both accept/display valid values correctly
+      - source_row_id: rules/viewpoints/06-input-controls.md::Date / Time / Datetime Picker::Disabled past/future dates & allowed ranges
+        path: rules/viewpoints/06-input-controls.md
+        heading: Date / Time / Datetime Picker
+        aspect: Disabled past/future dates & allowed ranges
+        viewpoint: Check date-range restrictions
+        expected_result: Disabled dates unselectable; only in-range dates selectable
+      - source_row_id: rules/viewpoints/06-input-controls.md::Date / Time / Datetime Picker::Leap year
+        path: rules/viewpoints/06-input-controls.md
+        heading: Date / Time / Datetime Picker
+        aspect: Leap year
+        viewpoint: Check Feb 29 of a leap year vs. non-leap year
+        expected_result: Accepted in leap year; rejected/handled correctly otherwise
+      - source_row_id: rules/viewpoints/06-input-controls.md::Date / Time / Datetime Picker::Timezone
+        path: rules/viewpoints/06-input-controls.md
+        heading: Date / Time / Datetime Picker
+        aspect: Timezone
+        viewpoint: Check timezone display
+        expected_result: Correct per timezone
+      - source_row_id: rules/viewpoints/06-input-controls.md::Date / Time / Datetime Picker::Clear/Reset
+        path: rules/viewpoints/06-input-controls.md
+        heading: Date / Time / Datetime Picker
+        aspect: Clear/Reset
+        viewpoint: Check the clear/reset control
+        expected_result: Value returns to empty/default
+      - source_row_id: rules/viewpoints/06-input-controls.md::Dropdown::Initial value & blank (required/optional)
+        path: rules/viewpoints/06-input-controls.md
+        heading: Dropdown
+        aspect: Initial value & blank (required/optional)
+        viewpoint: Check default and blank submission
+        expected_result: Correct default; required blocked, optional passes
+      - source_row_id: rules/viewpoints/06-input-controls.md::Dropdown::Options — source & completeness
+        path: rules/viewpoints/06-input-controls.md
+        heading: Dropdown
+        aspect: Options — source & completeness
+        viewpoint: Check the options list, including master-data-driven sourcing (common code, config table)
+        expected_result: Fully accurate; exactly matches the current master/reference data including additions/removals
+      - source_row_id: rules/viewpoints/06-input-controls.md::Dropdown::Single / Multi select
+        path: rules/viewpoints/06-input-controls.md
+        heading: Dropdown
+        aspect: Single / Multi select
+        viewpoint: Check both modes
+        expected_result: Enforced correctly per config
+      - source_row_id: rules/viewpoints/06-input-controls.md::Dropdown::Autocomplete
+        path: rules/viewpoints/06-input-controls.md
+        heading: Dropdown
+        aspect: Autocomplete
+        viewpoint: Check typing for suggestions
+        expected_result: Correct suggestion list; selection performs correctly
+      - source_row_id: rules/viewpoints/06-input-controls.md::Dropdown::Client-side option tampering
+        path: rules/viewpoints/06-input-controls.md
+        heading: Dropdown
+        aspect: Client-side option tampering
+        viewpoint: Check submitting a value not in the actual options list (added via DOM tampering)
+        expected_result: Rejected server-side as an invalid selection, even though the client-side control can't normally produce that value
+      - source_row_id: rules/viewpoints/06-input-controls.md::Radio Button::Initial value & blank (required/optional)
+        path: rules/viewpoints/06-input-controls.md
+        heading: Radio Button
+        aspect: Initial value & blank (required/optional)
+        viewpoint: Check default and blank submission
+        expected_result: Correct default; required blocked, optional passes
+      - source_row_id: rules/viewpoints/06-input-controls.md::Radio Button::Options
+        path: rules/viewpoints/06-input-controls.md
+        heading: Radio Button
+        aspect: Options
+        viewpoint: Check the option list
+        expected_result: Fully accurate
+      - source_row_id: rules/viewpoints/06-input-controls.md::Radio Button::Only one selectable
+        path: rules/viewpoints/06-input-controls.md
+        heading: Radio Button
+        aspect: Only one selectable
+        viewpoint: Check selecting multiple in sequence
+        expected_result: Only the last-clicked option stays selected
+      - source_row_id: rules/viewpoints/06-input-controls.md::Checkbox::Initial state & blank (required/optional)
+        path: rules/viewpoints/06-input-controls.md
+        heading: Checkbox
+        aspect: Initial state & blank (required/optional)
+        viewpoint: Check default and blank submission
+        expected_result: Correct default; required blocked, optional passes
+      - source_row_id: rules/viewpoints/06-input-controls.md::Checkbox::Options
+        path: rules/viewpoints/06-input-controls.md
+        heading: Checkbox
+        aspect: Options
+        viewpoint: Check the checkbox list
+        expected_result: Fully accurate
+      - source_row_id: rules/viewpoints/06-input-controls.md::Checkbox::Check / Uncheck & multiple selectable
+        path: rules/viewpoints/06-input-controls.md
+        heading: Checkbox
+        aspect: Check / Uncheck & multiple selectable
+        viewpoint: Check toggling and multi-select
+        expected_result: State changes correctly; multiple values selectable
+      - source_row_id: rules/viewpoints/06-input-controls.md::Checkbox::Bulk select/unselect ("Select all")
+        path: rules/viewpoints/06-input-controls.md
+        heading: Checkbox
+        aspect: Bulk select/unselect ("Select all")
+        viewpoint: Check the select-all control
+        expected_result: All items toggle together correctly
+      - source_row_id: rules/viewpoints/06-input-controls.md::Switch (Toggle)::Initial state & On/Off toggle
+        path: rules/viewpoints/06-input-controls.md
+        heading: Switch (Toggle)
+        aspect: Initial state & On/Off toggle
+        viewpoint: Check default state and toggling
+        expected_result: Displayed and switched correctly
+      - source_row_id: rules/viewpoints/06-input-controls.md::Rating Stars::Initial value, blank, selection, read-only
+        path: rules/viewpoints/06-input-controls.md
+        heading: Rating Stars
+        aspect: Initial value, blank, selection, read-only
+        viewpoint: Check all four states
+        expected_result: Correct display; required/optional enforced; selection updates; read-only blocks change
+      - source_row_id: rules/viewpoints/06-input-controls.md::Captcha::Load, expiry, refresh, incorrect handling
+        path: rules/viewpoints/06-input-controls.md
+        heading: Captcha
+        aspect: Load, expiry, refresh, incorrect handling
+        viewpoint: Check all four cases
+        expected_result: Displays correctly; expires and requires new entry; refresh works; wrong answer errors and re-issues a challenge
+      - source_row_id: rules/viewpoints/06-input-controls.md::File Upload::Single / Multi select & drag-drop
+        path: rules/viewpoints/06-input-controls.md
+        heading: File Upload
+        aspect: Single / Multi select & drag-drop
+        viewpoint: Check all three input methods
+        expected_result: Upload succeeds for each
+      - source_row_id: rules/viewpoints/06-input-controls.md::File Upload::File type & size limit
+        path: rules/viewpoints/06-input-controls.md
+        heading: File Upload
+        aspect: File type & size limit
+        viewpoint: Check disallowed format and over-limit size
+        expected_result: Rejected with a clear error in each case
+      - source_row_id: rules/viewpoints/06-input-controls.md::File Upload::Remove uploaded file & overwrite
+        path: rules/viewpoints/06-input-controls.md
+        heading: File Upload
+        aspect: Remove uploaded file & overwrite
+        viewpoint: Check removal and duplicate-name upload
+        expected_result: Removed from list; overwrite/rename handled correctly
+      - source_row_id: rules/viewpoints/06-input-controls.md::File Upload::Upload progress & preview
+        path: rules/viewpoints/06-input-controls.md
+        heading: File Upload
+        aspect: Upload progress & preview
+        viewpoint: Check progress bar and preview (image/PDF)
+        expected_result: Accurate progress display; correct preview content
+      - source_row_id: rules/viewpoints/06-input-controls.md::Range Slider::Drag handle & min/max & tooltip
+        path: rules/viewpoints/06-input-controls.md
+        heading: Range Slider
+        aspect: Drag handle & min/max & tooltip
+        viewpoint: Check dragging, boundary values, and value tooltip
+        expected_result: Value changes correctly; min/max enforced; current value displayed
+      - source_row_id: rules/viewpoints/06-input-controls.md::Bit Field (0/1 only)::Any character other than 0/1
+        path: rules/viewpoints/06-input-controls.md
+        heading: Bit Field (0/1 only)
+        aspect: Any character other than 0/1
+        viewpoint: Check letters, symbols, 2-byte digits, and empty input
+        expected_result: Rejected as invalid; only `0`/`1` sequences accepted
+      - source_row_id: rules/viewpoints/06-input-controls.md::`[From]`–`[To]` Range Pair::Cross-field ordering
+        path: rules/viewpoints/06-input-controls.md
+        heading: '`[From]`–`[To]` Range Pair'
+        aspect: Cross-field ordering
+        viewpoint: Check `From > To`, `From = To`, `From < To`, only one side filled, non-numeric in either side
+        expected_result: "`From > To` rejected as invalid; equal or ascending pairs accepted; partial-fill behavior and message follow the project's own spec"
+      - source_row_id: rules/viewpoints/06-input-controls.md::Conditional Field/Section Behavior::Show/hide by condition
+        path: rules/viewpoints/06-input-controls.md
+        heading: Conditional Field/Section Behavior
+        aspect: Show/hide by condition
+        viewpoint: Check a section/field appearing or disappearing based on one or more other fields' values (AND/OR combined)
+        expected_result: Shown only when the full condition is true, hidden otherwise, with no leftover data from the hidden state
+      - source_row_id: rules/viewpoints/06-input-controls.md::Conditional Field/Section Behavior::Enable/disable by selection
+        path: rules/viewpoints/06-input-controls.md
+        heading: Conditional Field/Section Behavior
+        aspect: Enable/disable by selection
+        viewpoint: Check that selecting one option enables one control and disables another
+        expected_result: Exactly the specified controls change enabled state; unrelated controls unaffected
+      - source_row_id: rules/viewpoints/06-input-controls.md::Conditional Field/Section Behavior::Required-ness driven by condition
+        path: rules/viewpoints/06-input-controls.md
+        heading: Conditional Field/Section Behavior
+        aspect: Required-ness driven by condition
+        viewpoint: Check a field that is required only when another field/condition is set (e.g. passport required unless destination is a specific country)
+        expected_result: Required/optional enforced exactly per the stated condition
+      - source_row_id: rules/viewpoints/06-input-controls.md::Conditional Field/Section Behavior::Dependent field options
+        path: rules/viewpoints/06-input-controls.md
+        heading: Conditional Field/Section Behavior
+        aspect: Dependent field options
+        viewpoint: Check a field's available options/value changing when a related field changes (e.g. cabin class depends on trip type)
+        expected_result: Updates immediately and correctly when the driving field changes
+      - source_row_id: rules/viewpoints/06-input-controls.md::Conditional Field/Section Behavior::Reverting the condition
+        path: rules/viewpoints/06-input-controls.md
+        heading: Conditional Field/Section Behavior
+        aspect: Reverting the condition
+        viewpoint: Check switching the driving condition back to its original value after a dependent field/section was shown
+        expected_result: Dependent field/section reverts (hides/resets) correctly, no stale data left visible
+      - source_row_id: rules/viewpoints/06-input-controls.md::Registration Flow::Username uniqueness
+        path: rules/viewpoints/06-input-controls.md
+        heading: Registration Flow
+        aspect: Username uniqueness
+        viewpoint: Check submitting a username that already exists in DB
+        expected_result: Rejected with a specific "already exists" message
+      - source_row_id: rules/viewpoints/06-input-controls.md::Registration Flow::Date of birth — required-ness by context
+        path: rules/viewpoints/06-input-controls.md
+        heading: Registration Flow
+        aspect: Date of birth — required-ness by context
+        viewpoint: Check leaving Day/Month/Year empty when the field is documented as required
+        expected_result: Rejected with a specific message
+      - source_row_id: rules/viewpoints/06-input-controls.md::Registration Flow::Gender — default & toggle
+        path: rules/viewpoints/06-input-controls.md
+        heading: Registration Flow
+        aspect: Gender — default & toggle
+        viewpoint: Check the default selected value on load, clicking a different option, and clicking its label
+        expected_result: Default matches design; selection updates correctly either way
+      - source_row_id: rules/viewpoints/06-input-controls.md::Registration Flow::Leading/trailing-space exemption
+        path: rules/viewpoints/06-input-controls.md
+        heading: Registration Flow
+        aspect: Leading/trailing-space exemption
+        viewpoint: Check a field the spec explicitly exempts from auto-trim (e.g. `[Username]`)
+        expected_result: Trim is NOT applied to that field, unlike the general rule
+      - source_row_id: rules/viewpoints/06-input-controls.md::Registration Flow::`[Register]` button
+        path: rules/viewpoints/06-input-controls.md
+        heading: Registration Flow
+        aspect: '`[Register]` button'
+        viewpoint: Click Register once all fields are valid
+        expected_result: Values written to DB into the documented table/columns; a success message is shown
+      - source_row_id: rules/viewpoints/06-input-controls.md::Registration Flow::`[Cancel]` button
+        path: rules/viewpoints/06-input-controls.md
+        heading: Registration Flow
+        aspect: '`[Cancel]` button'
+        viewpoint: Click Cancel after entering data
+        expected_result: No record saved; screen resets to initial state
+      - source_row_id: rules/viewpoints/06-input-controls.md::Registration Flow::`[Back]` button — single-page registration
+        path: rules/viewpoints/06-input-controls.md
+        heading: Registration Flow
+        aspect: '`[Back]` button — single-page registration'
+        viewpoint: Fill the page, move to Confirm, then click Back (in-app and browser)
+        expected_result: Returns to the registration page with previously entered values still populated, per spec
+      - source_row_id: rules/viewpoints/06-input-controls.md::Registration Flow::`[Back]` button — multi-page/wizard registration
+        path: rules/viewpoints/06-input-controls.md
+        heading: Registration Flow
+        aspect: '`[Back]` button — multi-page/wizard registration'
+        viewpoint: Fill page 1 → Next → page 2 → Next → page 3, then click Back (in-app and browser)
+        expected_result: Returns to page 2 with page 2's previously entered values still populated, per spec
+  - path: rules/viewpoints/07-action-controls.md
+    sha256: ac9783a4d3b5a868a5b95e46277d961f9794cd7b2130301608dda4f2d9c4b1f4
+    rows:
+      - source_row_id: rules/viewpoints/07-action-controls.md::Submit Button::Visible/Hidden by permission or condition
+        path: rules/viewpoints/07-action-controls.md
+        heading: Submit Button
+        aspect: Visible/Hidden by permission or condition
+        viewpoint: Check button visibility by role and by data condition
+        expected_result: Correct per role/condition
+      - source_row_id: rules/viewpoints/07-action-controls.md::Submit Button::Correct label
+        path: rules/viewpoints/07-action-controls.md
+        heading: Submit Button
+        aspect: Correct label
+        viewpoint: Check label text
+        expected_result: Accurate, no errors
+      - source_row_id: rules/viewpoints/07-action-controls.md::Submit Button::Enabled/Disabled by validation
+        path: rules/viewpoints/07-action-controls.md
+        heading: Submit Button
+        aspect: Enabled/Disabled by validation
+        viewpoint: Check state when data valid vs. invalid
+        expected_result: Enabled only when all required validations/selections pass
+      - source_row_id: rules/viewpoints/07-action-controls.md::Submit Button::Prevents double submit
+        path: rules/viewpoints/07-action-controls.md
+        heading: Submit Button
+        aspect: Prevents double submit
+        viewpoint: Check clicking rapidly multiple times
+        expected_result: Exactly one request sent; button disables or shows loading
+      - source_row_id: rules/viewpoints/07-action-controls.md::Submit Button::Mandatory field / format / unique-constraint validation
+        path: rules/viewpoints/07-action-controls.md
+        heading: Submit Button
+        aspect: Mandatory field / format / unique-constraint validation
+        viewpoint: Check blank required field, malformed input, duplicate value
+        expected_result: Each shows its specific error and blocks the request
+      - source_row_id: rules/viewpoints/07-action-controls.md::Submit Button::Submits correct data & DB verification
+        path: rules/viewpoints/07-action-controls.md
+        heading: Submit Button
+        aspect: Submits correct data & DB verification
+        viewpoint: Check submit with valid data, then verify DB
+        expected_result: Request sent correctly; DB stores accurately with no duplicate
+      - source_row_id: rules/viewpoints/07-action-controls.md::Submit Button::Role/Permission check
+        path: rules/viewpoints/07-action-controls.md
+        heading: Submit Button
+        aspect: Role/Permission check
+        viewpoint: Check submit attempt without sufficient permission
+        expected_result: Hidden/disabled client-side, and 403 server-side
+      - source_row_id: rules/viewpoints/07-action-controls.md::Submit Button::Fallback message on server error
+        path: rules/viewpoints/07-action-controls.md
+        heading: Submit Button
+        aspect: Fallback message on server error
+        viewpoint: Check submit during a timeout/500
+        expected_result: Clear error message shown
+      - source_row_id: rules/viewpoints/07-action-controls.md::Submit Button::Post-submission navigation & message
+        path: rules/viewpoints/07-action-controls.md
+        heading: Submit Button
+        aspect: Post-submission navigation & message
+        viewpoint: Check what happens right after success
+        expected_result: Navigates to the expected screen; shows a success message/notification
+      - source_row_id: rules/viewpoints/07-action-controls.md::Close / Cancel Button::Confirmation on click with unsaved changes
+        path: rules/viewpoints/07-action-controls.md
+        heading: Close / Cancel Button
+        aspect: Confirmation on click with unsaved changes
+        viewpoint: Check Cancel after data has changed
+        expected_result: Confirmation popup shown per spec
+      - source_row_id: rules/viewpoints/07-action-controls.md::Close / Cancel Button::Discards unsaved changes
+        path: rules/viewpoints/07-action-controls.md
+        heading: Close / Cancel Button
+        aspect: Discards unsaved changes
+        viewpoint: Check confirming discard
+        expected_result: Data not saved, form resets
+      - source_row_id: rules/viewpoints/07-action-controls.md::Close / Cancel Button::No data submission before save
+        path: rules/viewpoints/07-action-controls.md
+        heading: Close / Cancel Button
+        aspect: No data submission before save
+        viewpoint: Check Cancel before saving
+        expected_result: No request sent
+      - source_row_id: rules/viewpoints/07-action-controls.md::Close / Cancel Button::Closes modal
+        path: rules/viewpoints/07-action-controls.md
+        heading: Close / Cancel Button
+        aspect: Closes modal
+        viewpoint: Check Cancel inside a modal
+        expected_result: Modal closes correctly
+      - source_row_id: rules/viewpoints/07-action-controls.md::Secondary / Opening Action::Opens layer/popup with correct pre-fill
+        path: rules/viewpoints/07-action-controls.md
+        heading: Secondary / Opening Action
+        aspect: Opens layer/popup with correct pre-fill
+        viewpoint: Check clicking a control that opens a layer, dropdown, or popup (traveler selector, filter panel, fare rules, ...)
+        expected_result: Opens with correct current values pre-filled and correct content/options
+      - source_row_id: rules/viewpoints/07-action-controls.md::Secondary / Opening Action::Confirm action on popup
+        path: rules/viewpoints/07-action-controls.md
+        heading: Secondary / Opening Action
+        aspect: Confirm action on popup
+        viewpoint: Check clicking the confirm/OK button on a popup
+        expected_result: Popup closes and the confirmed action proceeds
+      - source_row_id: rules/viewpoints/07-action-controls.md::Split Button (Dropdown Button)::Dropdown opens & actions trigger
+        path: rules/viewpoints/07-action-controls.md
+        heading: Split Button (Dropdown Button)
+        aspect: Dropdown opens & actions trigger
+        viewpoint: Check clicking the main button, then each option
+        expected_result: Dropdown opens fully; each option performs its function correctly
+      - source_row_id: rules/viewpoints/07-action-controls.md::Link::Navigates to correct URL & tab behavior
+        path: rules/viewpoints/07-action-controls.md
+        heading: Link
+        aspect: Navigates to correct URL & tab behavior
+        viewpoint: Check click destination and new-tab/same-tab config
+        expected_result: Correct URL; opens per configuration
+      - source_row_id: rules/viewpoints/07-action-controls.md::Others::Trigger correct action, incl. heavy operations
+        path: rules/viewpoints/07-action-controls.md
+        heading: Others
+        aspect: Trigger correct action, incl. heavy operations
+        viewpoint: Check clicking performs the correct function; check with a large data volume (e.g. importing a file)
+        expected_result: Correct function, no errors; clear loading/progress indicator for heavy operations
+  - path: rules/viewpoints/08-advanced.md
+    sha256: 52bd4bb564a9660cf8c3870343deed172c7cd29f09aead064d26589c41355f7a
+    rows:
+      - source_row_id: rules/viewpoints/08-advanced.md::Search::Trigger methods
+        path: rules/viewpoints/08-advanced.md
+        heading: Search
+        aspect: Trigger methods
+        viewpoint: Check Enter key, icon/button click
+        expected_result: Both trigger correctly
+      - source_row_id: rules/viewpoints/08-advanced.md::Search::Icon state on empty input
+        path: rules/viewpoints/08-advanced.md
+        heading: Search
+        aspect: Icon state on empty input
+        viewpoint: Check the search icon/button when the search box is empty
+        expected_result: Disabled by default, unless spec says otherwise
+      - source_row_id: rules/viewpoints/08-advanced.md::Search::Clear (×) button
+        path: rules/viewpoints/08-advanced.md
+        heading: Search
+        aspect: Clear (×) button
+        viewpoint: Check clearing the keyword
+        expected_result: Resets to initial state
+      - source_row_id: rules/viewpoints/08-advanced.md::Search::Auto-suggest
+        path: rules/viewpoints/08-advanced.md
+        heading: Search
+        aspect: Auto-suggest
+        viewpoint: Check suggestions while typing
+        expected_result: Correct list; selection searches accurately
+      - source_row_id: rules/viewpoints/08-advanced.md::Search::Match modes — LIKE, =, range
+        path: rules/viewpoints/08-advanced.md
+        heading: Search
+        aspect: Match modes — LIKE, =, range
+        viewpoint: Check partial match, exact match, and range search (date/number/price)
+        expected_result: Each returns the correctly scoped result set
+      - source_row_id: rules/viewpoints/08-advanced.md::Search::Blank search
+        path: rules/viewpoints/08-advanced.md
+        heading: Search
+        aspect: Blank search
+        viewpoint: Check submitting with no keyword
+        expected_result: Shows all results or a message, per business rule
+      - source_row_id: rules/viewpoints/08-advanced.md::Search::IME / IME-converted input
+        path: rules/viewpoints/08-advanced.md
+        heading: Search
+        aspect: IME / IME-converted input
+        viewpoint: Check keyword entered via IME (Japanese, etc.)
+        expected_result: Accurate results based on the post-conversion characters
+      - source_row_id: rules/viewpoints/08-advanced.md::Search::Special characters
+        path: rules/viewpoints/08-advanced.md
+        heading: Search
+        aspect: Special characters
+        viewpoint: Check keywords with `!@#`, etc.
+        expected_result: Handled safely, no SQL errors, accurate results
+      - source_row_id: rules/viewpoints/08-advanced.md::Search::Case sensitivity
+        path: rules/viewpoints/08-advanced.md
+        heading: Search
+        aspect: Case sensitivity
+        viewpoint: Search using all-uppercase, all-lowercase, and mixed-case forms of the same term
+        expected_result: Matches all case variants unless spec explicitly requires exact-case matching
+      - source_row_id: rules/viewpoints/08-advanced.md::Search::Accent/diacritic sensitivity
+        path: rules/viewpoints/08-advanced.md
+        heading: Search
+        aspect: Accent/diacritic sensitivity
+        viewpoint: Search with and without diacritics for the same word (e.g. Vietnamese)
+        expected_result: Matches both variants unless spec explicitly requires exact-diacritic matching
+      - source_row_id: rules/viewpoints/08-advanced.md::Search::Half-width / full-width sensitivity
+        path: rules/viewpoints/08-advanced.md
+        heading: Search
+        aspect: Half-width / full-width sensitivity
+        viewpoint: Search using half-width vs. full-width forms of the same characters (CJK contexts)
+        expected_result: Matches both variants unless spec explicitly requires exact-width matching
+      - source_row_id: rules/viewpoints/08-advanced.md::Search::Over-length input
+        path: rules/viewpoints/08-advanced.md
+        heading: Search
+        aspect: Over-length input
+        viewpoint: Input a search string beyond the field's max length
+        expected_result: Shows a length-limit message rather than silently truncating or erroring
+      - source_row_id: rules/viewpoints/08-advanced.md::Search::Nearest-match focus
+        path: rules/viewpoints/08-advanced.md
+        heading: Search
+        aspect: Nearest-match focus
+        viewpoint: Submit a search that returns results, on a jump-to-match style field
+        expected_result: Cursor/focus lands on the closest matching value, sorted ascending by default
+      - source_row_id: rules/viewpoints/08-advanced.md::Search::Barcode/QR scan input
+        path: rules/viewpoints/08-advanced.md
+        heading: Search
+        aspect: Barcode/QR scan input
+        viewpoint: Scan an invalid/unrecognizable code, a valid code with no DB match, and a valid code with a DB match
+        expected_result: 'Unrecognizable: scan error. No match: "code not found" message. Match: correct record displayed'
+      - source_row_id: rules/viewpoints/08-advanced.md::Search::No-result state
+        path: rules/viewpoints/08-advanced.md
+        heading: Search
+        aspect: No-result state
+        viewpoint: Submit a search guaranteed to match nothing
+        expected_result: Shows an explicit "no results" state, not a blank/broken list
+      - source_row_id: rules/viewpoints/08-advanced.md::Filter::Initial state, clear/reset, AND/OR logic, apply button
+        path: rules/viewpoints/08-advanced.md
+        heading: Filter
+        aspect: Initial state, clear/reset, AND/OR logic, apply button
+        viewpoint: Check all four aspects of the filter function
+        expected_result: Results always match the current filter condition correctly
+      - source_row_id: rules/viewpoints/08-advanced.md::Access & Permission::Role-based UI visibility & unauthorized redirect
+        path: rules/viewpoints/08-advanced.md
+        heading: Access & Permission
+        aspect: Role-based UI visibility & unauthorized redirect
+        viewpoint: Check UI per role, and access to a disallowed page/action
+        expected_result: Only role-appropriate elements shown; unauthorized attempts redirected/error-messaged, and rejected server-side too
+      - source_row_id: rules/viewpoints/08-advanced.md::Access & Permission::Enable/disable for restricted controls
+        path: rules/viewpoints/08-advanced.md
+        heading: Access & Permission
+        aspect: Enable/disable for restricted controls
+        viewpoint: Check a button/function without sufficient permission
+        expected_result: Disabled/hidden, cannot be bypassed via dev tools
+      - source_row_id: rules/viewpoints/08-advanced.md::Access & Permission::Wrong credentials
+        path: rules/viewpoints/08-advanced.md
+        heading: Access & Permission
+        aspect: Wrong credentials
+        viewpoint: Check wrong username, wrong password, blank username, and blank password
+        expected_result: All four show the same generic message — never reveal which specific field was wrong
+      - source_row_id: rules/viewpoints/08-advanced.md::Access & Permission::Unauthenticated deep-link access
+        path: rules/viewpoints/08-advanced.md
+        heading: Access & Permission
+        aspect: Unauthenticated deep-link access
+        viewpoint: While logged out, directly navigate to a URL that requires login
+        expected_result: Redirected to the Login screen instead of the requested page
+      - source_row_id: rules/viewpoints/08-advanced.md::Access & Permission::Session/token expiry
+        path: rules/viewpoints/08-advanced.md
+        heading: Access & Permission
+        aspect: Session/token expiry
+        viewpoint: Check the session/token expiring while active on a screen, mid-flow, or on an API call
+        expected_result: The user is redirected to login at the point the invalid session is detected; in-progress data is preserved or clearly discarded per spec, never silently lost
+      - source_row_id: rules/viewpoints/08-advanced.md::Access & Permission::Permission change mid-session
+        path: rules/viewpoints/08-advanced.md
+        heading: Access & Permission
+        aspect: Permission change mid-session
+        viewpoint: Check a role/permission change applied to a user already logged in
+        expected_result: Takes effect at the next permission check — the user cannot keep using a revoked permission indefinitely
+      - source_row_id: rules/viewpoints/08-advanced.md::Access & Permission::Lockout threshold
+        path: rules/viewpoints/08-advanced.md
+        heading: Access & Permission
+        aspect: Lockout threshold
+        viewpoint: Check login failing 1–2 times, then check failing ≥3 times
+        expected_result: 'Under threshold: retry allowed. At/above threshold: account locked for the documented duration'
+      - source_row_id: rules/viewpoints/08-advanced.md::Access & Permission::Social login
+        path: rules/viewpoints/08-advanced.md
+        heading: Access & Permission
+        aspect: Social login
+        viewpoint: Click a third-party login option (Facebook/Google/...)
+        expected_result: Opens the provider's popup and completes login as that account
+      - source_row_id: rules/viewpoints/08-advanced.md::Access & Permission::Concurrent sessions — same account, multiple devices/tabs
+        path: rules/viewpoints/08-advanced.md
+        heading: Access & Permission
+        aspect: Concurrent sessions — same account, multiple devices/tabs
+        viewpoint: Log in as the same account on device A, then device B (or a second browser tab)
+        expected_result: 'Per spec: either both sessions stay valid, or logging in on B logs A out — must be an explicit, deliberate spec decision'
+      - source_row_id: rules/viewpoints/08-advanced.md::Access & Permission::Login load/stress test
+        path: rules/viewpoints/08-advanced.md
+        heading: Access & Permission
+        aspect: Login load/stress test
+        viewpoint: Log in with a very large number of concurrent simulated users at, then beyond, documented capacity
+        expected_result: 'Under capacity: all logins succeed. Beyond: degrades to a timeout/queue message, no crash or session corruption'
+      - source_row_id: rules/viewpoints/08-advanced.md::Access & Permission::Repeated-failure account-recovery prompt
+        path: rules/viewpoints/08-advanced.md
+        heading: Access & Permission
+        aspect: Repeated-failure account-recovery prompt
+        viewpoint: Fail login with the same account 5 times in a row
+        expected_result: A security-question or recovery prompt is shown before allowing a password reset, if spec defines it
+      - source_row_id: rules/viewpoints/08-advanced.md::Access & Permission::Change-password current-password check
+        path: rules/viewpoints/08-advanced.md
+        heading: Access & Permission
+        aspect: Change-password current-password check
+        viewpoint: Submit a wrong "current password" value on a change-password form
+        expected_result: Rejected with a specific "current password incorrect" message, distinct from the "new password invalid" messages
+      - source_row_id: rules/viewpoints/08-advanced.md::Access & Permission::Change-password cross-device session invalidation
+        path: rules/viewpoints/08-advanced.md
+        heading: Access & Permission
+        aspect: Change-password cross-device session invalidation
+        viewpoint: Log in as the same account on device A and B; change the password on A; then make any request from B
+        expected_result: B is force-logged-out on its next request after the password changes on A
+      - source_row_id: rules/viewpoints/08-advanced.md::Payment::Method selection, valid/invalid data, confirmation
+        path: rules/viewpoints/08-advanced.md
+        heading: Payment
+        aspect: Method selection, valid/invalid data, confirmation
+        viewpoint: Check selecting a method, entering valid/invalid data, and the pre-submit confirmation screen
+        expected_result: Correct list and selection; success/receipt vs. error shown; user confirms before submit
+      - source_row_id: rules/viewpoints/08-advanced.md::Payment::Gateway integration, timeout, error handling
+        path: rules/viewpoints/08-advanced.md
+        heading: Payment
+        aspect: Gateway integration, timeout, error handling
+        viewpoint: Check gateway connection, a timed-out transaction, and a gateway error
+        expected_result: Processed and returned accurately; timeout shows message with no charge; gateway error shown with no record created
+      - source_row_id: rules/viewpoints/08-advanced.md::Payment::Retry & duplicate-submission prevention
+        path: rules/viewpoints/08-advanced.md
+        heading: Payment
+        aspect: Retry & duplicate-submission prevention
+        viewpoint: Check retrying after failure, and rapid multi-click submit
+        expected_result: Retry allowed without duplicate transaction; only one transaction recorded, button disables after first click
+      - source_row_id: rules/viewpoints/08-advanced.md::Payment::Sensitive data handling
+        path: rules/viewpoints/08-advanced.md
+        heading: Payment
+        aspect: Sensitive data handling
+        viewpoint: Check encryption and card-info storage
+        expected_result: Not shown in plaintext, PCI-DSS compliant; card info not stored (or only tokenized)
+      - source_row_id: rules/viewpoints/08-advanced.md::Payment::Refund / Cancel
+        path: rules/viewpoints/08-advanced.md
+        heading: Payment
+        aspect: Refund / Cancel
+        viewpoint: Check refund/cancel handling
+        expected_result: Processed correctly, balance updates accurately
+      - source_row_id: rules/viewpoints/08-advanced.md::Notifications (Email, SMS, Push, In-app)::Trigger, timing, personalization
+        path: rules/viewpoints/08-advanced.md
+        heading: Notifications (Email, SMS, Push, In-app)
+        aspect: Trigger, timing, personalization
+        viewpoint: Check notification on event, delivery timing, and personalized content
+        expected_result: Sent when required, on time, with correct personalized data
+      - source_row_id: rules/viewpoints/08-advanced.md::Notifications (Email, SMS, Push, In-app)::Link/button behavior & OTP
+        path: rules/viewpoints/08-advanced.md
+        heading: Notifications (Email, SMS, Push, In-app)
+        aspect: Link/button behavior & OTP
+        viewpoint: Check link/button click, OTP validity, and resend restriction
+        expected_result: Navigates correctly; OTP expires/cannot be reused; resend rate-limited
+      - source_row_id: rules/viewpoints/08-advanced.md::Notifications (Email, SMS, Push, In-app)::Badge, read/unread, grouping, deep link
+        path: rules/viewpoints/08-advanced.md
+        heading: Notifications (Email, SMS, Push, In-app)
+        aspect: Badge, read/unread, grouping, deep link
+        viewpoint: Check all four in-app aspects
+        expected_result: Correct count; accurate status; correct grouping; deep link opens the correct screen
+      - source_row_id: rules/viewpoints/08-advanced.md::Notifications (Email, SMS, Push, In-app)::Click behavior
+        path: rules/viewpoints/08-advanced.md
+        heading: Notifications (Email, SMS, Push, In-app)
+        aspect: Click behavior
+        viewpoint: Check the behavior when clicking a notification
+        expected_result: Opens the correct related content/screen and marks it as read if applicable
+      - source_row_id: rules/viewpoints/08-advanced.md::Import::Selection methods
+        path: rules/viewpoints/08-advanced.md
+        heading: Import
+        aspect: Selection methods
+        viewpoint: Check single-file, multi-file, and drag-drop selection
+        expected_result: Each succeeds
+      - source_row_id: rules/viewpoints/08-advanced.md::Import::Format/content validation
+        path: rules/viewpoints/08-advanced.md
+        heading: Import
+        aspect: Format/content validation
+        viewpoint: Check required fields, wrong file type, empty file, invalid headers, wrong encoding, wrong column order, missing columns, wrong date/number/boolean format
+        expected_result: Each shows a specific error and blocks the import
+      - source_row_id: rules/viewpoints/08-advanced.md::Import::Duplicate data & row-level errors
+        path: rules/viewpoints/08-advanced.md
+        heading: Import
+        aspect: Duplicate data & row-level errors
+        viewpoint: Check duplicate rows within the file, and rows with bad data
+        expected_result: Warned/skipped per spec; bad rows skipped or flagged, not silently imported
+      - source_row_id: rules/viewpoints/08-advanced.md::Import::DB persistence & field mapping
+        path: rules/viewpoints/08-advanced.md
+        heading: Import
+        aspect: DB persistence & field mapping
+        viewpoint: Check data saved to DB and mapped to correct columns
+        expected_result: Accurate save; correct field-to-column mapping
+      - source_row_id: rules/viewpoints/08-advanced.md::Import::Result notification
+        path: rules/viewpoints/08-advanced.md
+        heading: Import
+        aspect: Result notification
+        viewpoint: Check the post-import message
+        expected_result: Success/failure shown per case
+      - source_row_id: rules/viewpoints/08-advanced.md::Import::BOM character in file
+        path: rules/viewpoints/08-advanced.md
+        heading: Import
+        aspect: BOM character in file
+        viewpoint: Import a file containing a BOM marker
+        expected_result: Rejected with a content-format error, same as other format violations
+      - source_row_id: rules/viewpoints/08-advanced.md::Import::Atomicity on partial failure
+        path: rules/viewpoints/08-advanced.md
+        heading: Import
+        aspect: Atomicity on partial failure
+        viewpoint: Import a file where one row has a format error
+        expected_result: The entire import rolls back — no partial write; a specific error is shown
+      - source_row_id: rules/viewpoints/08-advanced.md::Import::Image upload — size/extension/filename
+        path: rules/viewpoints/08-advanced.md
+        heading: Import
+        aspect: Image upload — size/extension/filename
+        viewpoint: Upload an image at/under/over the max size; with an allowed vs. disallowed extension; with a long or 2-byte filename
+        expected_result: 'Within limits and allowed extension: succeeds with correct thumbnail. Over limit or disallowed: rejected with a specific message. Long/2-byte filename: still succeeds unless spec restricts it'
+      - source_row_id: rules/viewpoints/08-advanced.md::Export::Format options & filters
+        path: rules/viewpoints/08-advanced.md
+        heading: Export
+        aspect: Format options & filters
+        viewpoint: Check CSV/Excel/PDF export, all-rows vs. filtered export
+        expected_result: Correct format; filtered export contains only matching rows
+      - source_row_id: rules/viewpoints/08-advanced.md::Export::Multiple simultaneous exports
+        path: rules/viewpoints/08-advanced.md
+        heading: Export
+        aspect: Multiple simultaneous exports
+        viewpoint: Check exporting multiple files at once
+        expected_result: All files are exported correctly
+      - source_row_id: rules/viewpoints/08-advanced.md::Export::Filename, encoding, headers
+        path: rules/viewpoints/08-advanced.md
+        heading: Export
+        aspect: Filename, encoding, headers
+        viewpoint: Check filename format, encoding (UTF-8/Shift JIS), and column headers
+        expected_result: Match required format/template
+      - source_row_id: rules/viewpoints/08-advanced.md::Export::Data consistency & large datasets
+        path: rules/viewpoints/08-advanced.md
+        heading: Export
+        aspect: Data consistency & large datasets
+        viewpoint: Check exported values vs. UI, and a large-dataset export
+        expected_result: Matches displayed data; completes without timing out
+      - source_row_id: rules/viewpoints/08-advanced.md::Export::Sheet-name length limit
+        path: rules/viewpoints/08-advanced.md
+        heading: Export
+        aspect: Sheet-name length limit
+        viewpoint: Export to a format with a naming constraint (e.g. Excel's 31-character sheet-name limit)
+        expected_result: Rejected/renamed per the target format's own limit, with a clear message — not a silent corrupt file
+      - source_row_id: rules/viewpoints/08-advanced.md::Analytics / Reporting::Generation, accuracy, real-time update, export, print
+        path: rules/viewpoints/08-advanced.md
+        heading: Analytics / Reporting
+        aspect: Generation, accuracy, real-time update, export, print
+        viewpoint: Check all five aspects of a report
+        expected_result: Complete and accurate generation; matches DB; updates live; exports/prints correctly
+      - source_row_id: rules/viewpoints/08-advanced.md::Localization / Globalization::Language switch, currency, date format, units
+        path: rules/viewpoints/08-advanced.md
+        heading: Localization / Globalization
+        aspect: Language switch, currency, date format, units
+        viewpoint: Check all four aspects
+        expected_result: Each displays correctly per selected locale
+      - source_row_id: rules/viewpoints/08-advanced.md::Errors & Network Resilience::Backend/API failure surfaced
+        path: rules/viewpoints/08-advanced.md
+        heading: Errors & Network Resilience
+        aspect: Backend/API failure surfaced
+        viewpoint: Check a case that fails at the API/business-rule level (invalid state, exceeded server-side constraint)
+        expected_result: The specific failure reason is surfaced to the user, not a generic error
+      - source_row_id: rules/viewpoints/08-advanced.md::Errors & Network Resilience::Network/timeout during a critical action
+        path: rules/viewpoints/08-advanced.md
+        heading: Errors & Network Resilience
+        aspect: Network/timeout during a critical action
+        viewpoint: Check losing connectivity or a timeout during a critical submit action
+        expected_result: Clear error/timeout message; no charge/record created; retry possible
+      - source_row_id: rules/viewpoints/08-advanced.md::Errors & Network Resilience::UI-level XSS via URL or text input
+        path: rules/viewpoints/08-advanced.md
+        heading: Errors & Network Resilience
+        aspect: UI-level XSS via URL or text input
+        viewpoint: Inject `<script>alert(...)</script>` / `<img src=...>` / `javascript:` payloads into a URL param, POST body, or text field that gets re-rendered
+        expected_result: Never executes; either escaped/sanitized on output or explicitly rejected at input — must be a deliberate choice
+      - source_row_id: rules/viewpoints/08-advanced.md::Errors & Network Resilience::UI-level SQL injection via login fields
+        path: rules/viewpoints/08-advanced.md
+        heading: Errors & Network Resilience
+        aspect: UI-level SQL injection via login fields
+        viewpoint: Input classic injection strings (`' or 1=1 --`, `'; DROP TABLE ...`) into username/password
+        expected_result: Login fails cleanly; no table dropped, no auth bypass
+      - source_row_id: rules/viewpoints/08-advanced.md::Errors & Network Resilience::Automated security scan
+        path: rules/viewpoints/08-advanced.md
+        heading: Errors & Network Resilience
+        aspect: Automated security scan
+        viewpoint: Run OWASP ZAP or Burp Suite against the app
+        expected_result: No High/Medium severity findings
+      - source_row_id: rules/viewpoints/08-advanced.md::Errors & Network Resilience::Sensitive file upload (virus/executable)
+        path: rules/viewpoints/08-advanced.md
+        heading: Errors & Network Resilience
+        aspect: Sensitive file upload (virus/executable)
+        viewpoint: Attempt to upload an executable (`.exe`) or a virus-flagged file
+        expected_result: Blocked by extension allowlist and/or virus scan
+      - source_row_id: rules/viewpoints/08-advanced.md::Errors & Network Resilience::Sensitive-data change propagation
+        path: rules/viewpoints/08-advanced.md
+        heading: Errors & Network Resilience
+        aspect: Sensitive-data change propagation
+        viewpoint: Edit sensitive account data (username, password, credit card number)
+        expected_result: Reflected immediately and completely everywhere that value is used — no stale cached copy
+      - source_row_id: rules/viewpoints/08-advanced.md::Errors & Network Resilience::Security-relevant audit logging
+        path: rules/viewpoints/08-advanced.md
+        heading: Errors & Network Resilience
+        aspect: Security-relevant audit logging
+        viewpoint: Trigger a failed login, a system error, or a suspicious access attempt
+        expected_result: Logged to the server-side log with enough detail to investigate later
+  - path: rules/viewpoints/09-mobile-specific.md
+    sha256: be96026ff785a080c46a54f8b92e653089b399b8a38373807bb0aad54970cf6d
+    rows:
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Screen Operation::Rotating screen
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Screen Operation
+        aspect: Rotating screen
+        viewpoint: Rotate between portrait and landscape
+        expected_result: Displays correctly, no layout breakage
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Screen Operation::Pull-to-refresh
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Screen Operation
+        aspect: Pull-to-refresh
+        viewpoint: Pull down to refresh
+        expected_result: Data updates to the latest available
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Screen Operation::Swipe right/left
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Screen Operation
+        aspect: Swipe right/left
+        viewpoint: Swipe to switch screens/items
+        expected_result: Navigates to the correct screen
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Screen Operation::Pinching in/out
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Screen Operation
+        aspect: Pinching in/out
+        viewpoint: Zoom in/out on the screen
+        expected_result: Content zooms correctly
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Device Operation::Home button & Kill app
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Device Operation
+        aspect: Home button & Kill app
+        viewpoint: Press Home then reopen; kill app then reopen
+        expected_result: Works normally without crashing; starts fresh on reopen
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Device Operation::Offline feature
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Device Operation
+        aspect: Offline feature
+        viewpoint: Disconnect internet
+        expected_result: Offline features work, or a clear "no internet" message shown
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Device Operation::Language change
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Device Operation
+        aspect: Language change
+        viewpoint: Change OS language
+        expected_result: App content updates to match
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Device Operation::Widget feature
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Device Operation
+        aspect: Widget feature
+        viewpoint: Add a home-screen widget
+        expected_result: Displays correctly
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Device Operation::Split-screen feature
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Device Operation
+        aspect: Split-screen feature
+        viewpoint: Open the app in split-screen mode
+        expected_result: Layout correct, no crash, no data loss
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Device Operation::GPS / Camera permission
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Device Operation
+        aspect: GPS / Camera permission
+        viewpoint: Grant/deny each permission
+        expected_result: Feature works, or shows the message appropriate to the permission state
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Device Operation::Online ⇄ Offline
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Device Operation
+        aspect: Online ⇄ Offline
+        viewpoint: Switch connectivity
+        expected_result: Re-syncs data without loss
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Device Operation::Background ⇄ Foreground
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Device Operation
+        aspect: Background ⇄ Foreground
+        viewpoint: Switch app state
+        expected_result: Resumes to the correct state
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Device Operation::Power saving / Sleep mode
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Device Operation
+        aspect: Power saving / Sleep mode
+        viewpoint: Enable each mode
+        expected_result: App remains stable; pauses/resumes correctly
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Device Operation::Dark mode
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Device Operation
+        aspect: Dark mode
+        viewpoint: Enable dark mode
+        expected_result: UI switches to the dark theme
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Face authentication::Successful authentication
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Face authentication
+        aspect: Successful authentication
+        viewpoint: Log in with a valid face
+        expected_result: Succeeds, grants access
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Face authentication::Retry & lockout
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Face authentication
+        aspect: Retry & lockout
+        viewpoint: Fail once then retry; fail repeatedly
+        expected_result: Retry allowed; locks and requires PIN/password beyond the limit
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Face authentication::ON/OFF biometric at OS level
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Face authentication
+        aspect: ON/OFF biometric at OS level
+        viewpoint: Disable/enable at OS level
+        expected_result: App detects state; hidden/disabled when OFF, usable when ON
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Face authentication::Ambient light / camera condition
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Face authentication
+        aspect: Ambient light / camera condition
+        viewpoint: Authenticate under low/back/bright light
+        expected_result: Camera still works; correct success/failure/retry message
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Face authentication::Face change (glasses, mask)
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Face authentication
+        aspect: Face change (glasses, mask)
+        viewpoint: Authenticate with an altered face
+        expected_result: Recognizes correctly or fails safely with retry — never authenticates the wrong person
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Fingerprint authentication::Successful authentication
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Fingerprint authentication
+        aspect: Successful authentication
+        viewpoint: Scan the correct registered fingerprint
+        expected_result: Succeeds, grants access
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Fingerprint authentication::Retry & lockout
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Fingerprint authentication
+        aspect: Retry & lockout
+        viewpoint: Scan wrong fingerprint 1-2 times then retry; exceed the configured limit (e.g. 5)
+        expected_result: Retry allowed; locks and requires PIN/password beyond the limit
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Fingerprint authentication::ON/OFF biometric at OS level
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Fingerprint authentication
+        aspect: ON/OFF biometric at OS level
+        viewpoint: Enable/disable at OS level (Android/iOS)
+        expected_result: App detects state; hidden/disabled when OFF, usable when ON
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Camera Startup (QR/Barcode)::Successful scan & valid/invalid QR code
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Camera Startup (QR/Barcode)
+        aspect: Successful scan & valid/invalid QR code
+        viewpoint: Scan under normal conditions; scan a valid vs. corrupted/blurry code
+        expected_result: Recognized and navigates correctly; invalid code shows an error, no unintended action
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Camera Startup (QR/Barcode)::Supported QR code formats
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Camera Startup (QR/Barcode)
+        aspect: Supported QR code formats
+        viewpoint: Scan URL, text, vCard, Wi-Fi formats
+        expected_result: All supported formats processed correctly
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Camera Startup (QR/Barcode)::Security & data validation
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Camera Startup (QR/Barcode)
+        aspect: Security & data validation
+        viewpoint: Scan a QR code with malicious/non-standard data
+        expected_result: Rejected with a warning; dangerous action disabled
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Camera Startup (QR/Barcode)::Fallback & alternative input
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Camera Startup (QR/Barcode)
+        aspect: Fallback & alternative input
+        viewpoint: Camera not working/cannot scan
+        expected_result: Manual code entry or gallery-image selection available
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::Camera Startup (QR/Barcode)::Cross-platform compatibility & detection accuracy
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: Camera Startup (QR/Barcode)
+        aspect: Cross-platform compatibility & detection accuracy
+        viewpoint: Test on multiple devices/cameras; scan under low light/tilted angle/small code
+        expected_result: Works stably across environments; recognizes accurately or shows a clear failure message
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Install / uninstall / update
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Install / uninstall / update
+        viewpoint: Install from store, uninstall, and update to a new version
+        expected_result: Each completes cleanly; post-update, both new and existing features work
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Hardware back repeated
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Hardware back repeated
+        viewpoint: Press Android hardware Back / iOS swipe-back repeatedly and rapidly
+        expected_result: Navigates back one screen per action; never crashes
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Interruption — incoming call/notification/alarm
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Interruption — incoming call/notification/alarm
+        viewpoint: Trigger a call/notification/alarm mid-action, then return
+        expected_result: App resumes at the same screen/state, continuing normally per spec
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Network loss/timeout mid-request
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Network loss/timeout mid-request
+        viewpoint: Disconnect or force a slow connection while a request is in flight
+        expected_result: Clear connectivity/timeout message; no crash, no silent hang
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::In-flight request interrupted by Back/Home/multi-tap
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: In-flight request interrupted by Back/Home/multi-tap
+        viewpoint: While a request is loading, press Home, Back, or rapidly re-open the app
+        expected_result: Request continues client-side; the Back/exit navigation is honored only after the request resolves (or per spec)
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::OS "don't keep activities" / low-memory kill (Android)
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: OS "don't keep activities" / low-memory kill (Android)
+        viewpoint: Enable the developer option, background the app, then resume
+        expected_result: App restarts/restores its state cleanly, no crash
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Runtime permission grant/deny
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Runtime permission grant/deny
+        viewpoint: Trigger a permission-gated feature (camera, location, contacts); grant it, then deny it on a separate run
+        expected_result: "Granted: works, prompt doesn't reappear. Denied: returns to the prior screen gracefully, no crash"
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Null/empty API response fields
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Null/empty API response fields
+        viewpoint: Force an API response where fields are null/empty
+        expected_result: Renders a defined empty state per field, does not crash
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Deep link / universal link — backgrounded or killed
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Deep link / universal link — backgrounded or killed
+        viewpoint: Send the app to background, or kill it entirely, then tap a universal link for it
+        expected_result: Opens (warm or cold) and navigates directly to the linked screen
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Rapid tab-bar switching
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Rapid tab-bar switching
+        viewpoint: Switch between bottom/tab-bar items rapidly and repeatedly
+        expected_result: Screen shown always matches whichever tab was tapped last — no lag mismatch, no crash
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Pull-to-refresh interrupted by backgrounding
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Pull-to-refresh interrupted by backgrounding
+        viewpoint: Start a pull-to-refresh, then immediately press Home and return
+        expected_result: Refresh completes correctly; loading indicator is cleared, not left stuck spinning
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Sort condition persists across refresh/load-more
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Sort condition persists across refresh/load-more
+        viewpoint: Apply a sort order, then pull-to-refresh or trigger "load more"
+        expected_result: Refreshed/loaded rows still reflect the previously applied sort condition
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Tap on a visually hidden element
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Tap on a visually hidden element
+        viewpoint: Tap the screen area where a hidden control would be
+        expected_result: No action triggered; screen stays as-is
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Back button tap while a popup is open
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Back button tap while a popup is open
+        viewpoint: With a popup/dialog open, tap the device Back control
+        expected_result: No navigation occurs behind the popup, unless spec says Back should close it
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Keyboard left open when navigating away
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Keyboard left open when navigating away
+        viewpoint: Tap Submit/navigate without first dismissing the on-screen keyboard
+        expected_result: Keyboard auto-dismisses and navigation proceeds correctly
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Low battery / low storage resilience
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Low battery / low storage resilience
+        viewpoint: Exercise core screens under low battery or low free storage
+        expected_result: App keeps functioning per spec, no crash
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Backup and restore
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Backup and restore
+        viewpoint: Back up app data, uninstall, reinstall, then restore
+        expected_result: Restored app shows the same data that existed at backup time
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Camera-captured image upload — portrait vs. landscape
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Camera-captured image upload — portrait vs. landscape
+        viewpoint: Capture a photo via the in-app camera upload flow in each orientation
+        expected_result: Uploaded thumbnail renders correctly and unrotated in both orientations
+      - source_row_id: rules/viewpoints/09-mobile-specific.md::App Lifecycle & Interruptions::Volume button / silent mode
+        path: rules/viewpoints/09-mobile-specific.md
+        heading: App Lifecycle & Interruptions
+        aspect: Volume button / silent mode
+        viewpoint: Adjust volume up/down, including in silent mode, during in-app playback
+        expected_result: Playback volume responds correctly; no crash/misbehavior in silent mode
+  - path: rules/viewpoints/10-batch-job-cron.md
+    sha256: 5b3ce61111a09f68c38ff7ee15ef2aed8d0b516fcab7d3f1acdb376c617e31f8
+    rows:
+      - source_row_id: rules/viewpoints/10-batch-job-cron.md::Job Trigger::Manual trigger
+        path: rules/viewpoints/10-batch-job-cron.md
+        heading: Job Trigger
+        aspect: Manual trigger
+        viewpoint: Check running the job manually
+        expected_result: Correct logic, expected data processing, complete and accurate output
+      - source_row_id: rules/viewpoints/10-batch-job-cron.md::Job Trigger::Scheduled (cron/daily/weekly/monthly)
+        path: rules/viewpoints/10-batch-job-cron.md
+        heading: Job Trigger
+        aspect: Scheduled (cron/daily/weekly/monthly)
+        viewpoint: Check the job on schedule
+        expected_result: Runs automatically on schedule, no delay or wrong-time run
+      - source_row_id: rules/viewpoints/10-batch-job-cron.md::Job Trigger::Event-based trigger
+        path: rules/viewpoints/10-batch-job-cron.md
+        heading: Job Trigger
+        aspect: Event-based trigger
+        viewpoint: Check triggering by an event (data update, API call, ...)
+        expected_result: Triggered accurately on the event, no extra/missing triggers
+      - source_row_id: rules/viewpoints/10-batch-job-cron.md::Input / Output Handling::Input validation
+        path: rules/viewpoints/10-batch-job-cron.md
+        heading: Input / Output Handling
+        aspect: Input validation
+        viewpoint: Check invalid input (wrong format, missing, null, invalid)
+        expected_result: Rejected or handled correctly, with full warning/error logs
+      - source_row_id: rules/viewpoints/10-batch-job-cron.md::Input / Output Handling::Data source availability
+        path: rules/viewpoints/10-batch-job-cron.md
+        heading: Input / Output Handling
+        aspect: Data source availability
+        viewpoint: Check behavior when the data source (file/DB/API) is unavailable
+        expected_result: Stops or retries per the correct mechanism; reads accurately when available
+      - source_row_id: rules/viewpoints/10-batch-job-cron.md::Input / Output Handling::Output file / DB update correctness
+        path: rules/viewpoints/10-batch-job-cron.md
+        heading: Input / Output Handling
+        aspect: Output file / DB update correctness
+        viewpoint: Check output file and DB update
+        expected_result: Correct file format/complete data; correct insert/update/delete logic
+      - source_row_id: rules/viewpoints/10-batch-job-cron.md::Error Handling & Recovery::Logging
+        path: rules/viewpoints/10-batch-job-cron.md
+        heading: Error Handling & Recovery
+        aspect: Logging
+        viewpoint: Check logs on a run (info/warning/error)
+        expected_result: Fully captures start/end/record count/errors in a consistent, searchable format
+      - source_row_id: rules/viewpoints/10-batch-job-cron.md::Error Handling & Recovery::Retry on failure
+        path: rules/viewpoints/10-batch-job-cron.md
+        heading: Error Handling & Recovery
+        aspect: Retry on failure
+        viewpoint: Check the retry mechanism
+        expected_result: Retries the correct number of times, at the correct interval, per config
+      - source_row_id: rules/viewpoints/10-batch-job-cron.md::Error Handling & Recovery::Notification/alert on error
+        path: rules/viewpoints/10-batch-job-cron.md
+        heading: Error Handling & Recovery
+        aspect: Notification/alert on error
+        viewpoint: Check the failure notification
+        expected_result: Sent to the correct channel with enough detail to investigate
+      - source_row_id: rules/viewpoints/10-batch-job-cron.md::Monitoring & Audit::Job status & history
+        path: rules/viewpoints/10-batch-job-cron.md
+        heading: Monitoring & Audit
+        aspect: Job status & history
+        viewpoint: Check status (success/fail, start/end time) and history tracking
+        expected_result: Accurately viewable; fully recorded without data loss
+      - source_row_id: rules/viewpoints/10-batch-job-cron.md::Monitoring & Audit::Audit log
+        path: rules/viewpoints/10-batch-job-cron.md
+        heading: Monitoring & Audit
+        aspect: Audit log
+        viewpoint: Check the job's audit log
+        expected_result: Records who ran it, when, and config changes made
+  - path: rules/viewpoints/11-api.md
+    sha256: bd01d1a65bb7c24b7ceafd4237b02a3beead4c9e32b1279e50f627b55f9ee21b
+    rows:
+      - source_row_id: rules/viewpoints/11-api.md::Basic::Endpoint/method, headers, params, body contract
+        path: rules/viewpoints/11-api.md
+        heading: Basic
+        aspect: Endpoint/method, headers, params, body contract
+        viewpoint: Check all four request-shape aspects
+        expected_result: Server accepts and processes correctly per spec
+      - source_row_id: rules/viewpoints/11-api.md::Basic::Response status, schema, business data, defaults, empty result
+        path: rules/viewpoints/11-api.md
+        heading: Basic
+        aspect: Response status, schema, business data, defaults, empty result
+        viewpoint: Check all five response aspects
+        expected_result: Matches spec exactly; empty filter returns `[]`/`{}`, never `null` or an error
+      - source_row_id: rules/viewpoints/11-api.md::Basic::Request triggered exactly once
+        path: rules/viewpoints/11-api.md
+        heading: Basic
+        aspect: Request triggered exactly once
+        viewpoint: Check that the triggering UI action calls the expected endpoint with correct method/params
+        expected_result: Fires exactly once, correct endpoint, params matching UI state
+      - source_row_id: rules/viewpoints/11-api.md::Basic::Response drives UI
+        path: rules/viewpoints/11-api.md
+        heading: Basic
+        aspect: Response drives UI
+        viewpoint: Check the screen renders using the actual response, not cached/stale/hardcoded data
+        expected_result: Every value on screen traces back to a response field
+      - source_row_id: rules/viewpoints/11-api.md::Validation::Missing field, invalid type, boundary, null, invalid format, special char, unexpected field, duplicate, large payload, UTF-8
+        path: rules/viewpoints/11-api.md
+        heading: Validation
+        aspect: Missing field, invalid type, boundary, null, invalid format, special char, unexpected field, duplicate, large payload, UTF-8
+        viewpoint: Check all ten input-validation edge cases
+        expected_result: 400 on invalid input (never 500); boundary values accepted in-range only; UTF-8/multi-byte round-trips intact
+      - source_row_id: rules/viewpoints/11-api.md::Authentication::No token, expired token, invalid token
+        path: rules/viewpoints/11-api.md
+        heading: Authentication
+        aspect: No token, expired token, invalid token
+        viewpoint: Check all three
+        expected_result: 401 in each case, with an "expired" message where applicable
+      - source_row_id: rules/viewpoints/11-api.md::Authorization::Role/permission, cross-user access, session timeout, refresh token
+        path: rules/viewpoints/11-api.md
+        heading: Authorization
+        aspect: Role/permission, cross-user access, session timeout, refresh token
+        viewpoint: Check all four
+        expected_result: 403/404 without leaking data; expired session requires re-login; refresh issues a new valid token
+      - source_row_id: rules/viewpoints/11-api.md::Business Logic::Happy path, business-rule violation, invalid state transition
+        path: rules/viewpoints/11-api.md
+        heading: Business Logic
+        aspect: Happy path, business-rule violation, invalid state transition
+        viewpoint: Check all three
+        expected_result: Correct processing; rule violations rejected with a clear message; invalid transitions rejected, state unchanged
+      - source_row_id: rules/viewpoints/11-api.md::Business Logic::Duplicate operation & idempotency
+        path: rules/viewpoints/11-api.md
+        heading: Business Logic
+        aspect: Duplicate operation & idempotency
+        viewpoint: Check duplicate create requests, and repeated PUT/PATCH
+        expected_result: 409/idempotency-key blocked; repeated PUT/PATCH yields the same final result
+      - source_row_id: rules/viewpoints/11-api.md::Business Logic::Concurrent request & transaction rollback
+        path: rules/viewpoints/11-api.md
+        heading: Business Logic
+        aspect: Concurrent request & transaction rollback
+        viewpoint: Check 2–5 concurrent writes to the same resource, and a mid-operation failure
+        expected_result: No data loss/race condition; entire transaction rolls back on failure
+      - source_row_id: rules/viewpoints/11-api.md::Database::Persisted change, audit log, timestamp/timezone, field mapping
+        path: rules/viewpoints/11-api.md
+        heading: Database
+        aspect: Persisted change, audit log, timestamp/timezone, field mapping
+        viewpoint: Check all four
+        expected_result: Change persists correctly; audit record created; correct ISO 8601 timestamp; response fields map to correct DB columns
+      - source_row_id: rules/viewpoints/11-api.md::Database::Currency/unit conversion at storage
+        path: rules/viewpoints/11-api.md
+        heading: Database
+        aspect: Currency/unit conversion at storage
+        viewpoint: Check a monetary or unit field that must be converted before storage (exchange rate, tax-inclusive total, ...)
+        expected_result: Conversion applied exactly once, correct rate/formula, no double- or missed conversion
+      - source_row_id: rules/viewpoints/11-api.md::Database::Third-party supplier field passthrough
+        path: rules/viewpoints/11-api.md
+        heading: Database
+        aspect: Third-party supplier field passthrough
+        viewpoint: Check a field sourced from a third-party supplier/GDS response before being normalized into the system's own schema
+        expected_result: Mapped/normalized correctly and consistently, including when the supplier's field is absent or null
+      - source_row_id: rules/viewpoints/11-api.md::Database::Failure does not partially persist
+        path: rules/viewpoints/11-api.md
+        heading: Database
+        aspect: Failure does not partially persist
+        viewpoint: Check the DB state and user-facing message when an API call fails partway
+        expected_result: Specific failure reason surfaced; no partial/inconsistent row left — the write either fully succeeds or nothing is written
+      - source_row_id: rules/viewpoints/11-api.md::Error Handling::Full HTTP status catalog (200/201/204/400/401/403/404/409/415/429/500)
+        path: rules/viewpoints/11-api.md
+        heading: Error Handling
+        aspect: Full HTTP status catalog (200/201/204/400/401/403/404/409/415/429/500)
+        viewpoint: Check each documented status case
+        expected_result: Correct status per case, consistent error format, no sensitive info exposed (no stack trace/SQL/internal paths)
+      - source_row_id: rules/viewpoints/11-api.md::Security::SQL injection, XSS payload, mass assignment, HTTPS enforcement, rate limit
+        path: rules/viewpoints/11-api.md
+        heading: Security
+        aspect: SQL injection, XSS payload, mass assignment, HTTPS enforcement, rate limit
+        viewpoint: Check all five
+        expected_result: Rejected/sanitized safely, never 500; HTTP redirects/rejects; rate limit returns 429 with `Retry-After`
+  - path: rules/viewpoints/12-it-flow.md
+    sha256: 54b1c8069d9db4a429ec75c59f18e5ddbd2d544a4176a333fa615d9d5bc6e806
+    rows:
+      - source_row_id: rules/viewpoints/12-it-flow.md::Basic case::Screen transition
+        path: rules/viewpoints/12-it-flow.md
+        heading: Basic case
+        aspect: Screen transition
+        viewpoint: Check that navigating from screen A to screen B carries the expected data (id, filter, selection)
+        expected_result: Screen B receives and correctly renders the data passed from screen A
+      - source_row_id: rules/viewpoints/12-it-flow.md::Basic case::Data round-trip
+        path: rules/viewpoints/12-it-flow.md
+        heading: Basic case
+        aspect: Data round-trip
+        viewpoint: Check that data submitted on screen A is saved via API and correctly reflected on screen B / in the DB
+        expected_result: Data shown on screen B / stored in the DB matches exactly what was submitted on screen A
+      - source_row_id: rules/viewpoints/12-it-flow.md::Basic case::Back navigation
+        path: rules/viewpoints/12-it-flow.md
+        heading: Basic case
+        aspect: Back navigation
+        viewpoint: Check the browser/app back action mid-flow
+        expected_result: Returning to the previous screen keeps its prior state/selection (no double-submit, no data loss)
+      - source_row_id: rules/viewpoints/12-it-flow.md::Happy case::Full main flow
+        path: rules/viewpoints/12-it-flow.md
+        heading: Happy case
+        aspect: Full main flow
+        viewpoint: Check the entire main flow from the entry screen to completion
+        expected_result: Every screen transitions correctly; the final state (DB, balance, status) matches the business rule
+      - source_row_id: rules/viewpoints/12-it-flow.md::Happy case::Cross-screen calculated value
+        path: rules/viewpoints/12-it-flow.md
+        heading: Happy case
+        aspect: Cross-screen calculated value
+        viewpoint: Check a calculated value shown on multiple screens (total, balance, quota)
+        expected_result: The value stays consistent everywhere it's displayed
+      - source_row_id: rules/viewpoints/12-it-flow.md::Happy case::Session/token continuity
+        path: rules/viewpoints/12-it-flow.md
+        heading: Happy case
+        aspect: Session/token continuity
+        viewpoint: Check that the session/token stays valid across the whole flow
+        expected_result: The user is not logged out unexpectedly mid-flow
+      - source_row_id: rules/viewpoints/12-it-flow.md::Happy case::Admin/back-office config → user-facing effect
+        path: rules/viewpoints/12-it-flow.md
+        heading: Happy case
+        aspect: Admin/back-office config → user-facing effect
+        viewpoint: Check a back-office/admin configuration change (e.g. markup, supplier setting) followed by the corresponding user-facing screen, both exercised via real API+DB
+        expected_result: The user-facing screen reflects the admin change correctly end to end, with the correct value/behavior
+      - source_row_id: rules/viewpoints/12-it-flow.md::Happy case::Round-trip create → verify → modify
+        path: rules/viewpoints/12-it-flow.md
+        heading: Happy case
+        aspect: Round-trip create → verify → modify
+        viewpoint: Check creating a record on one screen, re-opening the same record on another screen to modify it, then verifying the update
+        expected_result: Each stage's changes are visible and correct in the next stage — no stale reads, no lost updates
+      - source_row_id: rules/viewpoints/12-it-flow.md::Edge case::Forward → back → forward again
+        path: rules/viewpoints/12-it-flow.md
+        heading: Edge case
+        aspect: Forward → back → forward again
+        viewpoint: Check re-entering a step after going back
+        expected_result: Data/state is not duplicated or corrupted; the flow can still complete normally
+      - source_row_id: rules/viewpoints/12-it-flow.md::Edge case::Data changed mid-flow by another process
+        path: rules/viewpoints/12-it-flow.md
+        heading: Edge case
+        aspect: Data changed mid-flow by another process
+        viewpoint: Check the underlying data changing between two steps (another user/admin edits it)
+        expected_result: The flow either detects the change (reload/refetch/warn) or fails gracefully — it must never silently save stale data
+      - source_row_id: rules/viewpoints/12-it-flow.md::Edge case::Concurrent / double-submit
+        path: rules/viewpoints/12-it-flow.md
+        heading: Edge case
+        aspect: Concurrent / double-submit
+        viewpoint: Check submitting the same step twice quickly (double click, two tabs)
+        expected_result: Only 1 transaction is created; no duplicate record/side-effect
+      - source_row_id: rules/viewpoints/12-it-flow.md::Edge case::Permission changes mid-flow
+        path: rules/viewpoints/12-it-flow.md
+        heading: Edge case
+        aspect: Permission changes mid-flow
+        viewpoint: Check the user's role/permission being revoked partway through the flow
+        expected_result: The flow blocks/redirects appropriately at the next screen that requires that permission
+      - source_row_id: rules/viewpoints/12-it-flow.md::Edge case::Alternate-path branching
+        path: rules/viewpoints/12-it-flow.md
+        heading: Edge case
+        aspect: Alternate-path branching
+        viewpoint: Check a flow that branches into a named alternate path when a mid-flow condition changes (e.g. price change, item becomes unavailable)
+        expected_result: The flow branches correctly at the decision point and reaches the correct alternate final state, without corrupting the main-path data
+      - source_row_id: rules/viewpoints/12-it-flow.md::Abnormal case::Network loss mid-flow
+        path: rules/viewpoints/12-it-flow.md
+        heading: Abnormal case
+        aspect: Network loss mid-flow
+        viewpoint: Check losing connectivity between two steps
+        expected_result: A clear error is shown; no partial/corrupt data is saved; retry is possible
+      - source_row_id: rules/viewpoints/12-it-flow.md::Abnormal case::Token/session expired mid-flow
+        path: rules/viewpoints/12-it-flow.md
+        heading: Abnormal case
+        aspect: Token/session expired mid-flow
+        viewpoint: Check the token expiring while on step k
+        expected_result: The user is redirected to login; in-progress step data is not silently lost/corrupted (warn or preserve per spec)
+      - source_row_id: rules/viewpoints/12-it-flow.md::Abnormal case::API/DB error at any step
+        path: rules/viewpoints/12-it-flow.md
+        heading: Abnormal case
+        aspect: API/DB error at any step
+        viewpoint: Check any API in the flow returning an error/timeout
+        expected_result: The flow shows an appropriate error and does not proceed to the next screen with invalid state
+      - source_row_id: rules/viewpoints/12-it-flow.md::Abnormal case::Boundary data crossing screens
+        path: rules/viewpoints/12-it-flow.md
+        heading: Abnormal case
+        aspect: Boundary data crossing screens
+        viewpoint: Check boundary values (max length, max quantity, zero, negative) as they pass between screens
+        expected_result: Boundary values are validated consistently at every screen/API in the flow, not only at the first one
+  - path: rules/viewpoints/13-e2e-journey.md
+    sha256: 1a954db5351a3d15a3a8a2ff8457fcf515a54c0ac260e563e67475dd308efd4a
+    rows:
+      - source_row_id: rules/viewpoints/13-e2e-journey.md::Basic case::Persona happy path
+        path: rules/viewpoints/13-e2e-journey.md
+        heading: Basic case
+        aspect: Persona happy path
+        viewpoint: Check the shortest complete path for 1 persona (e.g. sign up → search → apply)
+        expected_result: The user completes the journey with no dead end and no missing action to move to the next feature
+      - source_row_id: rules/viewpoints/13-e2e-journey.md::Basic case::Cross-feature data continuity
+        path: rules/viewpoints/13-e2e-journey.md
+        heading: Basic case
+        aspect: Cross-feature data continuity
+        viewpoint: Check data created in feature A appears correctly in feature B (profile, order, application)
+        expected_result: The data is consistent and up to date everywhere it's shown downstream
+      - source_row_id: rules/viewpoints/13-e2e-journey.md::Happy case::Full main business journey
+        path: rules/viewpoints/13-e2e-journey.md
+        heading: Happy case
+        aspect: Full main business journey
+        viewpoint: Check the entire journey including every mandatory business branch (e.g. apply → work → get paid)
+        expected_result: Every feature hands off correctly; the final state (balance, history, status) matches the business rule end-to-end
+      - source_row_id: rules/viewpoints/13-e2e-journey.md::Happy case::Notification / external side-effect
+        path: rules/viewpoints/13-e2e-journey.md
+        heading: Happy case
+        aspect: Notification / external side-effect
+        viewpoint: Check emails/SMS/push notifications triggered at each journey milestone
+        expected_result: Each notification fires at the correct milestone, with correct content/recipient
+      - source_row_id: rules/viewpoints/13-e2e-journey.md::Happy case::Multi-session continuity
+        path: rules/viewpoints/13-e2e-journey.md
+        heading: Happy case
+        aspect: Multi-session continuity
+        viewpoint: Check resuming the journey in a new session (logout/login, new device)
+        expected_result: Progress/state is preserved correctly, matching what was left off
+      - source_row_id: rules/viewpoints/13-e2e-journey.md::Edge case::Alternate business branch
+        path: rules/viewpoints/13-e2e-journey.md
+        heading: Edge case
+        aspect: Alternate business branch
+        viewpoint: Check a valid but less common business branch (e.g. cancel then reapply, partial refund)
+        expected_result: The alternate branch completes correctly and doesn't corrupt data from the main branch
+      - source_row_id: rules/viewpoints/13-e2e-journey.md::Edge case::Multi-actor interaction
+        path: rules/viewpoints/13-e2e-journey.md
+        heading: Edge case
+        aspect: Multi-actor interaction
+        viewpoint: Check a journey requiring 2+ roles interacting (e.g. employer approves, worker confirms)
+        expected_result: Each actor's action is reflected correctly and promptly for the other actor
+      - source_row_id: rules/viewpoints/13-e2e-journey.md::Edge case::Time-based condition
+        path: rules/viewpoints/13-e2e-journey.md
+        heading: Edge case
+        aspect: Time-based condition
+        viewpoint: Check journeys depending on a scheduled job/cron or an expiry (e.g. shift starts, offer expires)
+        expected_result: The journey behaves correctly right before/at/after the time boundary
+      - source_row_id: rules/viewpoints/13-e2e-journey.md::Edge case::Full status-lifecycle walk (if documented)
+        path: rules/viewpoints/13-e2e-journey.md
+        heading: Edge case
+        aspect: Full status-lifecycle walk (if documented)
+        viewpoint: If this journey's record has a documented status lifecycle (see a supplied domain rules file, e.g. `rules/domains/example-booking.md`), check driving it through the entire lifecycle in one journey pass
+        expected_result: Every transition matches the documented valid-transition table, ending at the documented terminal status
+      - source_row_id: rules/viewpoints/13-e2e-journey.md::Abnormal case::Interruption mid-journey
+        path: rules/viewpoints/13-e2e-journey.md
+        heading: Abnormal case
+        aspect: Interruption mid-journey
+        viewpoint: Check closing the app/tab or losing network mid-journey, then resuming
+        expected_result: The user can resume/redo safely; no duplicate transaction, no stuck state
+      - source_row_id: rules/viewpoints/13-e2e-journey.md::Abnormal case::External system failure
+        path: rules/viewpoints/13-e2e-journey.md
+        heading: Abnormal case
+        aspect: External system failure
+        viewpoint: Check a downstream integration failing mid-journey (payment gateway down, 3rd-party API error)
+        expected_result: The journey fails gracefully with a clear message; earlier completed steps are not corrupted
+      - source_row_id: rules/viewpoints/13-e2e-journey.md::Abnormal case::Conflicting concurrent actions
+        path: rules/viewpoints/13-e2e-journey.md
+        heading: Abnormal case
+        aspect: Conflicting concurrent actions
+        viewpoint: Check 2 actors acting on the same journey at the same time (e.g. both cancel and confirm simultaneously)
+        expected_result: Only 1 consistent final state results; no lost update
+  - path: rules/viewpoints/14-keyboard-mouse-interaction.md
+    sha256: 8fcccc3bd8db73684d1ddba6cb82757d466742f7b39fc3dd89461fefbe1b9937
+    rows:
+      - source_row_id: rules/viewpoints/14-keyboard-mouse-interaction.md::::Tab order
+        path: rules/viewpoints/14-keyboard-mouse-interaction.md
+        heading: ''
+        aspect: Tab order
+        viewpoint: Press `TAB` repeatedly from screen load
+        expected_result: Focus moves left-to-right, top-to-bottom per the design's documented order; first `TAB` lands on the first editable field
+      - source_row_id: rules/viewpoints/14-keyboard-mouse-interaction.md::::Tab skips read-only fields
+        path: rules/viewpoints/14-keyboard-mouse-interaction.md
+        heading: ''
+        aspect: Tab skips read-only fields
+        viewpoint: Press `TAB` through a screen with read-only fields
+        expected_result: Focus skips every read-only field
+      - source_row_id: rules/viewpoints/14-keyboard-mouse-interaction.md::::Shift+Tab
+        path: rules/viewpoints/14-keyboard-mouse-interaction.md
+        heading: ''
+        aspect: Shift+Tab
+        viewpoint: Press `SHIFT+TAB`
+        expected_result: Focus moves back to the previous focusable element
+      - source_row_id: rules/viewpoints/14-keyboard-mouse-interaction.md::::Cursor position across popups/tab-switch
+        path: rules/viewpoints/14-keyboard-mouse-interaction.md
+        heading: ''
+        aspect: Cursor position across popups/tab-switch
+        viewpoint: Focus an item, open a sub-screen/popup/message box (or `ALT+TAB` to another program), then return
+        expected_result: Focus returns to exactly the item that was focused before
+      - source_row_id: rules/viewpoints/14-keyboard-mouse-interaction.md::::Enter / Arrow-key navigation
+        path: rules/viewpoints/14-keyboard-mouse-interaction.md
+        heading: ''
+        aspect: Enter / Arrow-key navigation
+        viewpoint: Press `ENTER`, `↓`, or `↑` to move between fields
+        expected_result: Moves per the design's field order; never lands on a read-only field
+      - source_row_id: rules/viewpoints/14-keyboard-mouse-interaction.md::::Navigation wrap at first/last field
+        path: rules/viewpoints/14-keyboard-mouse-interaction.md
+        heading: ''
+        aspect: Navigation wrap at first/last field
+        viewpoint: Press `ENTER`/`↓` at the last field, or `↑` at the first field
+        expected_result: Wraps per spec; default holds position at the first field for `↑`
+      - source_row_id: rules/viewpoints/14-keyboard-mouse-interaction.md::::Copy / Paste / Cut / Undo
+        path: rules/viewpoints/14-keyboard-mouse-interaction.md
+        heading: ''
+        aspect: Copy / Paste / Cut / Undo
+        viewpoint: '`CTRL+C`/`CTRL+V` between textboxes; `CTRL+X` to cut; `CTRL+Z` to undo'
+        expected_result: Paste inserts into the focused textbox; cut removes selected text; undo restores the pre-change value
+      - source_row_id: rules/viewpoints/14-keyboard-mouse-interaction.md::::Copy/Cut blocked on read-only
+        path: rules/viewpoints/14-keyboard-mouse-interaction.md
+        heading: ''
+        aspect: Copy/Cut blocked on read-only
+        viewpoint: '`CTRL+V`/`CTRL+X` targeting a read-only field'
+        expected_result: No paste/cut applied
+      - source_row_id: rules/viewpoints/14-keyboard-mouse-interaction.md::::Browser zoom shortcuts disabled
+        path: rules/viewpoints/14-keyboard-mouse-interaction.md
+        heading: ''
+        aspect: Browser zoom shortcuts disabled
+        viewpoint: "`CTRL+ +`/`CTRL+ -`/`CTRL+scroll-click` on the app's own controls"
+        expected_result: No zoom triggered by the app itself
+      - source_row_id: rules/viewpoints/14-keyboard-mouse-interaction.md::::Grid paging shortcuts
+        path: rules/viewpoints/14-keyboard-mouse-interaction.md
+        heading: ''
+        aspect: Grid paging shortcuts
+        viewpoint: '`CTRL+PageDown`/`CTRL+PageUp` on a Grid screen vs. non-Grid screen'
+        expected_result: 'Grid: moves page and highlights its first row. Non-Grid: no-op'
+      - source_row_id: rules/viewpoints/14-keyboard-mouse-interaction.md::::Multiple checkbox/radio selection
+        path: rules/viewpoints/14-keyboard-mouse-interaction.md
+        heading: ''
+        aspect: Multiple checkbox/radio selection
+        viewpoint: Select several checkboxes at once; click a different radio in the same group
+        expected_result: All selected checkboxes flip to checked; radio group moves to the newly clicked option
+      - source_row_id: rules/viewpoints/14-keyboard-mouse-interaction.md::::Combobox selection feedback
+        path: rules/viewpoints/14-keyboard-mouse-interaction.md
+        heading: ''
+        aspect: Combobox selection feedback
+        viewpoint: Select any value from a combobox's list
+        expected_result: Renders fully in the display area, never truncated
+      - source_row_id: rules/viewpoints/14-keyboard-mouse-interaction.md::::Multi-tab / multi-browser session
+        path: rules/viewpoints/14-keyboard-mouse-interaction.md
+        heading: ''
+        aspect: Multi-tab / multi-browser session
+        viewpoint: Open the same page in two tabs, and in two different browsers, simultaneously
+        expected_result: Both instances work correctly per spec (either both usable, or the app enforces re-login)
