@@ -440,12 +440,21 @@ git commit -m "feat(workspace): enforce approval gates"
 **Files:**
 - Create: `src/quality_weaver/catalog.py`
 - Create: `viewpoints/catalog.yaml`
+- Create: `viewpoints/local/ui-layout.yaml`
+- Create: `viewpoints/local/display-controls.yaml`
+- Create: `viewpoints/local/data-visualization.yaml`
+- Create: `viewpoints/local/container-structural.yaml`
 - Create: `viewpoints/local/input-validation.yaml`
 - Create: `viewpoints/local/action-controls.yaml`
-- Create: `viewpoints/local/display.yaml`
+- Create: `viewpoints/local/advanced.yaml`
+- Create: `viewpoints/local/api.yaml`
+- Create: `viewpoints/local/keyboard-mouse.yaml`
 - Create: `viewpoints/cross-requirement/navigation.yaml`
 - Create: `viewpoints/cross-requirement/data-continuity.yaml`
+- Create: `viewpoints/cross-requirement/it-flow.yaml`
+- Create: `viewpoints/cross-requirement/e2e-journey.yaml`
 - Create: `viewpoints/system-wide/mobile.yaml`
+- Create: `viewpoints/system-wide/batch-job-cron.yaml`
 - Create: `docs/migration/viewpoint-provenance.yaml`
 - Create: `tests/unit/test_catalog.py`
 - Create: `tests/contract/test_viewpoint_catalog.py`
@@ -483,9 +492,9 @@ Expected: FAIL because the catalog is absent.
 
 - [ ] **Step 3: Build the routing index and migrated files**
 
-Each YAML document validates as `list[Viewpoint]`. `catalog.yaml` contains catalog version `1.0.0` and group routing metadata. Migrate useful rows from `qa-engine/qc-testcase/rules/viewpoints/` into stable atomic viewpoints without copying group prose. Every migrated ID is listed in `viewpoint-provenance.yaml` with the legacy relative path and heading/table row description.
+Each YAML document validates as `list[Viewpoint]`. `catalog.yaml` contains catalog version `1.0.0` and group routing metadata. Migrate every current table row from all 14 files under `qa-engine/qc-testcase/rules/viewpoints/` into stable atomic viewpoints without copying group prose. Every legacy row must appear in `viewpoint-provenance.yaml` as either a migrated stable ID or an explicit deduplication mapping to another stable ID; no row may be silently dropped. Provenance records the legacy relative path, heading, and row description.
 
-The initial catalog must include input required/empty/boundary checks, repeated action/double submit, initial display/empty state, correct navigation/back behavior, cross-screen data continuity, interruption, orientation, permission, and deep-link mobile behavior.
+The initial catalog must preserve the full useful legacy viewpoint inventory while reclassifying each item as local, cross-requirement, or system-wide. It must include input required/empty/boundary checks, repeated action/double submit, initial display/empty state, correct navigation/back behavior, cross-screen data continuity, interruption, orientation, permission, and deep-link mobile behavior.
 
 - [ ] **Step 4: Validate without modifying legacy source**
 
