@@ -1,0 +1,64 @@
+schema_version: 1
+name: company-legacy
+formats:
+  - markdown
+  - excel
+organization:
+  project_cell: C1
+  manager_cell: C2
+  quality_lead_cell: C3
+workbooks:
+  ut:
+    template: templates/UT_TestCase.xlsx
+    required_sheets:
+      - Cover
+      - Overview
+      - Summary
+      - Setting
+      - Testcase
+      - APIParameters
+      - APIBusinessLogic
+    sheet: Testcase
+    header_row: 12
+    first_row: 16
+    columns:
+      id: 1
+      title: 2
+      traceability: 4
+      preconditions: 7
+      steps: 9
+      expected: 10
+    headers:
+      id: Test case ID
+      title: Item Test
+      traceability: Description
+      preconditions: Pre-conditions
+      steps: Step
+      expected: Expected Results
+    filename: "{project}_{artifact}_Test Case UT.xlsx"
+  it:
+    template: templates/IT_TestCase.xlsx
+    required_sheets:
+      - Cover
+      - Overview
+      - Summary
+      - Setting
+      - Testcase
+    sheet: Testcase
+    header_row: 12
+    first_row: 16
+    columns:
+      id: 1
+      title: 2
+      traceability: 4
+      preconditions: 7
+      steps: 9
+      expected: 10
+    headers:
+      id: Test case ID
+      title: Item Test
+      traceability: Description
+      preconditions: Pre-conditions
+      steps: Step
+      expected: Expected Results
+    filename: "{project}_{artifact}_Test Case IT.xlsx"

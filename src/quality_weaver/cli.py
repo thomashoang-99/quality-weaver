@@ -11,6 +11,7 @@ from ruamel.yaml.error import YAMLError
 from quality_weaver import __version__
 from quality_weaver.catalog import Catalog
 from quality_weaver.coverage import CoverageFinding, validate_ledger
+from quality_weaver.exporters import ExportError, export_excel, export_markdown
 from quality_weaver.io import atomic_write_text
 from quality_weaver.models import (
     CoverageItem,
@@ -18,6 +19,7 @@ from quality_weaver.models import (
     TestCaseDocument,
     TestOutline,
 )
+from quality_weaver.profiles import ExportFormat, Profile, ProfileError
 from quality_weaver.testcases import (
     render_testcases_markdown,
     validate_outline,
@@ -67,6 +69,12 @@ def _fail(error: StateError) -> Never:
 def _artifact_fail(kind: str, error: Exception) -> Never:
     message = str(error).splitlines()[0]
     typer.echo(f"Invalid {kind}: {message}")
+    raise typer.Exit(code=1)
+
+
+def _export_fail(error: ExportError) -> Never:
+    for finding in error.findings:
+        typer.echo(f"{finding.code} {finding.artifact_id}: {finding.message}")
     raise typer.Exit(code=1)
 
 
@@ -291,6 +299,59 @@ def testcases_render(
     except (OSError, ValueError, ValidationError, YAMLError) as error:
         _artifact_fail("test-case document", error)
     typer.echo(f"Rendered {output_path}")
+
+
+@app.command("export")
+def export_command(
+    project_path: Annotated[Path, typer.Argument(metavar="PROJECT")],
+    cases_path: Annotated[Path, typer.Argument(metavar="CASES")],
+    profiles_root: Annotated[Path, typer.Option("--profiles-root")],
+    profile_name: Annotated[str, typer.Option("--profile")],
+    output_format: Annotated[ExportFormat, typer.Option("--format")],
+    output_path: Annotated[Path, typer.Option("--out")],
+    workbook_kind: Annotated[str | None, typer.Option("--workbook")] = None,
+    project_name: Annotated[str | None, typer.Option("--project-name")] = None,
+    artifact_name: Annotated[str | None, typer.Option("--artifact-name")] = None,
+) -> None:
+    """Export explicitly selected approved cases through an explicit profile root."""
+    try:
+        workspace = Workspace(project_path)
+        document = _load_testcases(cases_path)
+        profile = Profile.load(profile_name, profiles_root)
+        protected = (cases_path, profile.root / "profile.yaml", workspace.state_path)
+        if output_format is ExportFormat.MARKDOWN:
+            result = export_markdown(
+                workspace,
+                document,
+                profile,
+                output_path,
+                protected_inputs=protected,
+            )
+        else:
+            if workbook_kind is None or project_name is None or artifact_name is None:
+                raise ValueError(
+                    "excel requires --workbook, --project-name, and --artifact-name"
+                )
+            result = export_excel(
+                workspace,
+                document,
+                profile,
+                workbook_kind=workbook_kind,
+                output_directory=output_path,
+                project=project_name,
+                artifact=artifact_name,
+                protected_inputs=protected,
+            )
+    except ProfileError as error:
+        typer.echo(str(error))
+        raise typer.Exit(code=1) from error
+    except ExportError as error:
+        _export_fail(error)
+    except StateError as error:
+        _fail(error)
+    except (OSError, ValueError, ValidationError, YAMLError) as error:
+        _artifact_fail("export input", error)
+    typer.echo(f"Exported {result.case_count} cases to {result.path}")
 
 
 @app.command("init")
