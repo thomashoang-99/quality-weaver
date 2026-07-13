@@ -12,15 +12,29 @@ from quality_weaver import __version__
 from quality_weaver.catalog import Catalog
 from quality_weaver.coverage import CoverageFinding, validate_ledger
 from quality_weaver.io import atomic_write_text
-from quality_weaver.models import CoverageItem, CoverageLedger
+from quality_weaver.models import (
+    CoverageItem,
+    CoverageLedger,
+    TestCaseDocument,
+    TestOutline,
+)
+from quality_weaver.testcases import (
+    render_testcases_markdown,
+    validate_outline,
+    validate_testcases,
+)
 from quality_weaver.testmap import render_testmap
 from quality_weaver.workspace import Stage, StateError, Workspace
 
 app = typer.Typer(no_args_is_help=True)
 coverage_app = typer.Typer(no_args_is_help=True)
 testmap_app = typer.Typer(no_args_is_help=True)
+outline_app = typer.Typer(no_args_is_help=True)
+testcases_app = typer.Typer(no_args_is_help=True)
 app.add_typer(coverage_app, name="coverage")
 app.add_typer(testmap_app, name="testmap")
+app.add_typer(outline_app, name="outline")
+app.add_typer(testcases_app, name="testcases")
 _COVERAGE_ITEMS = TypeAdapter(list[CoverageItem])
 
 
@@ -64,6 +78,16 @@ def _load_ledger(path: Path) -> CoverageLedger:
     if duplicate_findings:
         raise _DuplicateCoverageError(duplicate_findings)
     return CoverageLedger.model_validate(document)
+
+
+def _load_outline(path: Path) -> TestOutline:
+    yaml = YAML(typ="safe")
+    return TestOutline.model_validate(yaml.load(path.read_text(encoding="utf-8")))
+
+
+def _load_testcases(path: Path) -> TestCaseDocument:
+    yaml = YAML(typ="safe")
+    return TestCaseDocument.model_validate(yaml.load(path.read_text(encoding="utf-8")))
 
 
 def _catalog(path: Path) -> Catalog:
@@ -131,12 +155,22 @@ def _duplicates_fail(error: _DuplicateCoverageError) -> Never:
     raise typer.Exit(code=1)
 
 
-def _target_ownership(
-    requirement_ids: list[str], target_specs: list[str]
-) -> dict[str, set[str]]:
-    ownership: dict[str, set[str]] = {
-        requirement_id: set() for requirement_id in requirement_ids
-    }
+def _findings_result(findings: list[CoverageFinding], success: str) -> None:
+    for finding in findings:
+        typer.echo(f"{finding.code} {finding.artifact_id}: {finding.message}")
+    if any(finding.blocking for finding in findings):
+        raise typer.Exit(code=1)
+    typer.echo(success)
+
+
+def _ensure_distinct_output(output_path: Path, *input_paths: Path) -> None:
+    resolved_output = output_path.resolve()
+    if resolved_output in {path.resolve() for path in input_paths}:
+        raise ValueError("output path collides with an input")
+
+
+def _target_ownership(requirement_ids: list[str], target_specs: list[str]) -> dict[str, set[str]]:
+    ownership: dict[str, set[str]] = {requirement_id: set() for requirement_id in requirement_ids}
     for spec in target_specs:
         requirement_id, separator, target_id = spec.partition("=")
         if not separator or not requirement_id or not target_id:
@@ -202,6 +236,60 @@ def testmap_render(
         _duplicates_fail(error)
     except (OSError, ValueError, ValidationError, YAMLError) as error:
         _artifact_fail("coverage ledger", error)
+    typer.echo(f"Rendered {output_path}")
+
+
+@outline_app.command("validate")
+def outline_validate(
+    ledger_path: Annotated[Path, typer.Argument(metavar="LEDGER")],
+    outline_path: Annotated[Path, typer.Argument(metavar="OUTLINE")],
+) -> None:
+    """Validate exact coverage consumption by a test outline."""
+    try:
+        ledger = _load_ledger(ledger_path)
+        outline = _load_outline(outline_path)
+    except _DuplicateCoverageError as error:
+        _duplicates_fail(error)
+    except (OSError, ValueError, ValidationError, YAMLError) as error:
+        _artifact_fail("outline input", error)
+    _findings_result(validate_outline(ledger, outline), "Outline is valid")
+
+
+@testcases_app.command("validate")
+def testcases_validate(
+    ledger_path: Annotated[Path, typer.Argument(metavar="LEDGER")],
+    outline_path: Annotated[Path, typer.Argument(metavar="OUTLINE")],
+    cases_path: Annotated[Path, typer.Argument(metavar="CASES")],
+) -> None:
+    """Validate detailed test cases against explicit ledger and outline inputs."""
+    try:
+        ledger = _load_ledger(ledger_path)
+        outline = _load_outline(outline_path)
+        document = _load_testcases(cases_path)
+    except _DuplicateCoverageError as error:
+        _duplicates_fail(error)
+    except (OSError, ValueError, ValidationError, YAMLError) as error:
+        _artifact_fail("test-case input", error)
+    outline_findings = validate_outline(ledger, outline)
+    findings = outline_findings + validate_testcases(ledger, outline, document)
+    findings.sort(key=lambda item: (item.code, item.artifact_id, item.message))
+    _findings_result(findings, "Test cases are valid")
+
+
+@testcases_app.command("render")
+def testcases_render(
+    cases_path: Annotated[Path, typer.Argument(metavar="CASES")],
+    output_path: Annotated[Path, typer.Option("--out")],
+) -> None:
+    """Render deterministic Markdown from an explicit test-case document."""
+    try:
+        _ensure_distinct_output(output_path, cases_path)
+        document = _load_testcases(cases_path)
+        markdown = render_testcases_markdown(document)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        atomic_write_text(output_path, markdown)
+    except (OSError, ValueError, ValidationError, YAMLError) as error:
+        _artifact_fail("test-case document", error)
     typer.echo(f"Rendered {output_path}")
 
 
