@@ -1,3 +1,4 @@
+import html
 from collections import defaultdict
 from collections.abc import Mapping
 from collections.abc import Set as AbstractSet
@@ -11,6 +12,7 @@ _DECISION_COLUMN = {
     CoverageDecision.EXCLUDE: "Excluded",
     CoverageDecision.NEEDS_CLARIFICATION: "Questions",
 }
+_MARKDOWN_PUNCTUATION = frozenset("\\`*{}[]()#!|:~.@")
 
 
 def render_testmap(
@@ -149,12 +151,27 @@ def _table_row(*values: object) -> str:
 
 
 def _markdown_text(value: object) -> str:
-    return (
+    normalized = (
         str(value)
-        .replace("\\", "\\\\")
         .replace("\r\n", " ")
         .replace("\r", " ")
         .replace("\n", " ")
-        .replace("|", "\\|")
-        .replace("`", "\\`")
     )
+    markdown_escaped = "".join(
+        f"\\{character}" if _needs_markdown_escape(normalized, index) else character
+        for index, character in enumerate(normalized)
+    )
+    return html.escape(markdown_escaped, quote=True)
+
+
+def _needs_markdown_escape(text: str, index: int) -> bool:
+    character = text[index]
+    if character in _MARKDOWN_PUNCTUATION:
+        return True
+    if character != "_":
+        return False
+    previous = text[index - 1] if index else ""
+    following = text[index + 1] if index + 1 < len(text) else ""
+    opens_emphasis = (not previous or not previous.isalnum()) and bool(following.strip())
+    closes_emphasis = bool(previous.strip()) and (not following or not following.isalnum())
+    return opens_emphasis or closes_emphasis

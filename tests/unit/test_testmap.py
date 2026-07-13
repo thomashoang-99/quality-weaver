@@ -1,4 +1,3 @@
-import shutil
 from pathlib import Path
 
 import pytest
@@ -42,6 +41,34 @@ def render(ledger: CoverageLedger, catalog: Catalog = CATALOG) -> str:
         known_requirement_ids=requirement_ids,
         known_target_ids=ownership,
     )
+
+
+def write_project_root_catalog(root: Path) -> tuple[Path, ...]:
+    declared = (root / "declared" / "input.yaml", root / "declared" / "navigation.yaml")
+    declared[0].parent.mkdir(parents=True)
+    yaml = YAML()
+    with declared[0].open("w", encoding="utf-8") as stream:
+        yaml.dump(
+            [
+                CATALOG.get("VP-INPUT-VALIDATION-001").model_dump(mode="json"),
+                CATALOG.get("VP-INPUT-VALIDATION-002").model_dump(mode="json"),
+            ],
+            stream,
+        )
+    with declared[1].open("w", encoding="utf-8") as stream:
+        yaml.dump([CATALOG.get("VP-NAVIGATION-001").model_dump(mode="json")], stream)
+    with (root / "catalog.yaml").open("w", encoding="utf-8") as stream:
+        yaml.dump(
+            {
+                "version": CATALOG.version,
+                "groups": [
+                    {"name": "input-validation", "file": "declared/input.yaml"},
+                    {"name": "navigation", "file": "declared/navigation.yaml"},
+                ],
+            },
+            stream,
+        )
+    return declared
 
 
 def item(
@@ -169,17 +196,22 @@ def test_duplicate_id_blocks_every_affected_unit() -> None:
 
 
 def test_markdown_escapes_table_and_anomaly_injection() -> None:
+    payload = (
+        "\\ []()<> **em** _em_ ~~strike~~ # heading <script>alert(1)</script> "
+        "&lt;entity&gt; [link](javascript:alert(1)) ![img](javascript:x) "
+        "www.example.com user@example.com | `tick`\r\nnext"
+    )
     viewpoint = CATALOG.get("VP-INPUT-VALIDATION-001").model_copy(
-        update={"group": "group\\|inject\r\nrow"}
+        update={"group": f"group {payload}"}
     )
     catalog = Catalog(CATALOG.version, tuple(), [viewpoint])
     coverage = item(
         "COV-001",
-        "REQ\\|inject\r\nrow",
+        f"REQ {payload}",
         viewpoint.id,
         CoverageDecision.INCLUDE,
         "high",
-    ).model_copy(update={"target_id": "TARGET\\|inject\r\nrow"})
+    ).model_copy(update={"target_id": f"TARGET {payload}"})
     ledger = CoverageLedger(catalog_version=catalog.version, items=[coverage])
 
     markdown = render_testmap(
@@ -190,10 +222,35 @@ def test_markdown_escapes_table_and_anomaly_injection() -> None:
     )
 
     assert "\r" not in markdown
-    assert "inject\nrow" not in markdown
-    assert "REQ\\\\\\|inject row" in markdown
-    assert "group\\\\\\|inject row" in markdown
-    assert "TARGET\\\\\\|inject row" in markdown
+    assert "tick`\nnext" not in markdown
+    for active_syntax in (
+        "<script>",
+        "[link](",
+        "![img]",
+        "javascript:",
+        "**em**",
+        "_em_",
+        "~~strike~~",
+        "`tick`",
+        "&lt;entity&gt;",
+        "www.example.com",
+        "user@example.com",
+    ):
+        assert active_syntax not in markdown
+    for readable_text in (
+        "REQ",
+        "group",
+        "TARGET",
+        "heading",
+        "strike",
+        "script",
+        "entity",
+        "www",
+        "user",
+        "next",
+    ):
+        assert readable_text in markdown
+    assert "\\# heading" in markdown
 
 
 def test_cli_reports_yaml_schema_errors_without_traceback(tmp_path: Path) -> None:
@@ -355,6 +412,40 @@ def test_cli_translates_duplicate_id_after_item_schema_validation(tmp_path: Path
     assert "COVERAGE_DUPLICATE_ID COV-003" in result.stdout
 
 
+def test_cli_reports_all_sorted_duplicate_findings(tmp_path: Path) -> None:
+    ledger_path = tmp_path / "ledger.yaml"
+    beta = sample_ledger().items[0]
+    alpha_question = sample_ledger().items[1]
+    alpha_include = sample_ledger().items[2]
+    rows = [
+        beta,
+        beta.model_copy(deep=True),
+        alpha_question,
+        alpha_question.model_copy(update={"id": "COV-004"}),
+        alpha_include,
+        alpha_include.model_copy(
+            update={"requirement_id": "REQ-BETA", "target_id": "TARGET-COV-003"}
+        ),
+    ]
+    raw = sample_ledger().model_dump(mode="json")
+    raw["items"] = [row.model_dump(mode="json") for row in rows]
+    with ledger_path.open("w", encoding="utf-8") as stream:
+        YAML().dump(raw, stream)
+
+    result = CliRunner().invoke(
+        app, ["coverage", "validate", str(ledger_path), *CLI_CONTEXT]
+    )
+
+    assert result.exit_code != 0
+    duplicate_lines = [line for line in result.stdout.splitlines() if "DUPLICATE" in line]
+    assert duplicate_lines == [
+        "COVERAGE_DUPLICATE_ID COV-001: Coverage ID is duplicated",
+        "COVERAGE_DUPLICATE_ID COV-003: Coverage ID is duplicated",
+        "COVERAGE_DUPLICATE_KEY COV-002: Coverage logical key is duplicated",
+        "COVERAGE_DUPLICATE_KEY COV-003: Coverage logical key is duplicated",
+    ]
+
+
 def test_cli_rejects_output_alias_of_ledger(tmp_path: Path) -> None:
     ledger_path = tmp_path / "ledger.yaml"
     original = sample_ledger().model_dump_json()
@@ -378,24 +469,16 @@ def test_cli_rejects_output_alias_of_ledger(tmp_path: Path) -> None:
     assert ledger_path.read_text(encoding="utf-8") == original
 
 
-@pytest.mark.parametrize(
-    ("relative_output", "protected_output"),
-    [
-        ("alias/../catalog.yaml", "catalog.yaml"),
-        ("local/injected.md", "local/injected.md"),
-    ],
-)
-def test_cli_rejects_output_within_catalog_tree(
-    tmp_path: Path, relative_output: str, protected_output: str
-) -> None:
-    catalog_path = tmp_path / "catalog"
-    shutil.copytree(CATALOG_PATH, catalog_path)
-    ledger_path = tmp_path / "ledger.yaml"
+def test_cli_allows_output_under_broad_catalog_root(tmp_path: Path) -> None:
+    project_path = tmp_path / "project"
+    project_path.mkdir()
+    write_project_root_catalog(project_path)
+    coverage_path = project_path / ".quality-weaver" / "coverage"
+    coverage_path.mkdir(parents=True)
+    ledger_path = coverage_path / "ledger.yaml"
     ledger_path.write_text(sample_ledger().model_dump_json(), encoding="utf-8")
-    output_path = catalog_path / relative_output
-    protected_path = catalog_path / protected_output
-    original = protected_path.read_bytes() if protected_path.exists() else None
-    context = ["--catalog", str(catalog_path), *CLI_CONTEXT[2:]]
+    output_path = coverage_path / "test-map.md"
+    context = ["--catalog", str(project_path), *CLI_CONTEXT[2:]]
 
     result = CliRunner().invoke(
         app,
@@ -409,9 +492,64 @@ def test_cli_rejects_output_within_catalog_tree(
         ],
     )
 
+    assert result.exit_code == 0
+    assert output_path.read_text(encoding="utf-8").startswith("# Test Map\n")
+
+
+@pytest.mark.parametrize("source_index", [0, 1])
+def test_cli_rejects_output_alias_of_each_declared_catalog_source(
+    tmp_path: Path, source_index: int
+) -> None:
+    project_path = tmp_path / "project"
+    project_path.mkdir()
+    declared = write_project_root_catalog(project_path)
+    ledger_path = tmp_path / "ledger.yaml"
+    ledger_path.write_text(sample_ledger().model_dump_json(), encoding="utf-8")
+    source = declared[source_index]
+    original = source.read_bytes()
+    output_alias = source.parent / "alias" / ".." / source.name
+    context = ["--catalog", str(project_path), *CLI_CONTEXT[2:]]
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "testmap",
+            "render",
+            str(ledger_path),
+            "--out",
+            str(output_alias),
+            *context,
+        ],
+    )
+
     assert result.exit_code != 0
     assert "output path" in result.stdout
-    if original is None:
-        assert not protected_path.exists()
-    else:
-        assert protected_path.read_bytes() == original
+    assert source.read_bytes() == original
+
+
+def test_cli_rejects_output_alias_of_catalog_metadata(tmp_path: Path) -> None:
+    project_path = tmp_path / "project"
+    project_path.mkdir()
+    write_project_root_catalog(project_path)
+    ledger_path = tmp_path / "ledger.yaml"
+    ledger_path.write_text(sample_ledger().model_dump_json(), encoding="utf-8")
+    catalog_metadata = project_path / "catalog.yaml"
+    original = catalog_metadata.read_bytes()
+    output_alias = project_path / "alias" / ".." / "catalog.yaml"
+    context = ["--catalog", str(project_path), *CLI_CONTEXT[2:]]
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "testmap",
+            "render",
+            str(ledger_path),
+            "--out",
+            str(output_alias),
+            *context,
+        ],
+    )
+
+    assert result.exit_code != 0
+    assert "output path" in result.stdout
+    assert catalog_metadata.read_bytes() == original

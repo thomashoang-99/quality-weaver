@@ -24,6 +24,12 @@ app.add_typer(testmap_app, name="testmap")
 _COVERAGE_ITEMS = TypeAdapter(list[CoverageItem])
 
 
+class _DuplicateCoverageError(ValueError):
+    def __init__(self, findings: list[CoverageFinding]) -> None:
+        self.findings = tuple(findings)
+        super().__init__("coverage ledger contains duplicate coverage")
+
+
 @app.callback()
 def main() -> None:
     """QualityWeaver command-line interface."""
@@ -54,9 +60,9 @@ def _load_ledger(path: Path) -> CoverageLedger:
     yaml = YAML(typ="safe")
     document: Any = yaml.load(path.read_text(encoding="utf-8"))
     items = _validated_raw_items(document)
-    duplicate = _duplicate_finding(items)
-    if duplicate is not None:
-        raise ValueError(f"{duplicate.code} {duplicate.artifact_id}: {duplicate.message}")
+    duplicate_findings = _duplicate_findings(items)
+    if duplicate_findings:
+        raise _DuplicateCoverageError(duplicate_findings)
     return CoverageLedger.model_validate(document)
 
 
@@ -70,7 +76,7 @@ def _validated_raw_items(document: Any) -> list[CoverageItem]:
     return _COVERAGE_ITEMS.validate_python(document["items"])
 
 
-def _duplicate_finding(items: list[CoverageItem]) -> CoverageFinding | None:
+def _duplicate_findings(items: list[CoverageItem]) -> list[CoverageFinding]:
     ids_by_key: dict[tuple[str, str, str, str], list[str]] = {}
     for item in items:
         ids_by_key.setdefault(item.logical_key, []).append(item.id)
@@ -84,18 +90,45 @@ def _duplicate_finding(items: list[CoverageItem]) -> CoverageFinding | None:
         for coverage_id, count in Counter(item.id for item in items).items()
         if count > 1
     )
-    if not findings:
-        return None
-    code, artifact_id, message = min(findings)
-    return CoverageFinding(code=code, artifact_id=artifact_id, message=message)
+    return sorted(
+        (
+            CoverageFinding(code=code, artifact_id=artifact_id, message=message)
+            for code, artifact_id, message in findings
+        ),
+        key=lambda finding: (finding.code, finding.artifact_id, finding.message),
+    )
 
 
 def _ensure_safe_output(ledger_path: Path, catalog_path: Path, output_path: Path) -> None:
     resolved_output = output_path.resolve()
     resolved_ledger = ledger_path.resolve()
-    resolved_catalog = catalog_path.resolve()
-    if resolved_output == resolved_ledger or resolved_output.is_relative_to(resolved_catalog):
+    protected_inputs = _catalog_input_paths(catalog_path)
+    if resolved_output == resolved_ledger or resolved_output in protected_inputs:
         raise ValueError("output path collides with a protected input")
+
+
+def _catalog_input_paths(catalog_path: Path) -> set[Path]:
+    resolved_catalog = catalog_path.resolve()
+    metadata_path = (resolved_catalog / "catalog.yaml").resolve()
+    yaml = YAML(typ="safe")
+    metadata: Any = yaml.load(metadata_path.read_text(encoding="utf-8"))
+    if not isinstance(metadata, Mapping) or not isinstance(metadata.get("groups"), list):
+        raise ValueError("catalog.yaml requires list groups")
+    protected = {metadata_path}
+    for group in metadata["groups"]:
+        if not isinstance(group, Mapping) or not isinstance(group.get("file"), str):
+            raise ValueError("catalog group requires string file")
+        source = (resolved_catalog / group["file"]).resolve()
+        if not source.is_relative_to(resolved_catalog):
+            raise ValueError(f"catalog file escapes root: {group['file']}")
+        protected.add(source)
+    return protected
+
+
+def _duplicates_fail(error: _DuplicateCoverageError) -> Never:
+    for finding in error.findings:
+        typer.echo(f"{finding.code} {finding.artifact_id}: {finding.message}")
+    raise typer.Exit(code=1)
 
 
 def _target_ownership(
@@ -126,6 +159,8 @@ def coverage_validate(
         ledger = _load_ledger(ledger_path)
         catalog = _catalog(catalog_path)
         target_ownership = _target_ownership(requirement_ids, target_specs)
+    except _DuplicateCoverageError as error:
+        _duplicates_fail(error)
     except (OSError, ValueError, ValidationError, YAMLError) as error:
         _artifact_fail("coverage ledger", error)
     findings = validate_ledger(
@@ -163,6 +198,8 @@ def testmap_render(
         )
         output_path.parent.mkdir(parents=True, exist_ok=True)
         atomic_write_text(output_path, markdown)
+    except _DuplicateCoverageError as error:
+        _duplicates_fail(error)
     except (OSError, ValueError, ValidationError, YAMLError) as error:
         _artifact_fail("coverage ledger", error)
     typer.echo(f"Rendered {output_path}")
