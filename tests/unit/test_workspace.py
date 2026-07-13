@@ -1,5 +1,6 @@
 import hashlib
 import json
+import os
 import threading
 import time
 from contextlib import contextmanager
@@ -73,15 +74,48 @@ def test_workspace_translates_lock_timeout_to_state_error(tmp_path, monkeypatch)
         Workspace.init(tmp_path)
 
 
-def test_workspace_path_aliases_share_the_same_locks(tmp_path, monkeypatch) -> None:
+def test_workspace_path_aliases_share_the_same_project_local_lock(tmp_path, monkeypatch) -> None:
     monkeypatch.chdir(tmp_path.parent)
     relative_path = Path(tmp_path.name)
 
     absolute_workspace = Workspace(tmp_path)
     relative_workspace = Workspace(relative_path)
+    expected_lock = Path(os.path.normcase(str(tmp_path.resolve()))) / ".quality-weaver.lock"
 
     assert relative_workspace._init_lock_path == absolute_workspace._init_lock_path
     assert relative_workspace._mutation_lock_path == absolute_workspace._mutation_lock_path
+    assert absolute_workspace._init_lock_path == expected_lock
+    assert absolute_workspace._mutation_lock_path == expected_lock
+
+    Workspace.init(tmp_path)
+    assert expected_lock.is_file()
+    assert not expected_lock.is_symlink()
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows paths are case-insensitive")
+def test_windows_path_case_aliases_share_the_same_lock(tmp_path) -> None:
+    case_alias = Path(str(tmp_path).swapcase())
+
+    assert Workspace(case_alias)._init_lock_path == Workspace(tmp_path)._init_lock_path
+
+
+def test_init_rejects_missing_project_root_without_creating_it(tmp_path) -> None:
+    project_path = tmp_path / "missing-project"
+
+    with pytest.raises(StateError, match="project path must already exist"):
+        Workspace.init(project_path)
+
+    assert not project_path.exists()
+
+
+def test_init_rejects_non_directory_project_root(tmp_path) -> None:
+    project_path = tmp_path / "project.txt"
+    project_path.write_text("user content", encoding="utf-8")
+
+    with pytest.raises(StateError, match="project path must be a directory"):
+        Workspace.init(project_path)
+
+    assert project_path.read_text(encoding="utf-8") == "user content"
 
 
 def test_init_rejects_file_at_expected_directory_and_rolls_back(tmp_path) -> None:
@@ -106,34 +140,6 @@ def test_init_rejects_directory_at_config_path_and_rolls_back(tmp_path) -> None:
 
     assert config_path.is_dir()
     assert {path.name for path in config_path.parent.iterdir()} == {"config.yaml"}
-
-
-def test_failed_init_removes_newly_created_empty_project_root(tmp_path, monkeypatch) -> None:
-    project_path = tmp_path / "new-project"
-
-    def fail_create(*args, **kwargs) -> None:
-        raise OSError("state creation failed")
-
-    monkeypatch.setattr(workspace_module, "atomic_create_text", fail_create)
-
-    with pytest.raises(OSError, match="state creation failed"):
-        Workspace.init(project_path)
-
-    assert not project_path.exists()
-
-
-def test_failed_init_removes_all_newly_created_nested_ancestors(tmp_path, monkeypatch) -> None:
-    project_path = tmp_path / "new-a" / "new-b" / "project"
-
-    def fail_create(*args, **kwargs) -> None:
-        raise OSError("state creation failed")
-
-    monkeypatch.setattr(workspace_module, "atomic_create_text", fail_create)
-
-    with pytest.raises(OSError, match="state creation failed"):
-        Workspace.init(project_path)
-
-    assert not (tmp_path / "new-a").exists()
 
 
 def test_load_state_rejects_unsupported_schema_version(tmp_path) -> None:

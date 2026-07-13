@@ -233,6 +233,11 @@ No workflow depends on prior chat history. A task can move between Codex and Cla
 
 QualityWeaver stores generated state under `.quality-weaver/` in the user's project:
 
+`quality-weaver init PATH` requires `PATH` to already exist as a directory. QualityWeaver never
+creates the project root or any of its ancestors. Initialization and state mutations serialize on
+an OS-released project-local lock at `PATH/.quality-weaver.lock`; the lock identity is derived from
+the resolved path with platform-normalized case so path aliases share one lock.
+
 ```text
 .quality-weaver/
 ├── config.yaml

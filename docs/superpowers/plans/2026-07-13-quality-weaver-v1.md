@@ -402,6 +402,10 @@ Expected: FAIL because `Workspace` does not exist.
 
 Use an enum with `requirements`, `coverage`, and `testcases`. Store `state.json` with schema version `1`, each gate status, upstream hashes, and last run ID. Write state to a sibling temporary file and replace the destination atomically with `Path.replace`.
 
+`Workspace.init(PATH)` requires `PATH` to already exist as a directory and never creates the
+project root or ancestors. Initialization and state mutations use one OS-released project-local
+lock at `PATH/.quality-weaver.lock`, keyed by the resolved path with platform-normalized case.
+
 Legal approvals are:
 
 ```text
@@ -420,7 +424,9 @@ quality-weaver status [PATH]
 quality-weaver approve requirements|coverage|testcases [PATH]
 ```
 
-`init` creates the exact workspace tree from the design spec and refuses to overwrite an existing state file. `status` emits a compact table and the next legal action.
+`init` requires an existing project directory, creates the exact workspace tree inside it, never
+creates the project root or ancestors, and refuses to overwrite an existing state file. `status`
+emits a compact table and the next legal action.
 
 - [ ] **Step 5: Run verification**
 

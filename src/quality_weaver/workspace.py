@@ -1,11 +1,11 @@
 import hashlib
 import json
+import os
 import stat
 from collections.abc import Callable
 from contextlib import suppress
 from enum import StrEnum
 from pathlib import Path
-from tempfile import gettempdir
 from typing import Literal
 
 from pydantic import Field, ValidationError, model_validator
@@ -57,67 +57,28 @@ class Workspace:
         self.project_path = project_path
         self.path = project_path / ".quality-weaver"
         self.state_path = self.path / "state.json"
-        canonical_project_path = project_path.resolve()
-        lock_identity = hashlib.sha256(str(canonical_project_path).encode("utf-8")).hexdigest()
-        lock_directory = Path(gettempdir()) / "quality-weaver-locks"
-        lock_directory.mkdir(exist_ok=True)
-        self._mutation_lock_path = lock_directory / f"{lock_identity}.state.lock"
-        self._init_lock_path = lock_directory / f"{lock_identity}.init.lock"
+        canonical_project_path = Path(os.path.normcase(str(project_path.resolve())))
+        self._init_lock_path = canonical_project_path / ".quality-weaver.lock"
+        self._mutation_lock_path = self._init_lock_path
 
     @classmethod
     def init(cls, project_path: Path) -> "Workspace":
-        created_project_directories = cls._create_project_directories(project_path)
+        try:
+            project_path.lstat()
+        except FileNotFoundError:
+            raise StateError(f"project path must already exist: {project_path}") from None
+        if not cls._is_directory(project_path):
+            raise StateError(f"project path must be a directory: {project_path}")
 
         workspace = cls(project_path)
         try:
-            try:
-                with exclusive_lock(workspace._init_lock_path):
-                    if workspace.state_path.is_file():
-                        raise StateError(
-                            f"workspace state already exists: {workspace.state_path}"
-                        )
-                    workspace._initialize_exclusively()
-            except LockTimeoutError as error:
-                raise StateError("timed out acquiring workspace lock") from error
-        except BaseException:
-            for directory in reversed(created_project_directories):
-                with suppress(OSError):
-                    directory.rmdir()
-            raise
+            with exclusive_lock(workspace._init_lock_path):
+                if workspace.state_path.is_file():
+                    raise StateError(f"workspace state already exists: {workspace.state_path}")
+                workspace._initialize_exclusively()
+        except LockTimeoutError as error:
+            raise StateError("timed out acquiring workspace lock") from error
         return workspace
-
-    @classmethod
-    def _create_project_directories(cls, project_path: Path) -> list[Path]:
-        missing_directories: list[Path] = []
-        existing_ancestor = project_path
-        while not cls._node_exists(existing_ancestor):
-            missing_directories.append(existing_ancestor)
-            parent = existing_ancestor.parent
-            if parent == existing_ancestor:
-                break
-            existing_ancestor = parent
-
-        if not cls._is_directory(existing_ancestor):
-            raise StateError(f"project path must be a directory: {existing_ancestor}")
-
-        created_directories: list[Path] = []
-        try:
-            for directory in reversed(missing_directories):
-                try:
-                    directory.mkdir()
-                except FileExistsError:
-                    if not cls._is_directory(directory):
-                        raise StateError(
-                            f"project path must be a directory: {directory}"
-                        ) from None
-                else:
-                    created_directories.append(directory)
-        except BaseException:
-            for directory in reversed(created_directories):
-                with suppress(OSError):
-                    directory.rmdir()
-            raise
-        return created_directories
 
     def _initialize_exclusively(self) -> None:
         created_directories: list[Path] = []
@@ -178,14 +139,6 @@ class Workspace:
             return stat.S_ISDIR(path.lstat().st_mode)
         except OSError:
             return False
-
-    @staticmethod
-    def _node_exists(path: Path) -> bool:
-        try:
-            path.lstat()
-        except OSError:
-            return False
-        return True
 
     @staticmethod
     def _is_regular_file(path: Path) -> bool:
