@@ -1,6 +1,8 @@
 from typer.testing import CliRunner
 
 from quality_weaver.cli import app
+from quality_weaver.models import ApprovalStatus
+from quality_weaver.workspace import Stage, Workspace
 
 
 def test_version_command() -> None:
@@ -40,3 +42,34 @@ def test_init_command_reports_existing_workspace(tmp_path) -> None:
 
     assert duplicate.exit_code == 1
     assert "already exists" in duplicate.stdout
+
+
+def test_regenerate_command_recovers_stale_coverage(tmp_path) -> None:
+    workspace = Workspace.init(tmp_path)
+    workspace.approve(Stage.REQUIREMENTS)
+    workspace.approve(Stage.COVERAGE)
+    workspace.invalidate_after(Stage.REQUIREMENTS)
+
+    result = CliRunner().invoke(app, ["regenerate", "coverage", str(tmp_path)])
+
+    assert result.exit_code == 0
+    assert "Ready to regenerate coverage" in result.stdout
+    assert workspace.load_state().coverage is ApprovalStatus.DRAFT
+
+
+def test_status_uses_one_state_snapshot(tmp_path, monkeypatch) -> None:
+    Workspace.init(tmp_path)
+    original_load_state = Workspace.load_state
+    calls = 0
+
+    def counted_load_state(workspace: Workspace):
+        nonlocal calls
+        calls += 1
+        return original_load_state(workspace)
+
+    monkeypatch.setattr(Workspace, "load_state", counted_load_state)
+
+    result = CliRunner().invoke(app, ["status", str(tmp_path)])
+
+    assert result.exit_code == 0
+    assert calls == 1

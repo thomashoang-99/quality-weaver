@@ -55,7 +55,7 @@ def status(
     typer.echo("Stage         Status")
     for stage in Stage:
         typer.echo(f"{stage.value:<13} {getattr(state, stage.value).value}")
-    typer.echo(f"Next: {workspace.next_action()}")
+    typer.echo(f"Next: {workspace.next_action(state)}")
 
 
 @app.command()
@@ -70,3 +70,17 @@ def approve(
     except StateError as error:
         _fail(error)
     typer.echo(f"Approved {stage.value}")
+
+
+@app.command()
+def regenerate(
+    stage: Stage,
+    project_path: Annotated[Path, typer.Argument(metavar="[PATH]")] = Path("."),
+) -> None:
+    """Reset a stale gate to draft before regenerating its artifact."""
+    workspace = _workspace(project_path)
+    try:
+        workspace.regenerate(stage)
+    except StateError as error:
+        _fail(error)
+    typer.echo(f"Ready to regenerate {stage.value}")

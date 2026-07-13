@@ -1,8 +1,13 @@
 import hashlib
 import json
+import threading
+import time
+from pathlib import Path
 
 import pytest
 
+import quality_weaver.workspace as workspace_module
+from quality_weaver.io import atomic_write_text
 from quality_weaver.models import ApprovalStatus
 from quality_weaver.workspace import Stage, StateError, Workspace, sha256_file
 
@@ -50,6 +55,26 @@ def test_load_state_rejects_unsupported_schema_version(tmp_path) -> None:
     workspace = Workspace.init(tmp_path)
     state = json.loads(workspace.state_path.read_text(encoding="utf-8"))
     state["schema_version"] = 2
+    workspace.state_path.write_text(json.dumps(state), encoding="utf-8")
+
+    with pytest.raises(StateError, match="invalid workspace state"):
+        workspace.load_state()
+
+
+@pytest.mark.parametrize(
+    ("requirements", "coverage", "testcases"),
+    [
+        ("draft", "approved", "draft"),
+        ("draft", "approved", "approved"),
+        ("approved", "draft", "approved"),
+    ],
+)
+def test_load_state_rejects_impossible_approval_dependencies(
+    tmp_path, requirements: str, coverage: str, testcases: str
+) -> None:
+    workspace = Workspace.init(tmp_path)
+    state = json.loads(workspace.state_path.read_text(encoding="utf-8"))
+    state.update(requirements=requirements, coverage=coverage, testcases=testcases)
     workspace.state_path.write_text(json.dumps(state), encoding="utf-8")
 
     with pytest.raises(StateError, match="invalid workspace state"):
@@ -120,6 +145,28 @@ def test_coverage_change_marks_only_testcases_stale(tmp_path) -> None:
     assert state.testcases is ApprovalStatus.STALE
 
 
+def test_regenerate_moves_stale_stage_to_draft_and_keeps_downstream_stale(tmp_path) -> None:
+    workspace = Workspace.init(tmp_path)
+    workspace.approve(Stage.REQUIREMENTS)
+    workspace.approve(Stage.COVERAGE)
+    workspace.approve(Stage.TESTCASES)
+    workspace.invalidate_after(Stage.REQUIREMENTS)
+
+    workspace.regenerate(Stage.COVERAGE)
+
+    state = workspace.load_state()
+    assert state.requirements is ApprovalStatus.APPROVED
+    assert state.coverage is ApprovalStatus.DRAFT
+    assert state.testcases is ApprovalStatus.STALE
+
+
+def test_regenerate_rejects_non_stale_stage(tmp_path) -> None:
+    workspace = Workspace.init(tmp_path)
+
+    with pytest.raises(StateError, match="must be stale"):
+        workspace.regenerate(Stage.REQUIREMENTS)
+
+
 def test_approve_persists_complete_json_without_leaving_temporary_file(tmp_path) -> None:
     workspace = Workspace.init(tmp_path)
 
@@ -128,6 +175,161 @@ def test_approve_persists_complete_json_without_leaving_temporary_file(tmp_path)
     raw_state = json.loads(workspace.state_path.read_text(encoding="utf-8"))
     assert raw_state["requirements"] == "approved"
     assert not workspace.state_path.with_suffix(".json.tmp").exists()
+
+
+@pytest.mark.parametrize("failure_point", ["write", "replace"])
+def test_atomic_write_cleans_unique_temporary_file_after_failure(
+    tmp_path, monkeypatch, failure_point: str
+) -> None:
+    destination = tmp_path / "state.json"
+    destination.write_text("original", encoding="utf-8")
+
+    def fail(*args, **kwargs) -> None:
+        raise OSError(failure_point)
+
+    if failure_point == "write":
+        monkeypatch.setattr(Path, "write_text", fail)
+    else:
+        monkeypatch.setattr(Path, "replace", fail)
+
+    with pytest.raises(OSError, match=failure_point):
+        atomic_write_text(destination, "replacement")
+
+    assert destination.read_text(encoding="utf-8") == "original"
+    assert list(tmp_path.glob(".state.json.*.tmp")) == []
+
+
+def test_concurrent_atomic_writers_use_distinct_temporary_files(tmp_path, monkeypatch) -> None:
+    destination = tmp_path / "state.json"
+    destination.write_text("initial", encoding="utf-8")
+    barrier = threading.Barrier(2)
+    original_replace = Path.replace
+    attempted_sources: set[Path] = set()
+    attempted_sources_lock = threading.Lock()
+
+    def synchronized_replace(source: Path, target: Path) -> Path:
+        with attempted_sources_lock:
+            first_attempt = source not in attempted_sources
+            attempted_sources.add(source)
+        if first_attempt:
+            barrier.wait(timeout=2)
+        return original_replace(source, target)
+
+    monkeypatch.setattr(Path, "replace", synchronized_replace)
+    errors: list[BaseException] = []
+
+    def write(content: str) -> None:
+        try:
+            atomic_write_text(destination, content)
+        except BaseException as error:
+            errors.append(error)
+
+    threads = [threading.Thread(target=write, args=(content,)) for content in ("one", "two")]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=3)
+
+    assert errors == []
+    assert len(attempted_sources) == 2
+    assert destination.read_text(encoding="utf-8") in {"one", "two"}
+    assert list(tmp_path.glob(".state.json.*.tmp")) == []
+
+
+def test_concurrent_state_mutations_do_not_lose_updates(tmp_path, monkeypatch) -> None:
+    workspace = Workspace.init(tmp_path)
+    workspace.approve(Stage.REQUIREMENTS)
+    original_write = workspace_module.atomic_write_text
+    active_writers = 0
+    maximum_active_writers = 0
+    counter_lock = threading.Lock()
+
+    def observed_write(path: Path, content: str) -> None:
+        nonlocal active_writers, maximum_active_writers
+        with counter_lock:
+            active_writers += 1
+            maximum_active_writers = max(maximum_active_writers, active_writers)
+        time.sleep(0.05)
+        try:
+            original_write(path, content)
+        finally:
+            with counter_lock:
+                active_writers -= 1
+
+    monkeypatch.setattr(workspace_module, "atomic_write_text", observed_write)
+    errors: list[BaseException] = []
+
+    def mutate(operation) -> None:
+        try:
+            operation()
+        except BaseException as error:
+            errors.append(error)
+
+    threads = [
+        threading.Thread(target=mutate, args=(lambda: workspace.approve(Stage.COVERAGE),)),
+        threading.Thread(
+            target=mutate, args=(lambda: workspace.invalidate_after(Stage.COVERAGE),)
+        ),
+    ]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=3)
+
+    state = workspace.load_state()
+    assert errors == []
+    assert maximum_active_writers == 1
+    assert state.coverage is ApprovalStatus.APPROVED
+    assert state.testcases is ApprovalStatus.STALE
+
+
+def test_concurrent_initializers_have_one_winner_without_overwrite(tmp_path, monkeypatch) -> None:
+    original_exists = Path.exists
+    barrier = threading.Barrier(2)
+
+    def synchronized_exists(path: Path) -> bool:
+        if path.name == "state.json":
+            barrier.wait(timeout=2)
+        return original_exists(path)
+
+    monkeypatch.setattr(Path, "exists", synchronized_exists)
+    results: list[Workspace] = []
+    errors: list[BaseException] = []
+
+    def initialize() -> None:
+        try:
+            results.append(Workspace.init(tmp_path))
+        except BaseException as error:
+            errors.append(error)
+
+    threads = [threading.Thread(target=initialize) for _ in range(2)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=3)
+
+    assert len(results) == 1
+    assert len(errors) == 1
+    assert isinstance(errors[0], StateError)
+    assert results[0].load_state().requirements is ApprovalStatus.DRAFT
+
+
+def test_failed_initializer_rolls_back_only_its_created_content(tmp_path, monkeypatch) -> None:
+    workspace_path = tmp_path / ".quality-weaver"
+    workspace_path.mkdir()
+    user_file = workspace_path / "keep.txt"
+    user_file.write_text("keep", encoding="utf-8")
+
+    def fail_create(*args, **kwargs) -> None:
+        raise OSError("state creation failed")
+
+    monkeypatch.setattr(workspace_module, "atomic_create_text", fail_create, raising=False)
+
+    with pytest.raises(OSError, match="state creation failed"):
+        Workspace.init(tmp_path)
+
+    assert user_file.read_text(encoding="utf-8") == "keep"
+    assert {path.name for path in workspace_path.iterdir()} == {"keep.txt"}
 
 
 def test_sha256_file_hashes_bytes(tmp_path) -> None:
