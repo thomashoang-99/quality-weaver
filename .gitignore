@@ -36,6 +36,10 @@ ENV/
 # QualityWeaver runtime workspace
 /.quality-weaver/
 
+# Local implementation worktrees and SDD progress
+/.worktrees/
+/.superpowers/
+
 # Local Claude/Codex settings
 .claude/settings.local.json
 .codex/*.local.toml
