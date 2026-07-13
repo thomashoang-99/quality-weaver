@@ -5,6 +5,7 @@ from collections.abc import Callable
 from contextlib import suppress
 from enum import StrEnum
 from pathlib import Path
+from tempfile import gettempdir
 from typing import Literal
 
 from pydantic import Field, ValidationError, model_validator
@@ -57,20 +58,15 @@ class Workspace:
         self.path = project_path / ".quality-weaver"
         self.state_path = self.path / "state.json"
         canonical_project_path = project_path.resolve()
-        lock_prefix = f".{canonical_project_path.name}.quality-weaver"
-        self._mutation_lock_path = canonical_project_path.parent / f"{lock_prefix}.state.lock"
-        self._init_lock_path = canonical_project_path.parent / f"{lock_prefix}.init.lock"
+        lock_identity = hashlib.sha256(str(canonical_project_path).encode("utf-8")).hexdigest()
+        lock_directory = Path(gettempdir()) / "quality-weaver-locks"
+        lock_directory.mkdir(exist_ok=True)
+        self._mutation_lock_path = lock_directory / f"{lock_identity}.state.lock"
+        self._init_lock_path = lock_directory / f"{lock_identity}.init.lock"
 
     @classmethod
     def init(cls, project_path: Path) -> "Workspace":
-        created_project = False
-        try:
-            project_path.mkdir(parents=True)
-        except FileExistsError:
-            if not cls._is_directory(project_path):
-                raise StateError(f"project path must be a directory: {project_path}") from None
-        else:
-            created_project = True
+        created_project_directories = cls._create_project_directories(project_path)
 
         workspace = cls(project_path)
         try:
@@ -84,11 +80,44 @@ class Workspace:
             except LockTimeoutError as error:
                 raise StateError("timed out acquiring workspace lock") from error
         except BaseException:
-            if created_project:
+            for directory in reversed(created_project_directories):
                 with suppress(OSError):
-                    project_path.rmdir()
+                    directory.rmdir()
             raise
         return workspace
+
+    @classmethod
+    def _create_project_directories(cls, project_path: Path) -> list[Path]:
+        missing_directories: list[Path] = []
+        existing_ancestor = project_path
+        while not cls._node_exists(existing_ancestor):
+            missing_directories.append(existing_ancestor)
+            parent = existing_ancestor.parent
+            if parent == existing_ancestor:
+                break
+            existing_ancestor = parent
+
+        if not cls._is_directory(existing_ancestor):
+            raise StateError(f"project path must be a directory: {existing_ancestor}")
+
+        created_directories: list[Path] = []
+        try:
+            for directory in reversed(missing_directories):
+                try:
+                    directory.mkdir()
+                except FileExistsError:
+                    if not cls._is_directory(directory):
+                        raise StateError(
+                            f"project path must be a directory: {directory}"
+                        ) from None
+                else:
+                    created_directories.append(directory)
+        except BaseException:
+            for directory in reversed(created_directories):
+                with suppress(OSError):
+                    directory.rmdir()
+            raise
+        return created_directories
 
     def _initialize_exclusively(self) -> None:
         created_directories: list[Path] = []
@@ -149,6 +178,14 @@ class Workspace:
             return stat.S_ISDIR(path.lstat().st_mode)
         except OSError:
             return False
+
+    @staticmethod
+    def _node_exists(path: Path) -> bool:
+        try:
+            path.lstat()
+        except OSError:
+            return False
+        return True
 
     @staticmethod
     def _is_regular_file(path: Path) -> bool:

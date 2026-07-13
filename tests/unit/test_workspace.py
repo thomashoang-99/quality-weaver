@@ -122,6 +122,20 @@ def test_failed_init_removes_newly_created_empty_project_root(tmp_path, monkeypa
     assert not project_path.exists()
 
 
+def test_failed_init_removes_all_newly_created_nested_ancestors(tmp_path, monkeypatch) -> None:
+    project_path = tmp_path / "new-a" / "new-b" / "project"
+
+    def fail_create(*args, **kwargs) -> None:
+        raise OSError("state creation failed")
+
+    monkeypatch.setattr(workspace_module, "atomic_create_text", fail_create)
+
+    with pytest.raises(OSError, match="state creation failed"):
+        Workspace.init(project_path)
+
+    assert not (tmp_path / "new-a").exists()
+
+
 def test_load_state_rejects_unsupported_schema_version(tmp_path) -> None:
     workspace = Workspace.init(tmp_path)
     state = json.loads(workspace.state_path.read_text(encoding="utf-8"))
