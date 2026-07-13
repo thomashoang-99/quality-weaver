@@ -1,0 +1,128 @@
+{
+  "$defs": {
+    "ApprovalStatus": {
+      "enum": [
+        "draft",
+        "approved",
+        "stale"
+      ],
+      "title": "ApprovalStatus",
+      "type": "string"
+    },
+    "RequirementEntity": {
+      "additionalProperties": false,
+      "properties": {
+        "facts": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": "Facts",
+          "type": "object"
+        },
+        "id": {
+          "pattern": "^[A-Z]+-[A-Z0-9-]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "source_quote": {
+          "title": "Source Quote",
+          "type": "string"
+        },
+        "type": {
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "name",
+        "source_quote"
+      ],
+      "title": "RequirementEntity",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "business_rules": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Business Rules",
+      "type": "array"
+    },
+    "entities": {
+      "items": {
+        "$ref": "#/$defs/RequirementEntity"
+      },
+      "title": "Entities",
+      "type": "array"
+    },
+    "id": {
+      "pattern": "^REQ-[A-Z0-9-]+$",
+      "title": "Id",
+      "type": "string"
+    },
+    "questions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Questions",
+      "type": "array"
+    },
+    "risks": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Risks",
+      "type": "array"
+    },
+    "source_path": {
+      "title": "Source Path",
+      "type": "string"
+    },
+    "source_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Source Sha256",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/ApprovalStatus",
+      "default": "draft"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "source_path",
+    "source_sha256",
+    "entities"
+  ],
+  "title": "RequirementDocument",
+  "type": "object"
+}

@@ -1,0 +1,122 @@
+{
+  "$defs": {
+    "ApprovalStatus": {
+      "enum": [
+        "draft",
+        "approved",
+        "stale"
+      ],
+      "title": "ApprovalStatus",
+      "type": "string"
+    },
+    "CoverageDecision": {
+      "enum": [
+        "include",
+        "exclude",
+        "needs-clarification"
+      ],
+      "title": "CoverageDecision",
+      "type": "string"
+    },
+    "CoverageItem": {
+      "additionalProperties": false,
+      "properties": {
+        "condition": {
+          "title": "Condition",
+          "type": "string"
+        },
+        "decision": {
+          "$ref": "#/$defs/CoverageDecision"
+        },
+        "evidence": {
+          "title": "Evidence",
+          "type": "string"
+        },
+        "id": {
+          "pattern": "^COV-[0-9]{3,}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "priority": {
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ],
+          "title": "Priority",
+          "type": "string"
+        },
+        "question_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Question Id"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "requirement_id": {
+          "title": "Requirement Id",
+          "type": "string"
+        },
+        "target_id": {
+          "title": "Target Id",
+          "type": "string"
+        },
+        "viewpoint_id": {
+          "title": "Viewpoint Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "requirement_id",
+        "target_id",
+        "viewpoint_id",
+        "condition",
+        "decision",
+        "priority",
+        "evidence",
+        "rationale"
+      ],
+      "title": "CoverageItem",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "catalog_version": {
+      "title": "Catalog Version",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/CoverageItem"
+      },
+      "title": "Items",
+      "type": "array"
+    },
+    "profile": {
+      "default": "generic",
+      "title": "Profile",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/ApprovalStatus",
+      "default": "draft"
+    }
+  },
+  "required": [
+    "catalog_version",
+    "items"
+  ],
+  "title": "CoverageLedger",
+  "type": "object"
+}

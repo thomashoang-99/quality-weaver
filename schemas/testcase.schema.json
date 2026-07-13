@@ -1,0 +1,126 @@
+{
+  "$defs": {
+    "ApprovalStatus": {
+      "enum": [
+        "draft",
+        "approved",
+        "stale"
+      ],
+      "title": "ApprovalStatus",
+      "type": "string"
+    },
+    "TestCase": {
+      "additionalProperties": false,
+      "properties": {
+        "coverage_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Coverage Ids",
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^TC-[0-9]{3,}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "outline_id": {
+          "title": "Outline Id",
+          "type": "string"
+        },
+        "preconditions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Preconditions",
+          "type": "array"
+        },
+        "priority": {
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ],
+          "title": "Priority",
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/TestStep"
+          },
+          "minItems": 1,
+          "title": "Steps",
+          "type": "array"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        },
+        "test_data": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Test Data",
+          "type": "array"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "outline_id",
+        "coverage_ids",
+        "preconditions",
+        "steps",
+        "priority"
+      ],
+      "title": "TestCase",
+      "type": "object"
+    },
+    "TestStep": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "title": "Action",
+          "type": "string"
+        },
+        "expected": {
+          "title": "Expected",
+          "type": "string"
+        }
+      },
+      "required": [
+        "action",
+        "expected"
+      ],
+      "title": "TestStep",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "cases": {
+      "items": {
+        "$ref": "#/$defs/TestCase"
+      },
+      "title": "Cases",
+      "type": "array"
+    },
+    "status": {
+      "$ref": "#/$defs/ApprovalStatus",
+      "default": "draft"
+    }
+  },
+  "required": [
+    "cases"
+  ],
+  "title": "TestCaseDocument",
+  "type": "object"
+}

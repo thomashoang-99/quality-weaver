@@ -1,0 +1,61 @@
+{
+  "$defs": {
+    "ApprovalStatus": {
+      "enum": [
+        "draft",
+        "approved",
+        "stale"
+      ],
+      "title": "ApprovalStatus",
+      "type": "string"
+    },
+    "OutlineItem": {
+      "additionalProperties": false,
+      "properties": {
+        "coverage_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Coverage Ids",
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^OUT-[0-9]{3,}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "coverage_ids"
+      ],
+      "title": "OutlineItem",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "items": {
+      "items": {
+        "$ref": "#/$defs/OutlineItem"
+      },
+      "title": "Items",
+      "type": "array"
+    },
+    "status": {
+      "$ref": "#/$defs/ApprovalStatus",
+      "default": "draft"
+    }
+  },
+  "required": [
+    "items"
+  ],
+  "title": "TestOutline",
+  "type": "object"
+}
