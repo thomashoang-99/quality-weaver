@@ -39,6 +39,7 @@ ENV/
 # Local implementation worktrees and SDD progress
 /.worktrees/
 /.superpowers/
+/docs/superpowers/
 
 # Local Claude/Codex settings
 .claude/settings.local.json
