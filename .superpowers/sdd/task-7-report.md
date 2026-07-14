@@ -72,3 +72,44 @@ Focused GREEN:
   the deterministic filename. For Markdown, `--out` is the explicit output file.
 - The pre-existing unstaged edit to `docs/superpowers/plans/2026-07-13-quality-weaver-v1.md`
   was neither modified nor staged by Task 7.
+
+## Independent review fixes
+
+All six Important findings from the independent Task 7 review were reproduced and fixed:
+
+- Both exporters now protect `profile.yaml` and every workbook template at the exporter boundary,
+  including templates for workbook kinds not selected by the current Excel export.
+- Filename policies are parsed with `string.Formatter`; only plain `project` and `artifact` fields
+  are accepted, with no attribute/index access, conversion, format specification, unknown field,
+  or malformed brace syntax. Export revalidates a bypassed profile and returns typed
+  `EXPORT_FILENAME_INVALID` findings.
+- Excel presentation preserves every testcase field without adding legacy columns: tags are
+  labelled in traceability/Description, while labelled Preconditions and Test Data share the
+  preconditions cell. Empty lists render deterministically as `None.`.
+- Mapped data cells are cleared through the used worksheet range before writing. Vertical stale
+  data merges are removed while horizontal template formatting remains intact. The temporary
+  workbook is reloaded and its complete ID region must exactly equal the sorted source case IDs
+  before atomic replacement.
+- `profile.yaml` is resolved and containment-checked so a symlink cannot escape its resolved
+  profile root.
+- Directory creation, temporary-file setup, workbook save, reload, verification, and atomic
+  replacement failures are converted to typed export findings. Invalid ZIPs and missing sheets
+  are rejected before publication, and failed temporary outputs are removed.
+
+### Review RED/GREEN evidence
+
+The initial adversarial batch produced 11 expected failures with 23 existing tests passing.
+Focused REDs separately reproduced post-save corruption, invalid ZIP reload, and missing-sheet
+reload behavior. The final focused run was:
+
+```text
+36 passed in 25.95s
+```
+
+### Review verification
+
+- `python -m pytest -q`: 148 passed, 1 expected optional live legacy-audit skip.
+- `python -m ruff check .`: all checks passed.
+- `python -m mypy src`: success, no issues in 13 source files.
+- `git diff --check`: clean; Git emitted only Windows line-ending conversion warnings.
+- `qa-engine` remained clean at `## manual...origin/manual`.

@@ -1,8 +1,10 @@
+import shutil
 from hashlib import sha256
 from pathlib import Path
 
 import openpyxl
 import pytest
+from openpyxl.workbook.workbook import Workbook as OpenpyxlWorkbook
 from typer.testing import CliRunner
 
 from quality_weaver import exporters as exporter_module
@@ -25,6 +27,12 @@ from quality_weaver.testcases import render_testcases_markdown
 from quality_weaver.workspace import Stage, Workspace
 
 PROFILES_ROOT = Path("profiles")
+
+
+def copied_profile(name: str, destination: Path) -> Profile:
+    profiles_root = destination / "profiles"
+    shutil.copytree(PROFILES_ROOT / name, profiles_root / name)
+    return Profile.load(name, profiles_root)
 
 
 def document(*, status: ApprovalStatus = ApprovalStatus.APPROVED) -> CaseDocument:
@@ -158,6 +166,57 @@ def test_resolved_output_collision_is_rejected_before_write(tmp_path: Path) -> N
     assert cases_path.read_text(encoding="utf-8") == document().model_dump_json()
 
 
+def test_markdown_export_always_protects_every_profile_resource(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    workspace = ready_workspace(project)
+    profile = copied_profile("company-legacy", tmp_path)
+    template = profile.workbooks["ut"].template_path(profile.root)
+    before = template.read_bytes()
+
+    with pytest.raises(ExportError) as raised:
+        export_markdown(
+            workspace,
+            document(),
+            profile,
+            template,
+            protected_inputs=(),
+        )
+
+    assert raised.value.findings[0].code == "EXPORT_OUTPUT_COLLISION"
+    assert template.read_bytes() == before
+
+
+def test_excel_export_protects_templates_for_unselected_workbook_kinds(
+    tmp_path: Path,
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    workspace = ready_workspace(project)
+    profile = copied_profile("company-legacy", tmp_path)
+    it_template = profile.workbooks["it"].template_path(profile.root)
+    before = it_template.read_bytes()
+    ut = profile.workbooks["ut"].model_copy(
+        update={"filename": "{project}{artifact}.xlsx"}
+    )
+    profile = profile.model_copy(update={"workbooks": {**profile.workbooks, "ut": ut}})
+
+    with pytest.raises(ExportError) as raised:
+        export_excel(
+            workspace,
+            document(),
+            profile,
+            workbook_kind="ut",
+            output_directory=it_template.parent,
+            project="IT_",
+            artifact="TestCase",
+            protected_inputs=(),
+        )
+
+    assert raised.value.findings[0].code == "EXPORT_OUTPUT_COLLISION"
+    assert it_template.read_bytes() == before
+
+
 @pytest.mark.parametrize(
     "kind, expected_name",
     [
@@ -193,12 +252,93 @@ def test_excel_export_preserves_template_maps_cases_and_verifies_count(
     sheet = workbook["Testcase"]
     assert sheet["A16"].value == "TC-001"
     assert sheet["B16"].value == "Reject empty email"
-    assert sheet["D16"].value == "Outline: OUT-001\nCoverage: COV-001, COV-003\nPriority: high"
-    assert sheet["G16"].value == "1. User is on login\n2. Form is empty"
+    assert sheet["D16"].value == (
+        "Outline: OUT-001\nCoverage: COV-001, COV-003\nPriority: high\nTags: login"
+    )
+    assert sheet["G16"].value == (
+        "Preconditions:\n1. User is on login\n2. Form is empty\n"
+        "Test Data:\n1. email = empty"
+    )
     assert sheet["I16"].value == "1. Submit form\n2. Inspect email"
     assert sheet["J16"].value == "1. Validation appears\n2. Email stays empty"
     assert sheet["A17"].value == "TC-002"
+    assert sheet["G17"].value == (
+        "Preconditions:\n1. User is signed in\nTest Data:\nNone."
+    )
     assert list(result.path.parent.glob(f".{expected_name}.*.tmp")) == []
+
+
+def test_excel_clears_stale_mapped_rows_and_verifies_all_ids_after_save(
+    tmp_path: Path, monkeypatch
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    workspace = ready_workspace(project)
+    profile = Profile.load("company-legacy", PROFILES_ROOT)
+    original_load = exporter_module.openpyxl.load_workbook
+    load_count = 0
+
+    def load_with_stale_case(*args, **kwargs):
+        nonlocal load_count
+        workbook = original_load(*args, **kwargs)
+        load_count += 1
+        if load_count == 1:
+            workbook["Testcase"]["A30"] = "TC-OLD"
+            workbook["Testcase"]["B30"] = "Stale title"
+        return workbook
+
+    monkeypatch.setattr(exporter_module.openpyxl, "load_workbook", load_with_stale_case)
+
+    result = export_excel(
+        workspace,
+        document(),
+        profile,
+        workbook_kind="ut",
+        output_directory=tmp_path,
+        project="Demo",
+        artifact="Clean",
+        protected_inputs=(),
+    )
+
+    sheet = original_load(result.path, data_only=False)["Testcase"]
+    ids = [sheet.cell(row=row, column=1).value for row in range(16, sheet.max_row + 1)]
+    assert [value for value in ids if value is not None] == ["TC-001", "TC-002"]
+    assert load_count >= 2
+
+
+def test_excel_reloads_temporary_workbook_before_atomic_publish(
+    tmp_path: Path, monkeypatch
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    workspace = ready_workspace(project)
+    profile = Profile.load("company-legacy", PROFILES_ROOT)
+    original_save = OpenpyxlWorkbook.save
+
+    def save_then_corrupt(workbook, filename) -> None:
+        original_save(workbook, filename)
+        with Path(filename).open("rb") as temporary_file:
+            corrupted = openpyxl.load_workbook(temporary_file, data_only=False)
+        corrupted["Testcase"]["A16"] = "TC-CORRUPTED"
+        original_save(corrupted, filename)
+
+    monkeypatch.setattr(OpenpyxlWorkbook, "save", save_then_corrupt)
+    output = tmp_path / "Demo_Corrupt_Test Case UT.xlsx"
+
+    with pytest.raises(ExportError) as raised:
+        export_excel(
+            workspace,
+            document(),
+            profile,
+            workbook_kind="ut",
+            output_directory=tmp_path,
+            project="Demo",
+            artifact="Corrupt",
+            protected_inputs=(),
+        )
+
+    assert raised.value.findings[0].code == "EXPORT_CASE_COUNT_MISMATCH"
+    assert not output.exists()
 
 
 def test_excel_rejects_unknown_workbook_missing_sheet_and_unsafe_filename(
@@ -306,6 +446,136 @@ def test_excel_writes_user_text_as_literal_cells_not_formulas(tmp_path: Path) ->
     cell = openpyxl.load_workbook(result.path, data_only=False)["Testcase"]["B16"]
     assert cell.value == "=1+1"
     assert cell.data_type == "s"
+
+
+def test_invalid_filename_policy_at_export_boundary_is_typed(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    workspace = ready_workspace(project)
+    profile = Profile.load("company-legacy", PROFILES_ROOT)
+    ut = profile.workbooks["ut"].model_copy(
+        update={"filename": "{project}_{missing}.xlsx"}
+    )
+    profile = profile.model_copy(update={"workbooks": {"ut": ut}})
+
+    with pytest.raises(ExportError) as raised:
+        export_excel(
+            workspace,
+            document(),
+            profile,
+            workbook_kind="ut",
+            output_directory=tmp_path,
+            project="Demo",
+            artifact="Login",
+            protected_inputs=(),
+        )
+
+    assert raised.value.findings[0].code == "EXPORT_FILENAME_INVALID"
+
+
+def test_output_directory_creation_failure_is_typed(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    workspace = ready_workspace(project)
+    blocked_parent = tmp_path / "blocked"
+    blocked_parent.write_text("not a directory", encoding="utf-8")
+
+    with pytest.raises(ExportError) as raised:
+        export_markdown(
+            workspace,
+            document(),
+            Profile.load("generic", PROFILES_ROOT),
+            blocked_parent / "testcases.md",
+            protected_inputs=(),
+        )
+
+    assert raised.value.findings[0].code == "EXPORT_WRITE_FAILED"
+
+
+def test_excel_temporary_file_setup_failure_is_typed(tmp_path: Path, monkeypatch) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    workspace = ready_workspace(project)
+    profile = Profile.load("company-legacy", PROFILES_ROOT)
+
+    def fail_mkstemp(*args, **kwargs):
+        raise OSError("temporary setup failed")
+
+    monkeypatch.setattr(exporter_module.tempfile, "mkstemp", fail_mkstemp)
+
+    with pytest.raises(ExportError) as raised:
+        export_excel(
+            workspace,
+            document(),
+            profile,
+            workbook_kind="ut",
+            output_directory=tmp_path,
+            project="Demo",
+            artifact="Temp",
+            protected_inputs=(),
+        )
+
+    assert raised.value.findings[0].code == "EXPORT_WRITE_FAILED"
+
+
+def test_excel_temporary_workbook_reload_failure_is_typed(
+    tmp_path: Path, monkeypatch
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    workspace = ready_workspace(project)
+    profile = Profile.load("company-legacy", PROFILES_ROOT)
+
+    def save_invalid_workbook(workbook, filename) -> None:
+        Path(filename).write_bytes(b"not an xlsx zip")
+
+    monkeypatch.setattr(OpenpyxlWorkbook, "save", save_invalid_workbook)
+
+    with pytest.raises(ExportError) as raised:
+        export_excel(
+            workspace,
+            document(),
+            profile,
+            workbook_kind="ut",
+            output_directory=tmp_path,
+            project="Demo",
+            artifact="Reload",
+            protected_inputs=(),
+        )
+
+    assert raised.value.findings[0].code == "EXPORT_WRITE_FAILED"
+    assert not (tmp_path / "Demo_Reload_Test Case UT.xlsx").exists()
+
+
+def test_excel_temporary_workbook_missing_sheet_is_typed(
+    tmp_path: Path, monkeypatch
+) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    workspace = ready_workspace(project)
+    profile = Profile.load("company-legacy", PROFILES_ROOT)
+    original_save = OpenpyxlWorkbook.save
+
+    def save_without_testcase_sheet(workbook, filename) -> None:
+        workbook.remove(workbook["Testcase"])
+        original_save(workbook, filename)
+
+    monkeypatch.setattr(OpenpyxlWorkbook, "save", save_without_testcase_sheet)
+
+    with pytest.raises(ExportError) as raised:
+        export_excel(
+            workspace,
+            document(),
+            profile,
+            workbook_kind="ut",
+            output_directory=tmp_path,
+            project="Demo",
+            artifact="MissingSheet",
+            protected_inputs=(),
+        )
+
+    assert raised.value.findings[0].code == "EXPORT_WRITE_FAILED"
+    assert not (tmp_path / "Demo_MissingSheet_Test Case UT.xlsx").exists()
 
 
 def test_cli_export_uses_only_explicit_project_cases_profile_and_output_paths(

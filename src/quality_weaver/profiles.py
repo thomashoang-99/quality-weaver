@@ -1,6 +1,7 @@
 import re
 from enum import StrEnum
 from pathlib import Path
+from string import Formatter
 from typing import Any, Literal, Self
 
 from pydantic import Field, PrivateAttr, ValidationError, field_validator, model_validator
@@ -65,6 +66,26 @@ class WorkbookProfile(StrictModel):
             raise ValueError("template must be a nonempty relative path")
         return value
 
+    @field_validator("filename")
+    @classmethod
+    def safe_filename_policy(cls, value: str) -> str:
+        try:
+            parsed = tuple(Formatter().parse(value))
+        except ValueError as error:
+            raise ValueError("filename is not a valid format pattern") from error
+        fields: list[str] = []
+        for _, field_name, format_spec, conversion in parsed:
+            if field_name is None:
+                continue
+            if field_name not in {"project", "artifact"}:
+                raise ValueError("filename fields must be project or artifact")
+            if format_spec or conversion is not None:
+                raise ValueError("filename fields cannot use conversions or format specs")
+            fields.append(field_name)
+        if set(fields) != {"project", "artifact"}:
+            raise ValueError("filename must contain project and artifact fields")
+        return value
+
     @field_validator("required_sheets")
     @classmethod
     def unique_required_sheets(cls, value: tuple[str, ...]) -> tuple[str, ...]:
@@ -81,8 +102,6 @@ class WorkbookProfile(StrictModel):
             raise ValueError("column mappings must be unique")
         if self.header_row >= self.first_row:
             raise ValueError("header_row must precede first_row")
-        if "{project}" not in self.filename or "{artifact}" not in self.filename:
-            raise ValueError("filename must contain {project} and {artifact}")
         return self
 
     def template_path(self, profile_root: Path) -> Path:
@@ -127,9 +146,17 @@ class Profile(StrictModel):
         profile_path = profile_root / "profile.yaml"
         if not profile_path.is_file():
             raise ProfileError("PROFILE_UNKNOWN", f"unknown profile: {name}")
+        resolved_profile_path = profile_path.resolve()
+        if not resolved_profile_path.is_relative_to(profile_root):
+            raise ProfileError(
+                "PROFILE_FILE_ESCAPE",
+                f"profile file escapes profile root: {name}",
+            )
 
         try:
-            document: Any = YAML(typ="safe").load(profile_path.read_text(encoding="utf-8"))
+            document: Any = YAML(typ="safe").load(
+                resolved_profile_path.read_text(encoding="utf-8")
+            )
             profile = cls.model_validate(document)
         except (OSError, ValidationError, ValueError, YAMLError) as error:
             message = str(error).splitlines()[0]

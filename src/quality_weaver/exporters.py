@@ -3,10 +3,13 @@ import re
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
+from zipfile import BadZipFile
 
 import openpyxl
 from openpyxl import Workbook
+from openpyxl.cell.cell import MergedCell
 from openpyxl.utils.exceptions import InvalidFileException
+from pydantic import ValidationError
 
 from quality_weaver.io import atomic_write_text
 from quality_weaver.models import ApprovalStatus, TestCase, TestCaseDocument
@@ -48,9 +51,9 @@ def export_markdown(
     """Atomically export canonical Markdown after all approval checks pass."""
     _ensure_ready(workspace, document)
     _ensure_format(profile, "markdown")
-    _ensure_distinct_output(output_path, protected_inputs)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    _ensure_distinct_output(output_path, (*protected_inputs, *_profile_resources(profile)))
     try:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
         atomic_write_text(output_path, render_testcases_markdown(document))
     except OSError as error:
         raise _error("EXPORT_WRITE_FAILED", str(error), str(output_path)) from error
@@ -80,7 +83,15 @@ def export_excel(
         )
     _ensure_filename_value(project, "project")
     _ensure_filename_value(artifact, "artifact")
-    filename = workbook_profile.filename.format(project=project, artifact=artifact)
+    try:
+        validated_workbook = WorkbookProfile.model_validate(workbook_profile.model_dump())
+        filename = validated_workbook.filename.format(project=project, artifact=artifact)
+    except (AttributeError, IndexError, KeyError, ValidationError, ValueError) as error:
+        raise _error(
+            "EXPORT_FILENAME_INVALID",
+            "filename policy must use plain project and artifact fields",
+            workbook_profile.filename,
+        ) from error
     if Path(filename).name != filename or Path(filename).suffix.lower() != ".xlsx":
         raise _error(
             "EXPORT_FILENAME_INVALID",
@@ -90,13 +101,13 @@ def export_excel(
 
     output_path = output_directory / filename
     template_path = workbook_profile.template_path(profile.root)
-    _ensure_distinct_output(output_path, (*protected_inputs, template_path))
+    _ensure_distinct_output(output_path, (*protected_inputs, *_profile_resources(profile)))
     workbook = _load_template(template_path, workbook_profile)
+    _clear_mapped_data(workbook, workbook_profile)
     _write_cases(workbook, workbook_profile, document)
     _fill_organization(workbook, profile, project)
     _verify_case_count(workbook, workbook_profile, document)
-    output_directory.mkdir(parents=True, exist_ok=True)
-    _save_workbook_atomic(workbook, output_path)
+    _save_workbook_atomic(workbook, output_path, workbook_profile, document)
     return ExportResult(path=output_path, case_count=len(document.cases))
 
 
@@ -130,6 +141,13 @@ def _ensure_distinct_output(output_path: Path, protected_inputs: tuple[Path, ...
             "resolved output path collides with a protected input",
             str(output_path),
         )
+
+
+def _profile_resources(profile: Profile) -> tuple[Path, ...]:
+    templates = tuple(
+        workbook.template_path(profile.root) for workbook in profile.workbooks.values()
+    )
+    return (profile.root / "profile.yaml", *templates)
 
 
 def _ensure_filename_value(value: str, field: str) -> None:
@@ -184,6 +202,27 @@ def _write_cases(
             cell.data_type = "s"
 
 
+def _clear_mapped_data(workbook: Workbook, profile: WorkbookProfile) -> None:
+    sheet = workbook[profile.sheet]
+    mapped_columns = set(profile.columns.model_dump().values())
+    vertical_merges = [
+        str(cell_range)
+        for cell_range in sheet.merged_cells.ranges
+        if cell_range.max_row >= profile.first_row
+        and cell_range.min_row != cell_range.max_row
+        and any(
+            cell_range.min_col <= column <= cell_range.max_col for column in mapped_columns
+        )
+    ]
+    for cell_range in vertical_merges:
+        sheet.unmerge_cells(cell_range)
+    for row in range(profile.first_row, sheet.max_row + 1):
+        for column in mapped_columns:
+            cell = sheet.cell(row=row, column=column)
+            if not isinstance(cell, MergedCell):
+                cell.value = None
+
+
 def _case_values(test_case: TestCase) -> dict[str, str]:
     return {
         "id": test_case.id,
@@ -191,15 +230,21 @@ def _case_values(test_case: TestCase) -> dict[str, str]:
         "traceability": (
             f"Outline: {test_case.outline_id}\n"
             f"Coverage: {', '.join(sorted(test_case.coverage_ids))}\n"
-            f"Priority: {test_case.priority}"
+            f"Priority: {test_case.priority}\n"
+            f"Tags: {', '.join(sorted(test_case.tags)) if test_case.tags else 'None.'}"
         ),
-        "preconditions": _numbered(test_case.preconditions),
+        "preconditions": (
+            f"Preconditions:\n{_numbered(test_case.preconditions)}\n"
+            f"Test Data:\n{_numbered(test_case.test_data)}"
+        ),
         "steps": _numbered([step.action for step in test_case.steps]),
         "expected": _numbered([step.expected for step in test_case.steps]),
     }
 
 
 def _numbered(values: list[str]) -> str:
+    if not values:
+        return "None."
     return "\n".join(f"{number}. {value}" for number, value in enumerate(values, start=1))
 
 
@@ -214,8 +259,9 @@ def _verify_case_count(
 ) -> None:
     sheet = workbook[profile.sheet]
     ids = [
-        sheet.cell(row=profile.first_row + offset, column=profile.columns.id).value
-        for offset in range(len(document.cases))
+        sheet.cell(row=row, column=profile.columns.id).value
+        for row in range(profile.first_row, sheet.max_row + 1)
+        if sheet.cell(row=row, column=profile.columns.id).value is not None
     ]
     expected = [case.id for case in sorted(document.cases, key=lambda case: case.id)]
     if ids != expected:
@@ -226,19 +272,36 @@ def _verify_case_count(
         )
 
 
-def _save_workbook_atomic(workbook: Workbook, output_path: Path) -> None:
-    descriptor, temporary_name = tempfile.mkstemp(
-        dir=output_path.parent, prefix=f".{output_path.name}.", suffix=".tmp"
-    )
-    os.close(descriptor)
-    temporary_path = Path(temporary_name)
+def _save_workbook_atomic(
+    workbook: Workbook,
+    output_path: Path,
+    profile: WorkbookProfile,
+    document: TestCaseDocument,
+) -> None:
+    temporary_path: Path | None = None
     try:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        descriptor, temporary_name = tempfile.mkstemp(
+            dir=output_path.parent,
+            prefix=f".{output_path.name}.",
+            suffix=".tmp.xlsx",
+        )
+        temporary_path = Path(temporary_name)
+        os.close(descriptor)
         workbook.save(temporary_path)
+        verified_workbook = openpyxl.load_workbook(temporary_path, data_only=False)
+        try:
+            _verify_case_count(verified_workbook, profile, document)
+        finally:
+            verified_workbook.close()
         temporary_path.replace(output_path)
-    except (OSError, ValueError) as error:
+    except ExportError:
+        raise
+    except (BadZipFile, OSError, InvalidFileException, KeyError, ValueError) as error:
         raise _error("EXPORT_WRITE_FAILED", str(error), str(output_path)) from error
     finally:
-        temporary_path.unlink(missing_ok=True)
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
 
 
 def _error(code: str, message: str, artifact_id: str) -> ExportError:
