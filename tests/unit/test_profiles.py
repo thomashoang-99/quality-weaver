@@ -2,8 +2,9 @@ import shutil
 from pathlib import Path
 
 import pytest
+from pydantic import ValidationError
 
-from quality_weaver.profiles import Profile, ProfileError
+from quality_weaver.profiles import Profile, ProfileError, WorkbookProfile
 
 PROFILES_ROOT = Path("profiles")
 
@@ -172,3 +173,55 @@ def test_profile_yaml_symlink_cannot_escape_resolved_profile_root(
         Profile.load("linked", profiles_root)
 
     assert raised.value.code == "PROFILE_FILE_ESCAPE"
+
+
+@pytest.mark.parametrize(
+    "filename",
+    [
+        "{project}:{artifact}.xlsx",
+        "{project}/{artifact}.xlsx",
+        "{project}\\{artifact}.xlsx",
+        "{project}\x01{artifact}.xlsx",
+        "{project}_{artifact.xlsx",
+    ],
+)
+def test_workbook_filename_rejects_portable_unsafe_literals(filename: str) -> None:
+    document = Profile.load("company-legacy", PROFILES_ROOT).workbooks["ut"].model_dump()
+    document["filename"] = filename
+
+    with pytest.raises(ValidationError):
+        WorkbookProfile.model_validate(document)
+
+
+@pytest.mark.parametrize(
+    "cell",
+    ["A0", "XFE1", "A1048577", "1A", "A:A", "a1"],
+)
+def test_profile_load_rejects_invalid_organization_cell_coordinates(
+    tmp_path: Path, cell: str
+) -> None:
+    profiles_root = copy_profile("company-legacy", tmp_path)
+    profile_path = profiles_root / "company-legacy" / "profile.yaml"
+    content = profile_path.read_text(encoding="utf-8").replace(
+        "project_cell: C1", f"project_cell: {cell}", 1
+    )
+    profile_path.write_text(content, encoding="utf-8")
+
+    with pytest.raises(ProfileError) as raised:
+        Profile.load("company-legacy", profiles_root)
+
+    assert raised.value.code == "PROFILE_SCHEMA_INVALID"
+
+
+def test_profile_with_organization_requires_overview_in_every_workbook(
+    tmp_path: Path,
+) -> None:
+    profiles_root = copy_profile("company-legacy", tmp_path)
+    profile_path = profiles_root / "company-legacy" / "profile.yaml"
+    content = profile_path.read_text(encoding="utf-8").replace("      - Overview\n", "")
+    profile_path.write_text(content, encoding="utf-8")
+
+    with pytest.raises(ProfileError) as raised:
+        Profile.load("company-legacy", profiles_root)
+
+    assert raised.value.code == "PROFILE_SCHEMA_INVALID"

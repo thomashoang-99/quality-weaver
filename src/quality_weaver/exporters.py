@@ -98,6 +98,7 @@ def export_excel(
             "filename policy must produce one .xlsx name",
             filename,
         )
+    _revalidate_profile(profile)
 
     output_path = output_directory / filename
     template_path = workbook_profile.template_path(profile.root)
@@ -131,6 +132,17 @@ def _ensure_format(profile: Profile, output_format: str) -> None:
             f"profile {profile.name} does not support {output_format}",
             profile.name,
         )
+
+
+def _revalidate_profile(profile: Profile) -> None:
+    try:
+        Profile.model_validate(profile.model_dump())
+    except ValidationError as error:
+        raise _error(
+            "EXPORT_PROFILE_INVALID",
+            str(error).splitlines()[0],
+            profile.name,
+        ) from error
 
 
 def _ensure_distinct_output(output_path: Path, protected_inputs: tuple[Path, ...]) -> None:

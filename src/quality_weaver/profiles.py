@@ -3,7 +3,9 @@ from enum import StrEnum
 from pathlib import Path
 from string import Formatter
 from typing import Any, Literal, Self
+from unicodedata import category
 
+from openpyxl.utils.cell import column_index_from_string
 from pydantic import Field, PrivateAttr, ValidationError, field_validator, model_validator
 from ruamel.yaml import YAML
 from ruamel.yaml.error import YAMLError
@@ -29,6 +31,19 @@ class OrganizationMetadata(StrictModel):
     project_cell: str
     manager_cell: str | None = None
     quality_lead_cell: str | None = None
+
+    @field_validator("project_cell", "manager_cell", "quality_lead_cell")
+    @classmethod
+    def valid_excel_cell(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        match = re.fullmatch(r"([A-Z]{1,3})([1-9][0-9]{0,6})", value)
+        if match is None:
+            raise ValueError("organization cells must be uppercase A1 coordinates")
+        column_letters, row_text = match.groups()
+        if column_index_from_string(column_letters) > 16_384 or int(row_text) > 1_048_576:
+            raise ValueError("organization cell is outside Excel worksheet bounds")
+        return value
 
 
 class WorkbookColumns(StrictModel):
@@ -74,7 +89,13 @@ class WorkbookProfile(StrictModel):
         except ValueError as error:
             raise ValueError("filename is not a valid format pattern") from error
         fields: list[str] = []
-        for _, field_name, format_spec, conversion in parsed:
+        for literal, field_name, format_spec, conversion in parsed:
+            unsafe_literal = any(
+                character in '<>:"/\\|?*' or category(character) == "Cc"
+                for character in literal
+            )
+            if unsafe_literal:
+                raise ValueError("filename literals contain portable-unsafe characters")
             if field_name is None:
                 continue
             if field_name not in {"project", "artifact"}:
@@ -133,6 +154,17 @@ class Profile(StrictModel):
             raise ValueError("excel profiles require workbooks")
         if "excel" not in self.formats and self.workbooks:
             raise ValueError("workbooks require the excel format")
+        if self.organization is not None:
+            missing_overview = sorted(
+                kind
+                for kind, workbook in self.workbooks.items()
+                if "Overview" not in workbook.required_sheets
+            )
+            if missing_overview:
+                raise ValueError(
+                    "organization metadata requires Overview in every workbook: "
+                    + ", ".join(missing_overview)
+                )
         return self
 
     @classmethod

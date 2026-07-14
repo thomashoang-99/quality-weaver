@@ -376,7 +376,7 @@ def test_excel_rejects_unknown_workbook_missing_sheet_and_unsafe_filename(
     assert unsafe.value.findings[0].code == "EXPORT_FILENAME_VALUE_INVALID"
 
     workbook_profile = profile.workbooks["ut"].model_copy(
-        update={"required_sheets": ("Testcase", "Missing")}
+        update={"required_sheets": ("Overview", "Testcase", "Missing")}
     )
     broken = profile.model_copy(update={"workbooks": {"ut": workbook_profile}})
     with pytest.raises(ExportError) as missing:
@@ -471,6 +471,64 @@ def test_invalid_filename_policy_at_export_boundary_is_typed(tmp_path: Path) -> 
         )
 
     assert raised.value.findings[0].code == "EXPORT_FILENAME_INVALID"
+
+
+def test_export_revalidates_bypassed_invalid_organization_cell(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    workspace = ready_workspace(project)
+    profile = Profile.load("company-legacy", PROFILES_ROOT)
+    assert profile.organization is not None
+    invalid_organization = profile.organization.model_copy(update={"project_cell": "A0"})
+    profile = profile.model_copy(update={"organization": invalid_organization})
+
+    with pytest.raises(ExportError) as raised:
+        export_excel(
+            workspace,
+            document(),
+            profile,
+            workbook_kind="ut",
+            output_directory=tmp_path,
+            project="Demo",
+            artifact="InvalidCell",
+            protected_inputs=(),
+        )
+
+    assert raised.value.findings[0].code == "EXPORT_PROFILE_INVALID"
+    assert not (tmp_path / "Demo_InvalidCell_Test Case UT.xlsx").exists()
+
+
+def test_export_revalidates_bypassed_missing_organization_sheet(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    workspace = ready_workspace(project)
+    profile = Profile.load("company-legacy", PROFILES_ROOT)
+    ut = profile.workbooks["ut"]
+    without_overview = ut.model_copy(
+        update={
+            "required_sheets": tuple(
+                sheet for sheet in ut.required_sheets if sheet != "Overview"
+            )
+        }
+    )
+    profile = profile.model_copy(
+        update={"workbooks": {**profile.workbooks, "ut": without_overview}}
+    )
+
+    with pytest.raises(ExportError) as raised:
+        export_excel(
+            workspace,
+            document(),
+            profile,
+            workbook_kind="ut",
+            output_directory=tmp_path,
+            project="Demo",
+            artifact="MissingOverview",
+            protected_inputs=(),
+        )
+
+    assert raised.value.findings[0].code == "EXPORT_PROFILE_INVALID"
+    assert not (tmp_path / "Demo_MissingOverview_Test Case UT.xlsx").exists()
 
 
 def test_output_directory_creation_failure_is_typed(tmp_path: Path) -> None:

@@ -113,3 +113,24 @@ reload behavior. The final focused run was:
 - `python -m mypy src`: success, no issues in 13 source files.
 - `git diff --check`: clean; Git emitted only Windows line-ending conversion warnings.
 - `qa-engine` remained clean at `## manual...origin/manual`.
+
+## Second independent re-review fixes
+
+The two remaining Important findings were reproduced and closed:
+
+- Workbook filename policy validation now rejects portable-unsafe literal characters
+  (`<>:"/\\|?*`), path separators, and Unicode control characters in addition to the existing
+  strict `project`/`artifact` placeholder whitelist. Malformed patterns remain schema-invalid.
+- Organization metadata cells now require uppercase A1 coordinates within Excel's maximum row
+  and column bounds. When organization metadata exists, every configured workbook must declare
+  `Overview` as required. Excel export defensively revalidates bypassed profile values before any
+  template mutation and returns `EXPORT_PROFILE_INVALID` instead of leaking workbook exceptions.
+
+The adversarial RED run produced 13 expected failures with 37 tests passing. Final verification:
+
+- Focused profile/export tests: 50 passed.
+- Full suite: 162 passed, 1 expected optional live legacy-audit skip.
+- Ruff: all checks passed.
+- mypy: success, no issues in 13 source files.
+- `git diff --check`: clean; only Windows line-ending conversion warnings were emitted.
+- `qa-engine` remained clean at `## manual...origin/manual`.
