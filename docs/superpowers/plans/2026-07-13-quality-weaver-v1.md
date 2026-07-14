@@ -360,6 +360,20 @@ git commit -m "feat(domain): define canonical artifacts"
 
 ### Task 3: Atomic workspace and three-gate state machine
 
+> **Plan update (2026-07-14):** The project is still being built and no real requirement
+> documents flow through the workspace yet. Task 3 is adjusted as follows:
+>
+> 1. **Hash-based staleness detection is deferred.** Keep `WorkspaceState.upstream_hashes`
+>    and `sha256_file` as data plumbing, but do not implement automatic hash comparison or
+>    auto-invalidation in v1. Manual `invalidate_after` remains the only staleness trigger.
+>    As a consequence, `regenerate requirements` stays unreachable in v1 — this is
+>    intentional. Revisit both when real requirement inputs exist (v1.x follow-up task).
+> 2. **Housekeeping:** add `.quality-weaver.lock` to the repository `.gitignore` and to the
+>    workspace documentation, since the project-local lock file persists at the project root.
+> 3. **Verification uses fixtures, not real requirements.** Task 3 (and downstream tasks)
+>    verify workspace behavior with `tmp_path` fixtures and committed test data instead of
+>    live requirement documents; keep it that way until the golden vertical slice in Task 9.
+
 **Files:**
 - Create: `src/quality_weaver/io.py`
 - Create: `src/quality_weaver/workspace.py`
