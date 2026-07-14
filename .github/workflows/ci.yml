@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.11", "3.13"]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install package with dev extras
+        run: python -m pip install -e ".[dev]"
+
+      - name: Ruff
+        run: python -m ruff check .
+
+      - name: Mypy
+        run: python -m mypy src
+
+      - name: Pytest with coverage
+        run: python -m pytest --cov=quality_weaver --cov-fail-under=90 -q
+
+      - name: Build wheel and sdist
+        run: python -m build
+
+      - name: Install built wheel into a clean environment
+        run: |
+          python -m venv .clean-env
+          if [ -f .clean-env/Scripts/pip.exe ]; then
+            CLEAN_PIP=.clean-env/Scripts/pip.exe
+          else
+            CLEAN_PIP=.clean-env/bin/pip
+          fi
+          "$CLEAN_PIP" install --quiet dist/*.whl
+
+      - name: Verify quality-weaver console command
+        run: |
+          if [ -f .clean-env/Scripts/quality-weaver.exe ]; then
+            .clean-env/Scripts/quality-weaver.exe version
+          else
+            .clean-env/bin/quality-weaver version
+          fi

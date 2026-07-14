@@ -6,6 +6,9 @@ build-backend = "hatchling.build"
 name = "quality-weaver"
 version = "0.1.0"
 description = "Viewpoint-driven manual test design workflow"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.11"
 dependencies = [
   "openpyxl>=3.1,<4",
@@ -13,6 +16,11 @@ dependencies = [
   "ruamel.yaml>=0.18,<0.19",
   "typer>=0.16,<1",
 ]
+
+[project.urls]
+Homepage = "https://github.com/quality-weaver/quality-weaver"
+Repository = "https://github.com/quality-weaver/quality-weaver"
+Changelog = "https://github.com/quality-weaver/quality-weaver/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 dev = [
@@ -29,6 +37,32 @@ quality-weaver = "quality_weaver.cli:app"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/quality_weaver"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"schemas" = "quality_weaver/schemas"
+"viewpoints" = "quality_weaver/viewpoints"
+"profiles" = "quality_weaver/profiles"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/src",
+  "/schemas",
+  "/viewpoints",
+  "/profiles",
+  "/skills",
+  "/.codex-plugin",
+  "/.claude-plugin",
+  "/examples",
+  "/tests",
+  "/evals",
+  "/docs",
+  "/README.md",
+  "/CONTRIBUTING.md",
+  "/AGENTS.md",
+  "/CLAUDE.md",
+  "/CHANGELOG.md",
+  "/LICENSE",
+]
 
 [tool.pytest.ini_options]
 addopts = "-ra"
