@@ -134,3 +134,23 @@ The adversarial RED run produced 13 expected failures with 37 tests passing. Fin
 - mypy: success, no issues in 13 source files.
 - `git diff --check`: clean; only Windows line-ending conversion warnings were emitted.
 - `qa-engine` remained clean at `## manual...origin/manual`.
+
+## Final profile-boundary re-review fix
+
+The final Important finding was reproduced for three malformed `model_copy` inputs: an Excel
+profile with a raw list as `workbooks`, a raw nested workbook dictionary, and Markdown resource
+enumeration over a raw list. All three leaked `AttributeError` before profile validation.
+
+Both exporters now replace their input with a fully validated `Profile` immediately after gate
+checks and before format, workbook, filename, or resource access. The helper returns the validated
+object and preserves the trusted root of the loaded profile so template/resource resolution remains
+unchanged. Any malformed copied structure fails as typed `EXPORT_PROFILE_INVALID`.
+
+Final evidence:
+
+- Focused profile/export tests: 53 passed.
+- Full suite: 165 passed, 1 expected optional live legacy-audit skip.
+- Ruff: all checks passed.
+- mypy: success, no issues in 13 source files.
+- `git diff --check`: clean; only Windows line-ending conversion warnings were emitted.
+- `qa-engine` remained clean at `## manual...origin/manual`.

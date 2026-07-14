@@ -470,7 +470,7 @@ def test_invalid_filename_policy_at_export_boundary_is_typed(tmp_path: Path) -> 
             protected_inputs=(),
         )
 
-    assert raised.value.findings[0].code == "EXPORT_FILENAME_INVALID"
+    assert raised.value.findings[0].code == "EXPORT_PROFILE_INVALID"
 
 
 def test_export_revalidates_bypassed_invalid_organization_cell(tmp_path: Path) -> None:
@@ -529,6 +529,73 @@ def test_export_revalidates_bypassed_missing_organization_sheet(tmp_path: Path) 
 
     assert raised.value.findings[0].code == "EXPORT_PROFILE_INVALID"
     assert not (tmp_path / "Demo_MissingOverview_Test Case UT.xlsx").exists()
+
+
+def test_excel_revalidates_raw_workbooks_container_before_lookup(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    workspace = ready_workspace(project)
+    profile = Profile.load("company-legacy", PROFILES_ROOT).model_copy(
+        update={"workbooks": []}
+    )
+
+    with pytest.raises(ExportError) as raised:
+        export_excel(
+            workspace,
+            document(),
+            profile,
+            workbook_kind="ut",
+            output_directory=tmp_path,
+            project="Demo",
+            artifact="RawContainer",
+            protected_inputs=(),
+        )
+
+    assert raised.value.findings[0].code == "EXPORT_PROFILE_INVALID"
+
+
+def test_excel_revalidates_raw_nested_workbook_before_field_access(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    workspace = ready_workspace(project)
+    profile = Profile.load("company-legacy", PROFILES_ROOT).model_copy(
+        update={"workbooks": {"ut": {"filename": "raw"}}}
+    )
+
+    with pytest.raises(ExportError) as raised:
+        export_excel(
+            workspace,
+            document(),
+            profile,
+            workbook_kind="ut",
+            output_directory=tmp_path,
+            project="Demo",
+            artifact="RawNested",
+            protected_inputs=(),
+        )
+
+    assert raised.value.findings[0].code == "EXPORT_PROFILE_INVALID"
+
+
+def test_markdown_revalidates_profile_before_resource_enumeration(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    workspace = ready_workspace(project)
+    profile = Profile.load("company-legacy", PROFILES_ROOT).model_copy(
+        update={"workbooks": []}
+    )
+
+    with pytest.raises(ExportError) as raised:
+        export_markdown(
+            workspace,
+            document(),
+            profile,
+            tmp_path / "out.md",
+            protected_inputs=(),
+        )
+
+    assert raised.value.findings[0].code == "EXPORT_PROFILE_INVALID"
+    assert not (tmp_path / "out.md").exists()
 
 
 def test_output_directory_creation_failure_is_typed(tmp_path: Path) -> None:

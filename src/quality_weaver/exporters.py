@@ -50,6 +50,7 @@ def export_markdown(
 ) -> ExportResult:
     """Atomically export canonical Markdown after all approval checks pass."""
     _ensure_ready(workspace, document)
+    profile = _revalidate_profile(profile)
     _ensure_format(profile, "markdown")
     _ensure_distinct_output(output_path, (*protected_inputs, *_profile_resources(profile)))
     try:
@@ -73,6 +74,7 @@ def export_excel(
 ) -> ExportResult:
     """Render a verified workbook through a self-contained profile template."""
     _ensure_ready(workspace, document)
+    profile = _revalidate_profile(profile)
     _ensure_format(profile, "excel")
     workbook_profile = profile.workbooks.get(workbook_kind)
     if workbook_profile is None:
@@ -98,8 +100,6 @@ def export_excel(
             "filename policy must produce one .xlsx name",
             filename,
         )
-    _revalidate_profile(profile)
-
     output_path = output_directory / filename
     template_path = workbook_profile.template_path(profile.root)
     _ensure_distinct_output(output_path, (*protected_inputs, *_profile_resources(profile)))
@@ -134,15 +134,18 @@ def _ensure_format(profile: Profile, output_format: str) -> None:
         )
 
 
-def _revalidate_profile(profile: Profile) -> None:
+def _revalidate_profile(profile: Profile) -> Profile:
+    profile_root = profile.root
     try:
-        Profile.model_validate(profile.model_dump())
-    except ValidationError as error:
+        validated = Profile.model_validate(profile.model_dump(warnings=False))
+    except (AttributeError, TypeError, ValidationError, ValueError) as error:
         raise _error(
             "EXPORT_PROFILE_INVALID",
             str(error).splitlines()[0],
-            profile.name,
+            getattr(profile, "name", "profile"),
         ) from error
+    validated._root = profile_root
+    return validated
 
 
 def _ensure_distinct_output(output_path: Path, protected_inputs: tuple[Path, ...]) -> None:
