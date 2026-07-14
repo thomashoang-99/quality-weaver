@@ -1,0 +1,10 @@
+status: approved
+items:
+  - id: OUT-001
+    title: Blank email blocks submission
+    coverage_ids:
+      - COV-001
+  - id: OUT-002
+    title: Submit button disabled until form valid
+    coverage_ids:
+      - COV-002

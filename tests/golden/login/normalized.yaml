@@ -1,0 +1,28 @@
+id: REQ-LOGIN
+title: Login
+source_path: examples/login/requirements/login.md
+source_sha256: 1dd9d6e092a923b78ace672b85268ce26ad324302aba1ac0b99d67b660007851
+status: approved
+entities:
+  - id: CTRL-EMAIL
+    type: textbox
+    name: Email field
+    facts:
+      required: true
+    source_quote: >-
+      Leaving the field blank and submitting shows "Email is required" and
+      blocks submission.
+  - id: CTRL-SUBMIT
+    type: button
+    name: Submit button
+    facts:
+      required: false
+    source_quote: >-
+      Disabled while the form has validation errors; enabled once email and
+      password are both valid.
+business_rules:
+  - The submit button must stay disabled until both the email and password fields pass validation.
+  - Leaving the email field blank blocks form submission with an inline error.
+risks:
+  - Users may not notice the inline validation error and repeatedly click a disabled button.
+questions: []

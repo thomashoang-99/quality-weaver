@@ -1,0 +1,38 @@
+status: approved
+cases:
+  - id: TC-001
+    title: Blank email blocks submission
+    outline_id: OUT-001
+    coverage_ids:
+      - COV-001
+    preconditions:
+      - User is on the login page
+    test_data:
+      - email = empty
+      - password = empty
+    steps:
+      - action: Leave the email field blank and submit the form
+        expected: 'The "Email is required" error appears and the form is not submitted'
+    priority: high
+    tags:
+      - login
+      - validation
+  - id: TC-002
+    title: Submit button disabled until form valid
+    outline_id: OUT-002
+    coverage_ids:
+      - COV-002
+    preconditions:
+      - User is on the login page
+    test_data:
+      - email = invalid
+      - password = empty
+    steps:
+      - action: Enter an invalid email and leave password blank
+        expected: Submit button remains disabled
+      - action: Enter a valid email and password
+        expected: Submit button becomes enabled
+    priority: high
+    tags:
+      - action-controls
+      - login

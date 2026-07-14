@@ -1,0 +1,72 @@
+id: login
+description: >-
+  Coverage-ledger generation eval case built on the login vertical slice.
+  A model receives one normalized requirement packet and one viewpoint
+  packet, then must produce a Coverage Ledger for CTRL-EMAIL and
+  CTRL-SUBMIT.
+
+input:
+  normalized_requirement: ../../tests/golden/login/normalized.yaml
+  viewpoint_packet:
+    catalog_version: "1.0.0"
+    groups:
+      - input-validation
+      - action-controls
+    source: ../../viewpoints
+
+schema:
+  coverage_ledger: ../../schemas/coverage-ledger.schema.json
+
+scoring:
+  structural:
+    - name: schema_valid
+      description: Model output validates against coverage-ledger.schema.json.
+      threshold: 1.0
+    - name: unique_logical_keys
+      description: >-
+        No duplicate (requirement_id, target_id, viewpoint_id, condition)
+        tuples, per CoverageLedger.unique_logical_keys.
+      threshold: 1.0
+    - name: traceability_complete
+      description: >-
+        quality_weaver.coverage.validate_ledger reports zero blocking
+        findings against the fixed known_requirement_ids and
+        known_target_ids for this case.
+      threshold: 1.0
+    - name: gate_checks
+      description: >-
+        The ledger only reaches coverage approval once schema, uniqueness,
+        and traceability checks pass; a model must never mark its own
+        output approved.
+      threshold: 1.0
+  semantic:
+    - name: viewpoint_relevance
+      description: >-
+        Selected viewpoints are relevant to CTRL-EMAIL (textbox) and
+        CTRL-SUBMIT (button) given their entity types.
+      reported: true
+      gates_approval: false
+    - name: condition_specificity
+      description: >-
+        Conditions describe an observable state (for example "blank" or
+        "invalid-form"), not a restatement of the viewpoint name.
+      reported: true
+      gates_approval: false
+
+run_metadata:
+  required_fields:
+    - provider
+    - model
+    - platform
+    - catalog_version
+    - profile
+    - artifact_sha256
+
+acceptance:
+  structural_threshold: 1.0
+  semantic_threshold: null
+  note: >-
+    Structural, uniqueness, traceability, and gate scores must reach 100%
+    before a run is accepted. Semantic scores are recorded for trend
+    analysis only and never substitute for the human approval gates
+    enforced by the CLI.

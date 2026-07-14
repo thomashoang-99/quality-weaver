@@ -1,0 +1,26 @@
+status: approved
+catalog_version: 1.0.0
+profile: generic
+items:
+  - id: COV-001
+    requirement_id: REQ-LOGIN
+    target_id: CTRL-EMAIL
+    viewpoint_id: VP-INPUT-VALIDATION-003
+    condition: blank
+    decision: include
+    priority: high
+    evidence: >-
+      Leaving the field blank and submitting shows "Email is required" and
+      blocks submission.
+    rationale: Required field must block submission when empty per business rule.
+  - id: COV-002
+    requirement_id: REQ-LOGIN
+    target_id: CTRL-SUBMIT
+    viewpoint_id: VP-ACTION-CONTROLS-003
+    condition: invalid-form
+    decision: include
+    priority: high
+    evidence: >-
+      Disabled while the form has validation errors; enabled once email and
+      password are both valid.
+    rationale: Submit control must reflect validation state per business rule.
