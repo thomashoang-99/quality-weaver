@@ -9,7 +9,7 @@ Treat CLI output as the authoritative workflow snapshot. Report it without infer
 
 ## Contract
 
-**Input artifacts and read paths:** Accept `<project-path>` and confirm `.quality-weaver/config.yaml` exists; query state only through the CLI.
+**Input artifacts and read paths:** Accept `<project-path>` and confirm `<project-path>/.quality-weaver/config.yaml` exists; query state only through the CLI.
 
 **Allowed state:** Any initialized QualityWeaver state, including draft, approved, or stale gates.
 
@@ -29,4 +29,4 @@ Treat CLI output as the authoritative workflow snapshot. Report it without infer
 2. Preserve all three gate values and the exact next-action meaning.
 3. Explain stale or blocked state only from CLI output and direct the human to the reported gate.
 
-Do not read `.quality-weaver/state.json` directly. Do not write `.quality-weaver/state.json`; only the CLI owns state. Do not approve a gate, regenerate an artifact, or execute the reported next action.
+Do not read `<project-path>/.quality-weaver/state.json` directly. Do not write `<project-path>/.quality-weaver/state.json`; only the CLI owns state. Do not approve a gate, regenerate an artifact, or execute the reported next action.

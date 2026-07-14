@@ -735,6 +735,76 @@ def test_cli_export_uses_only_explicit_project_cases_profile_and_output_paths(
     assert output.read_bytes() == render_testcases_markdown(document()).encode("utf-8")
 
 
+def test_cli_markdown_export_from_canonical_markdown_is_byte_equal(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    ready_workspace(project)
+    cases = document()
+    cases_path = tmp_path / "canonical.md"
+    canonical = render_testcases_markdown(cases).encode("utf-8")
+    cases_path.write_bytes(canonical)
+    output = tmp_path / "exported.md"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "export",
+            str(project),
+            str(cases_path),
+            "--profiles-root",
+            str(PROFILES_ROOT.resolve()),
+            "--profile",
+            "generic",
+            "--format",
+            "markdown",
+            "--out",
+            str(output),
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert output.read_bytes() == canonical
+
+
+def test_cli_excel_export_parses_canonical_markdown_without_field_loss(tmp_path: Path) -> None:
+    project = tmp_path / "project"
+    project.mkdir()
+    ready_workspace(project)
+    cases = document()
+    cases.cases[1].tags = ["smoke,critical", "login"]
+    cases_path = tmp_path / "canonical.md"
+    cases_path.write_text(render_testcases_markdown(cases), encoding="utf-8")
+    output_directory = tmp_path / "excel"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "export",
+            str(project),
+            str(cases_path),
+            "--profiles-root",
+            str(PROFILES_ROOT.resolve()),
+            "--profile",
+            "company-legacy",
+            "--format",
+            "excel",
+            "--out",
+            str(output_directory),
+            "--workbook",
+            "ut",
+            "--project-name",
+            "Demo",
+            "--artifact-name",
+            "Canonical",
+        ],
+    )
+
+    assert result.exit_code == 0
+    output = output_directory / "Demo_Canonical_Test Case UT.xlsx"
+    sheet = openpyxl.load_workbook(output, data_only=False)["Testcase"]
+    assert "Tags: login, smoke,critical" in sheet["D16"].value
+
+
 def test_cli_unknown_profile_and_format_fail_concisely(tmp_path: Path) -> None:
     project = tmp_path / "project"
     project.mkdir()

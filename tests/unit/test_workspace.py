@@ -258,6 +258,39 @@ def test_regenerate_rejects_non_stale_stage(tmp_path) -> None:
         workspace.regenerate(Stage.REQUIREMENTS)
 
 
+@pytest.mark.parametrize(
+    ("stage", "expected"),
+    [
+        (Stage.REQUIREMENTS, ("draft", "stale", "stale")),
+        (Stage.COVERAGE, ("approved", "draft", "stale")),
+        (Stage.TESTCASES, ("approved", "approved", "draft")),
+    ],
+)
+def test_reopen_returns_only_approved_stage_to_draft_and_stales_downstream(
+    tmp_path, stage: Stage, expected: tuple[str, str, str]
+) -> None:
+    workspace = Workspace.init(tmp_path)
+    workspace.approve(Stage.REQUIREMENTS)
+    workspace.approve(Stage.COVERAGE)
+    workspace.approve(Stage.TESTCASES)
+
+    workspace.reopen(stage)
+
+    state = workspace.load_state()
+    assert (state.requirements.value, state.coverage.value, state.testcases.value) == expected
+
+
+@pytest.mark.parametrize("stage", [Stage.REQUIREMENTS, Stage.COVERAGE])
+def test_reopen_rejects_gate_that_is_not_approved(tmp_path, stage: Stage) -> None:
+    workspace = Workspace.init(tmp_path)
+    if stage is Stage.COVERAGE:
+        workspace.approve(Stage.REQUIREMENTS)
+        workspace.invalidate_after(Stage.REQUIREMENTS)
+
+    with pytest.raises(StateError, match=f"{stage.value} must be approved before reopening"):
+        workspace.reopen(stage)
+
+
 def test_approve_persists_complete_json_without_leaving_temporary_file(tmp_path) -> None:
     workspace = Workspace.init(tmp_path)
 

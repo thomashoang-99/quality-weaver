@@ -16,11 +16,13 @@ from quality_weaver.io import atomic_write_text
 from quality_weaver.models import (
     CoverageItem,
     CoverageLedger,
+    RequirementDocument,
     TestCaseDocument,
     TestOutline,
 )
 from quality_weaver.profiles import ExportFormat, Profile, ProfileError
 from quality_weaver.testcases import (
+    parse_testcases_markdown,
     render_testcases_markdown,
     validate_outline,
     validate_testcases,
@@ -29,10 +31,12 @@ from quality_weaver.testmap import render_testmap
 from quality_weaver.workspace import Stage, StateError, Workspace
 
 app = typer.Typer(no_args_is_help=True)
+requirements_app = typer.Typer(no_args_is_help=True)
 coverage_app = typer.Typer(no_args_is_help=True)
 testmap_app = typer.Typer(no_args_is_help=True)
 outline_app = typer.Typer(no_args_is_help=True)
 testcases_app = typer.Typer(no_args_is_help=True)
+app.add_typer(requirements_app, name="requirements")
 app.add_typer(coverage_app, name="coverage")
 app.add_typer(testmap_app, name="testmap")
 app.add_typer(outline_app, name="outline")
@@ -93,7 +97,14 @@ def _load_outline(path: Path) -> TestOutline:
     return TestOutline.model_validate(yaml.load(path.read_text(encoding="utf-8")))
 
 
+def _load_requirement(path: Path) -> RequirementDocument:
+    yaml = YAML(typ="safe")
+    return RequirementDocument.model_validate(yaml.load(path.read_text(encoding="utf-8")))
+
+
 def _load_testcases(path: Path) -> TestCaseDocument:
+    if path.suffix.lower() == ".md":
+        return parse_testcases_markdown(path.read_text(encoding="utf-8"))
     yaml = YAML(typ="safe")
     return TestCaseDocument.model_validate(yaml.load(path.read_text(encoding="utf-8")))
 
@@ -187,6 +198,18 @@ def _target_ownership(requirement_ids: list[str], target_specs: list[str]) -> di
             raise ValueError(f"target references undeclared requirement: {requirement_id}")
         ownership[requirement_id].add(target_id)
     return ownership
+
+
+@requirements_app.command("validate")
+def requirements_validate(
+    requirement_path: Annotated[Path, typer.Argument(metavar="PATH")],
+) -> None:
+    """Validate a normalized requirement document."""
+    try:
+        _load_requirement(requirement_path)
+    except (OSError, ValueError, ValidationError, YAMLError) as error:
+        _artifact_fail("requirement document", error)
+    typer.echo("Requirement document is valid")
 
 
 @coverage_app.command("validate")
@@ -409,3 +432,17 @@ def regenerate(
     except StateError as error:
         _fail(error)
     typer.echo(f"Ready to regenerate {stage.value}")
+
+
+@app.command()
+def reopen(
+    stage: Stage,
+    project_path: Annotated[Path, typer.Argument(metavar="[PATH]")] = Path("."),
+) -> None:
+    """Return an approved gate to draft for human-reviewed revision."""
+    workspace = _workspace(project_path)
+    try:
+        workspace.reopen(stage)
+    except StateError as error:
+        _fail(error)
+    typer.echo(f"Reopened {stage.value}")

@@ -1,6 +1,10 @@
 import json
+import shutil
+import subprocess
 from pathlib import Path
 from typing import Any
+
+import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CODEX_MANIFEST = PROJECT_ROOT / ".codex-plugin" / "plugin.json"
@@ -61,4 +65,33 @@ def test_codex_manifest_has_current_required_publisher_and_interface_fields() ->
 def test_claude_manifest_uses_only_portable_identity_and_discovery_fields() -> None:
     claude = _load(CLAUDE_MANIFEST)
 
-    assert set(claude) == {"name", "version", "description"}
+    assert set(claude) == {"name", "version", "description", "author"}
+    assert claude["author"]["name"] == "QualityWeaver"
+
+
+@pytest.mark.skipif(shutil.which("claude") is None, reason="Claude CLI is not installed")
+def test_real_claude_validator_and_component_discovery() -> None:
+    validated = subprocess.run(
+        ["claude", "plugin", "validate", "."],
+        cwd=PROJECT_ROOT,
+        capture_output=True,
+        encoding="utf-8",
+        errors="replace",
+        check=False,
+    )
+    details = subprocess.run(
+        ["claude", "--plugin-dir", ".", "plugin", "details", "quality-weaver"],
+        cwd=PROJECT_ROOT,
+        capture_output=True,
+        encoding="utf-8",
+        errors="replace",
+        check=False,
+    )
+
+    assert validated.returncode == 0, validated.stdout + validated.stderr
+    assert "warning" not in (validated.stdout + validated.stderr).lower()
+    assert details.returncode == 0, details.stdout + details.stderr
+    inventory = details.stdout + details.stderr
+    assert "Skills (6)" in inventory
+    for skill_name in EXPECTED_CAPABILITIES:
+        assert skill_name in inventory

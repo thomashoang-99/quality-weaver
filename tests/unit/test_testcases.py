@@ -1,8 +1,10 @@
 from collections.abc import Iterable
 from pathlib import Path
 
+import pytest
 from typer.testing import CliRunner
 
+import quality_weaver.testcases as testcase_module
 from quality_weaver import models
 from quality_weaver.cli import app
 from quality_weaver.coverage import CoverageFinding
@@ -193,7 +195,7 @@ def test_markdown_is_canonical_inert_and_matches_golden() -> None:
     expected = Path("tests/golden/expected/testcases.md").read_bytes()
     assert rendered.encode("utf-8") == expected
     assert rendered.index("## TC-001") < rendered.index("## TC-002")
-    assert "pipe \\| next \\# heading" in rendered
+    assert "pipe \\| next\\r\\n\\# heading" in rendered
     assert "<script>" not in rendered
     assert "javascript:" not in rendered
     assert "**bold**" not in rendered
@@ -215,6 +217,48 @@ def test_markdown_neutralizes_leading_markers_in_numbered_dynamic_content() -> N
     assert "2. \\-" in rendered
     assert "1.   \\+ nested" in rendered
     assert "2. \\+" in rendered
+
+
+def test_markdown_roundtrip_preserves_every_testcase_field_and_comma_tags() -> None:
+    payload = "line one\nline two\rbackslash \\ | <script> [x](javascript:y)"
+    test_case = case(title=payload, action=payload, expected=payload).model_copy(
+        update={
+            "outline_id": "OUT-special,one",
+            "coverage_ids": ["COV-001", "COV-special,one"],
+            "preconditions": [payload, "- marker"],
+            "test_data": ["key,value", "None."],
+            "priority": "low",
+            "tags": ["smoke,critical", payload],
+        }
+    )
+    document = models.TestCaseDocument(
+        status=models.ApprovalStatus.APPROVED,
+        cases=[test_case],
+    )
+
+    rendered = render_testcases_markdown(document)
+    parsed = testcase_module.parse_testcases_markdown(rendered)
+
+    assert parsed == document
+    assert render_testcases_markdown(parsed) == rendered
+    assert "<script>" not in rendered
+    assert "javascript:" not in rendered
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda text: text.replace("case_count: 1", "case_count: 2", 1),
+        lambda text: text + "unexpected\n",
+        lambda text: text.replace("| 1 |", "| 2 |", 1),
+        lambda text: text.replace("- Priority: high", "- Priority: urgent", 1),
+    ],
+)
+def test_markdown_parser_rejects_noncanonical_or_malformed_input(mutate) -> None:
+    rendered = render_testcases_markdown(models.TestCaseDocument(cases=[case()]))
+
+    with pytest.raises(testcase_module.TestCaseMarkdownError):
+        testcase_module.parse_testcases_markdown(mutate(rendered))
 
 
 def write_inputs(tmp_path: Path) -> tuple[Path, Path, Path]:
@@ -254,6 +298,29 @@ def test_cli_validates_outline_and_detailed_cases(tmp_path: Path) -> None:
     assert outline_result.stdout.strip() == "Outline is valid"
     assert cases_result.exit_code == 0
     assert cases_result.stdout.strip() == "Test cases are valid"
+
+
+def test_cli_validates_canonical_markdown_cases(tmp_path: Path) -> None:
+    ledger_path, outline_path, _ = write_inputs(tmp_path)
+    document = models.TestCaseDocument(
+        cases=[case(), case("TC-002", outline_id="OUT-002", coverage_ids=["COV-002"])]
+    )
+    cases_path = tmp_path / "cases.md"
+    cases_path.write_text(render_testcases_markdown(document), encoding="utf-8")
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "testcases",
+            "validate",
+            str(ledger_path),
+            str(outline_path),
+            str(cases_path),
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert result.stdout.strip() == "Test cases are valid"
 
 
 def test_cli_renders_atomically_and_rejects_resolved_input_collision(

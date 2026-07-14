@@ -1,5 +1,8 @@
 {
   "name": "quality-weaver",
   "version": "0.1.0",
-  "description": "Viewpoint-driven manual test design"
+  "description": "Viewpoint-driven manual test design",
+  "author": {
+    "name": "QualityWeaver"
+  }
 }

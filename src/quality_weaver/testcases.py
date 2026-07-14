@@ -1,13 +1,27 @@
+import html
+import json
+import re
 from collections import Counter
+from typing import Literal, cast
+
+from pydantic import ValidationError
 
 from quality_weaver.coverage import CoverageFinding
 from quality_weaver.models import (
+    ApprovalStatus,
     CoverageDecision,
     CoverageLedger,
+    TestCase,
     TestCaseDocument,
     TestOutline,
+    TestStep,
 )
-from quality_weaver.testmap import _markdown_text
+
+_MARKDOWN_PUNCTUATION = frozenset("`*{}[]()#!|:~.@_")
+
+
+class TestCaseMarkdownError(ValueError):
+    """Raised when canonical testcase Markdown is malformed or noncanonical."""
 
 
 def validate_outline(ledger: CoverageLedger, outline: TestOutline) -> list[CoverageFinding]:
@@ -160,10 +174,8 @@ def render_testcases_markdown(document: TestCaseDocument) -> str:
         "# Test Cases",
     ]
     for test_case in cases:
-        coverage = ", ".join(
-            _markdown_text(coverage_id) for coverage_id in sorted(test_case.coverage_ids)
-        )
-        tags = ", ".join(_markdown_text(tag) for tag in sorted(test_case.tags))
+        coverage = _render_list(test_case.coverage_ids)
+        tags = _render_list(test_case.tags)
         lines.extend(
             [
                 "",
@@ -172,7 +184,7 @@ def render_testcases_markdown(document: TestCaseDocument) -> str:
                 f"- Requirement traceability: via {_markdown_text(test_case.outline_id)}",
                 f"- Coverage: {coverage}",
                 f"- Priority: {test_case.priority}",
-                f"- Tags: {tags if tags else 'None.'}",
+                f"- Tags: {tags}",
                 "",
                 "### Preconditions",
                 "",
@@ -195,6 +207,126 @@ def render_testcases_markdown(document: TestCaseDocument) -> str:
     return "\n".join(lines) + "\n"
 
 
+def parse_testcases_markdown(text: str) -> TestCaseDocument:
+    """Parse only the exact canonical Markdown emitted by the renderer."""
+    try:
+        document = _MarkdownParser(text).parse()
+    except (IndexError, json.JSONDecodeError, TypeError, ValidationError, ValueError) as error:
+        if isinstance(error, TestCaseMarkdownError):
+            raise
+        raise TestCaseMarkdownError(str(error).splitlines()[0]) from error
+    if render_testcases_markdown(document) != text:
+        raise TestCaseMarkdownError("testcase Markdown is not canonical")
+    return document
+
+
+class _MarkdownParser:
+    def __init__(self, text: str) -> None:
+        self.text = text
+        self.lines = text.splitlines()
+        self.index = 0
+
+    def parse(self) -> TestCaseDocument:
+        self._expect("---")
+        status_match = self._match(r"status: (draft|approved|stale)")
+        count_match = self._match(r"case_count: ([0-9]+)")
+        self._expect("---")
+        self._expect("# Test Cases")
+        cases: list[TestCase] = []
+        while self.index < len(self.lines):
+            self._expect("")
+            cases.append(self._case())
+        expected_count = int(count_match.group(1))
+        if expected_count != len(cases):
+            raise TestCaseMarkdownError("case_count does not match parsed cases")
+        return TestCaseDocument(
+            status=ApprovalStatus(status_match.group(1)),
+            cases=cases,
+        )
+
+    def _case(self) -> TestCase:
+        heading = self._match(r"## (TC-[0-9]{3,}): (.*)")
+        self._expect("")
+        outline = self._prefixed("- Requirement traceability: via ")
+        coverage = self._list(self._prefixed("- Coverage: "))
+        priority = cast(
+            Literal["high", "medium", "low"],
+            self._prefixed("- Priority: "),
+        )
+        tags = self._list(self._prefixed("- Tags: "))
+        self._expect("")
+        self._expect("### Preconditions")
+        self._expect("")
+        preconditions = self._numbered()
+        self._expect("")
+        self._expect("### Test Data")
+        self._expect("")
+        test_data = self._numbered()
+        self._expect("")
+        self._expect("### Steps")
+        self._expect("")
+        self._expect("| Step | Action | Expected Result |")
+        self._expect("| ---: | --- | --- |")
+        steps: list[TestStep] = []
+        while self.index < len(self.lines) and self.lines[self.index].startswith("| "):
+            number = len(steps) + 1
+            row = self._match(rf"\| {number} \| (.*) \| (.*) \|")
+            steps.append(
+                TestStep(action=_decode_text(row.group(1)), expected=_decode_text(row.group(2)))
+            )
+        return TestCase(
+            id=heading.group(1),
+            title=_decode_text(heading.group(2)),
+            outline_id=_decode_text(outline),
+            coverage_ids=coverage,
+            preconditions=preconditions,
+            test_data=test_data,
+            steps=steps,
+            priority=priority,
+            tags=tags,
+        )
+
+    def _numbered(self) -> list[str]:
+        if self.lines[self.index] == "None.":
+            self.index += 1
+            return []
+        values: list[str] = []
+        while self.index < len(self.lines):
+            match = re.fullmatch(rf"{len(values) + 1}\. (.*)", self.lines[self.index])
+            if match is None:
+                break
+            values.append(_decode_text(match.group(1)))
+            self.index += 1
+        if not values:
+            raise TestCaseMarkdownError("expected canonical numbered values")
+        return values
+
+    def _list(self, payload: str) -> list[str]:
+        parsed = json.loads(html.unescape(payload))
+        if not isinstance(parsed, list) or not all(isinstance(value, str) for value in parsed):
+            raise TestCaseMarkdownError("expected a JSON string array")
+        return [_unescape_markdown(value) for value in parsed]
+
+    def _prefixed(self, prefix: str) -> str:
+        line = self.lines[self.index]
+        if not line.startswith(prefix):
+            raise TestCaseMarkdownError(f"expected {prefix.strip()}")
+        self.index += 1
+        return line[len(prefix) :]
+
+    def _expect(self, expected: str) -> None:
+        if self.lines[self.index] != expected:
+            raise TestCaseMarkdownError(f"expected canonical line: {expected}")
+        self.index += 1
+
+    def _match(self, pattern: str) -> re.Match[str]:
+        match = re.fullmatch(pattern, self.lines[self.index])
+        if match is None:
+            raise TestCaseMarkdownError(f"line does not match canonical form: {pattern}")
+        self.index += 1
+        return match
+
+
 def _numbered_or_none(values: list[str]) -> list[str]:
     if not values:
         return ["None."]
@@ -212,3 +344,53 @@ def _list_text(value: str) -> str:
 
 def _sorted(findings: list[CoverageFinding]) -> list[CoverageFinding]:
     return sorted(findings, key=lambda item: (item.code, item.artifact_id, item.message))
+
+
+def _render_list(values: list[str]) -> str:
+    encoded = json.dumps(
+        [_escape_markdown(value) for value in values],
+        ensure_ascii=False,
+        separators=(", ", ": "),
+    )
+    return html.escape(encoded, quote=True)
+
+
+def _markdown_text(value: object) -> str:
+    return html.escape(_escape_markdown(str(value)), quote=True)
+
+
+def _escape_markdown(value: str) -> str:
+    escaped: list[str] = []
+    for character in value:
+        if character == "\\":
+            escaped.append("\\\\")
+        elif character == "\n":
+            escaped.append("\\n")
+        elif character == "\r":
+            escaped.append("\\r")
+        elif character in _MARKDOWN_PUNCTUATION:
+            escaped.append(f"\\{character}")
+        else:
+            escaped.append(character)
+    return "".join(escaped)
+
+
+def _decode_text(value: str) -> str:
+    return _unescape_markdown(html.unescape(value))
+
+
+def _unescape_markdown(value: str) -> str:
+    decoded: list[str] = []
+    index = 0
+    while index < len(value):
+        character = value[index]
+        if character != "\\":
+            decoded.append(character)
+            index += 1
+            continue
+        if index + 1 >= len(value):
+            raise TestCaseMarkdownError("dangling Markdown escape")
+        escaped = value[index + 1]
+        decoded.append("\n" if escaped == "n" else "\r" if escaped == "r" else escaped)
+        index += 2
+    return "".join(decoded)

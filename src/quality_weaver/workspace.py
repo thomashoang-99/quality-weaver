@@ -211,6 +211,26 @@ class Workspace:
 
         self._mutate_state(transition)
 
+    def reopen(self, stage: Stage) -> None:
+        downstream = {
+            Stage.REQUIREMENTS: (Stage.COVERAGE, Stage.TESTCASES),
+            Stage.COVERAGE: (Stage.TESTCASES,),
+            Stage.TESTCASES: (),
+        }
+
+        def transition(state: WorkspaceState) -> None:
+            current_status = getattr(state, stage.value)
+            if current_status is not ApprovalStatus.APPROVED:
+                raise StateError(
+                    f"{stage.value} must be approved before reopening; "
+                    f"current status is {current_status.value}"
+                )
+            setattr(state, stage.value, ApprovalStatus.DRAFT)
+            for downstream_stage in downstream[stage]:
+                setattr(state, downstream_stage.value, ApprovalStatus.STALE)
+
+        self._mutate_state(transition)
+
     def ensure_export_ready(self) -> None:
         state = self.load_state()
         statuses = (state.requirements, state.coverage, state.testcases)

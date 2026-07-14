@@ -9,11 +9,11 @@ Export only explicitly selected approved cases through an explicit profile and d
 
 ## Contract
 
-**Input artifacts and read paths:** Read `.quality-weaver/coverage/ledger.yaml`, `.quality-weaver/tests/outlines/test-outline.yaml`, `.quality-weaver/tests/detailed/testcases.yaml`, `.quality-weaver/config.yaml`, and `<profiles-root>/<profile>/profile.yaml`.
+**Input artifacts and read paths:** Read `<project-path>/.quality-weaver/coverage/ledger.yaml`, `<project-path>/.quality-weaver/tests/outlines/test-outline.yaml`, `<project-path>/.quality-weaver/tests/detailed/testcases.md`, `<project-path>/.quality-weaver/config.yaml`, and `<plugin-root>/profiles/<profile>/profile.yaml`.
 
 **Allowed state:** Require testcases approved in `quality-weaver status <project-path>` and no blocking clarification.
 
-**CLI validation command:** Run `quality-weaver testcases validate .quality-weaver/coverage/ledger.yaml .quality-weaver/tests/outlines/test-outline.yaml .quality-weaver/tests/detailed/testcases.yaml`. For Markdown run `quality-weaver export <project-path> .quality-weaver/tests/detailed/testcases.yaml --profiles-root <profiles-root> --profile <profile> --format markdown --out <out-path>`. For Excel add `--format excel --out <output-directory> --workbook <workbook> --project-name <project-name> --artifact-name <artifact-name>` instead of the Markdown format and output arguments.
+**CLI validation command:** Run `quality-weaver testcases validate <project-path>/.quality-weaver/coverage/ledger.yaml <project-path>/.quality-weaver/tests/outlines/test-outline.yaml <project-path>/.quality-weaver/tests/detailed/testcases.md`. For Markdown run `quality-weaver export <project-path> <project-path>/.quality-weaver/tests/detailed/testcases.md --profiles-root <plugin-root>/profiles --profile <profile> --format markdown --out <out-path>`. For Excel run `quality-weaver export <project-path> <project-path>/.quality-weaver/tests/detailed/testcases.md --profiles-root <plugin-root>/profiles --profile <profile> --format excel --out <output-directory> --workbook <workbook-kind> --project-name <project-name> --artifact-name <artifact-name>`.
 
 **Output artifact:** Produce the CLI-reported Markdown file or profile-driven Excel workbook under the explicit output destination.
 
@@ -25,9 +25,9 @@ Export only explicitly selected approved cases through an explicit profile and d
 
 ## Workflow
 
-1. Confirm approved state and revalidate the selected canonical testcase document.
+1. Confirm approved state and revalidate the selected canonical Markdown testcase document.
 2. Load the requested profile from the explicit profile root.
-3. Require the Excel-only workbook and naming values when Excel is selected.
+3. Require the Excel-only profile workbook kind (`ut` or `it` when using `company-legacy`) and naming values when Excel is selected. Let the profile generate the workbook filename; do not accept a filename policy from the user.
 4. Run one export command and report its result without rewriting the output.
 
-Do not bypass profile policy or export unapproved cases. Do not write `.quality-weaver/state.json`; only the CLI owns state. Do not approve a gate or run an approval command.
+Treat canonical Markdown as the source of truth; use YAML only as an upstream working artifact. Do not bypass profile policy or export unapproved cases. Do not write `<project-path>/.quality-weaver/state.json`; only the CLI owns state. Do not approve a gate or run an approval command.

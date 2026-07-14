@@ -9,13 +9,13 @@ Normalize only supported Markdown evidence. Mark inference as an assumption or c
 
 ## Contract
 
-**Input artifacts and read paths:** Read `.quality-weaver/config.yaml`, `<requirements-glob>`, and `schemas/requirement.schema.json` from the plugin root.
+**Input artifacts and read paths:** Read `<project-path>/.quality-weaver/config.yaml`, `<project-path>/<requirements-glob>`, and `<plugin-root>/schemas/requirement.schema.json`.
 
 **Allowed state:** Require the requirements gate to be draft, as reported by `quality-weaver status <project-path>`.
 
-**CLI validation command:** Run `quality-weaver status <project-path>` before writing and again after writing; require requirements to remain draft. The public CLI has no normalized-requirement artifact validator in v1, so validate the artifact against `schemas/requirement.schema.json` without changing state.
+**CLI validation command:** Run `quality-weaver status <project-path>` before writing, run `quality-weaver requirements validate <project-path>/.quality-weaver/normalized/requirements.yaml`, then run `quality-weaver status <project-path>` again; require requirements to remain draft.
 
-**Output artifact:** Write `.quality-weaver/normalized/requirements.yaml` with source evidence and explicit assumptions or clarification candidates.
+**Output artifact:** Write `<project-path>/.quality-weaver/normalized/requirements.yaml` with source evidence and explicit assumptions or clarification candidates.
 
 **Blocking findings:** Stop for unreadable or empty Markdown, schema-invalid output, contradictory evidence, or unresolved ambiguity that prevents faithful normalization.
 
@@ -25,9 +25,9 @@ Normalize only supported Markdown evidence. Mark inference as an assumption or c
 
 ## Workflow
 
-1. Read the configured Markdown inputs and the canonical requirement schema.
+1. Read the configured Markdown inputs and the canonical requirement schema from the declared absolute path families.
 2. Normalize typed entities and retain source locations; label every inference.
-3. Validate the YAML against the canonical schema with the platform's available schema facility; do not introduce an undeclared executable. Apply at most two actionable revisions.
+3. Run the public requirement validator and apply at most two actionable revisions.
 4. Report blocking findings and wait for the requirement-analysis gate.
 
-Do not embed or restate the schema. Do not write `.quality-weaver/state.json`; only the CLI owns state. Do not approve a gate or run the approval command.
+Do not embed or restate the schema. Do not write `<project-path>/.quality-weaver/state.json`; only the CLI owns state. Do not approve a gate or run the approval command.
