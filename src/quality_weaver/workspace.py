@@ -231,6 +231,53 @@ class Workspace:
 
         self._mutate_state(transition)
 
+    def approve_testcases_artifact(
+        self,
+        artifact_path: Path,
+        expected_draft: str,
+        approved_content: str,
+    ) -> None:
+        expected_path = self.path / "tests" / "detailed" / "testcases.md"
+        if artifact_path.resolve() != expected_path.resolve():
+            raise StateError(f"testcase artifact must be {expected_path}")
+        try:
+            with exclusive_lock(self._mutation_lock_path):
+                state = self.load_state()
+                if state.coverage is not ApprovalStatus.APPROVED:
+                    raise StateError("coverage must be approved before testcases")
+                if state.testcases is not ApprovalStatus.DRAFT:
+                    raise StateError(
+                        "testcases must be draft before approval; "
+                        f"current status is {state.testcases.value}"
+                    )
+                try:
+                    current_content = artifact_path.read_text(encoding="utf-8")
+                except OSError as error:
+                    raise StateError(f"cannot read testcase artifact: {error}") from error
+                if current_content != expected_draft:
+                    raise StateError("testcase artifact changed during approval")
+                state.testcases = ApprovalStatus.APPROVED
+                validated_state = WorkspaceState.model_validate(state.model_dump())
+                try:
+                    atomic_write_text(artifact_path, approved_content)
+                except OSError as error:
+                    raise StateError(f"cannot write approved testcase artifact: {error}") from error
+                try:
+                    self._save_state(validated_state)
+                except BaseException as state_error:
+                    try:
+                        atomic_write_text(artifact_path, expected_draft)
+                    except BaseException as rollback_error:
+                        raise StateError(
+                            "testcase approval state write failed: "
+                            f"{state_error}; artifact rollback failed: {rollback_error}"
+                        ) from state_error
+                    raise StateError(
+                        f"testcase approval state write failed: {state_error}"
+                    ) from state_error
+        except LockTimeoutError as error:
+            raise StateError("timed out acquiring workspace lock") from error
+
     def ensure_export_ready(self) -> None:
         state = self.load_state()
         statuses = (state.requirements, state.coverage, state.testcases)

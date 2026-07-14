@@ -9,9 +9,9 @@ Export only explicitly selected approved cases through an explicit profile and d
 
 ## Contract
 
-**Input artifacts and read paths:** Read `<project-path>/.quality-weaver/coverage/ledger.yaml`, `<project-path>/.quality-weaver/tests/outlines/test-outline.yaml`, `<project-path>/.quality-weaver/tests/detailed/testcases.md`, `<project-path>/.quality-weaver/config.yaml`, and `<plugin-root>/profiles/<profile>/profile.yaml`.
+**Input artifacts and read paths:** Read `<project-path>/.quality-weaver/coverage/ledger.yaml`, `<project-path>/.quality-weaver/tests/outlines/test-outline.yaml`, the approved canonical Markdown at `<project-path>/.quality-weaver/tests/detailed/testcases.md`, `<project-path>/.quality-weaver/config.yaml`, and `<plugin-root>/profiles/<profile>/profile.yaml`.
 
-**Allowed state:** Require testcases approved in `quality-weaver status <project-path>` and no blocking clarification.
+**Allowed state:** Require testcases approved in `quality-weaver status <project-path>`, require the canonical Markdown document status to be approved, and require no blocking clarification.
 
 **CLI validation command:** Run `quality-weaver testcases validate <project-path>/.quality-weaver/coverage/ledger.yaml <project-path>/.quality-weaver/tests/outlines/test-outline.yaml <project-path>/.quality-weaver/tests/detailed/testcases.md`. For Markdown run `quality-weaver export <project-path> <project-path>/.quality-weaver/tests/detailed/testcases.md --profiles-root <plugin-root>/profiles --profile <profile> --format markdown --out <out-path>`. For Excel run `quality-weaver export <project-path> <project-path>/.quality-weaver/tests/detailed/testcases.md --profiles-root <plugin-root>/profiles --profile <profile> --format excel --out <output-directory> --workbook <workbook-kind> --project-name <project-name> --artifact-name <artifact-name>`.
 

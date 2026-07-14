@@ -303,6 +303,15 @@ def test_design_has_conditional_gate2_reopen_and_canonical_markdown_review() -> 
         "<project-path>/.quality-weaver/tests/detailed/testcases.md"
     ) in body
     assert "canonical Markdown is the source of truth" in body
+    approval = (
+        "quality-weaver approve testcases <project-path> --artifact "
+        "<project-path>/.quality-weaver/tests/detailed/testcases.md"
+    )
+    assert approval in body
+    assert "quality-weaver regenerate testcases <project-path>" in body
+    assert body.index("quality-weaver approve coverage <project-path>") < body.index(
+        "quality-weaver regenerate testcases <project-path>"
+    )
     assert "Gate 2" in body and "Gate 3" in body
 
 
@@ -313,6 +322,7 @@ def test_export_consumes_canonical_markdown_and_plugin_profile_root() -> None:
     assert "--profiles-root <plugin-root>/profiles" in body
     assert "--workbook <workbook-kind>" in body
     assert "do not accept a filename policy from the user" in body
+    assert "approved canonical Markdown" in body
     assert "YAML is the source of truth" not in body
 
 

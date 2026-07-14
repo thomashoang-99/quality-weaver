@@ -174,8 +174,8 @@ def render_testcases_markdown(document: TestCaseDocument) -> str:
         "# Test Cases",
     ]
     for test_case in cases:
-        coverage = _render_list(test_case.coverage_ids)
-        tags = _render_list(test_case.tags)
+        coverage = _render_list(sorted(test_case.coverage_ids))
+        tags = _render_list(sorted(test_case.tags))
         lines.extend(
             [
                 "",

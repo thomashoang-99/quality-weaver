@@ -239,10 +239,46 @@ def test_markdown_roundtrip_preserves_every_testcase_field_and_comma_tags() -> N
     rendered = render_testcases_markdown(document)
     parsed = testcase_module.parse_testcases_markdown(rendered)
 
-    assert parsed == document
+    expected = document.model_copy(deep=True)
+    expected.cases[0].coverage_ids.sort()
+    expected.cases[0].tags.sort()
+    assert parsed == expected
     assert render_testcases_markdown(parsed) == rendered
     assert "<script>" not in rendered
     assert "javascript:" not in rendered
+
+
+def test_markdown_is_invariant_to_coverage_and_tag_permutations() -> None:
+    first = case().model_copy(
+        update={
+            "coverage_ids": ["COV-002", "COV-001"],
+            "tags": ["smoke,critical", "login"],
+        }
+    )
+    second = first.model_copy(
+        update={
+            "coverage_ids": list(reversed(first.coverage_ids)),
+            "tags": list(reversed(first.tags)),
+        }
+    )
+
+    assert render_testcases_markdown(models.TestCaseDocument(cases=[first])) == (
+        render_testcases_markdown(models.TestCaseDocument(cases=[second]))
+    )
+
+
+def test_markdown_parser_rejects_manually_unsorted_arrays() -> None:
+    test_case = case().model_copy(
+        update={"coverage_ids": ["COV-001", "COV-002"], "tags": ["a", "b"]}
+    )
+    rendered = render_testcases_markdown(models.TestCaseDocument(cases=[test_case]))
+    unsorted = rendered.replace(
+        "[&quot;COV-001&quot;, &quot;COV-002&quot;]",
+        "[&quot;COV-002&quot;, &quot;COV-001&quot;]",
+    )
+
+    with pytest.raises(testcase_module.TestCaseMarkdownError, match="not canonical"):
+        testcase_module.parse_testcases_markdown(unsorted)
 
 
 @pytest.mark.parametrize(

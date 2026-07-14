@@ -21,7 +21,7 @@ Design only from approved included coverage. Return newly discovered coverage to
 
 **Retry limit:** Model artifact validation retries: 2 per current outline or testcase artifact, only for actionable validation findings. Do not retry state, permission, stale approval, or unresolved clarification failures.
 
-**Next human gate:** On normal success, present validated canonical Markdown and traceability for Gate 3; the human may run `quality-weaver approve testcases <project-path>` only after review. If new coverage is discovered, stop testcase outputs and return to Gate 2: tell the human to run `quality-weaver reopen coverage <project-path>`, revise and validate the ledger, render the Test Map, approve coverage, then restart testcase design.
+**Next human gate:** On normal success, present validated canonical Markdown and traceability for Gate 3; the human may run `quality-weaver approve testcases <project-path> --artifact <project-path>/.quality-weaver/tests/detailed/testcases.md` only after review. If new coverage is discovered, stop testcase outputs and return to Gate 2. Tell the human to run `quality-weaver reopen coverage <project-path>`, revise and validate the ledger, render the Test Map, run `quality-weaver approve coverage <project-path>`, then run `quality-weaver regenerate testcases <project-path>`. Require `quality-weaver status <project-path>` to confirm coverage approved and testcases draft before restarting testcase design.
 
 ## Workflow
 

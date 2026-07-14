@@ -14,6 +14,7 @@ from quality_weaver.coverage import CoverageFinding, validate_ledger
 from quality_weaver.exporters import ExportError, export_excel, export_markdown
 from quality_weaver.io import atomic_write_text
 from quality_weaver.models import (
+    ApprovalStatus,
     CoverageItem,
     CoverageLedger,
     RequirementDocument,
@@ -410,14 +411,73 @@ def status(
 def approve(
     stage: Stage,
     project_path: Annotated[Path, typer.Argument(metavar="[PATH]")] = Path("."),
+    artifact_path: Annotated[Path | None, typer.Option("--artifact")] = None,
 ) -> None:
     """Approve a workspace gate."""
     workspace = _workspace(project_path)
+    if stage is Stage.TESTCASES:
+        if artifact_path is None:
+            _fail(StateError("--artifact is required for testcase approval"))
+        _approve_testcase_artifact(workspace, artifact_path)
+        typer.echo("Approved testcases")
+        return
+    if artifact_path is not None:
+        _fail(StateError("--artifact is only valid for testcases"))
     try:
         workspace.approve(stage)
     except StateError as error:
         _fail(error)
     typer.echo(f"Approved {stage.value}")
+
+
+def _approve_testcase_artifact(workspace: Workspace, artifact_path: Path) -> None:
+    expected_path = workspace.path / "tests" / "detailed" / "testcases.md"
+    if artifact_path.resolve() != expected_path.resolve():
+        _fail(StateError(f"testcase artifact must be {expected_path}"))
+    try:
+        original_content = artifact_path.read_text(encoding="utf-8")
+        document = parse_testcases_markdown(original_content)
+        ledger = _load_ledger(workspace.path / "coverage" / "ledger.yaml")
+        outline = _load_outline(workspace.path / "tests" / "outlines" / "test-outline.yaml")
+    except _DuplicateCoverageError as error:
+        _duplicates_fail(error)
+    except (OSError, ValueError, ValidationError, YAMLError) as error:
+        _artifact_fail("testcase approval input", error)
+    try:
+        state = workspace.load_state()
+    except StateError as error:
+        _fail(error)
+    if state.testcases is not ApprovalStatus.DRAFT:
+        _fail(
+            StateError(
+                "testcases must be draft before approval; "
+                f"current status is {state.testcases.value}"
+            )
+        )
+    if ledger.status is not ApprovalStatus.APPROVED:
+        _fail(StateError("coverage ledger must be approved before testcase approval"))
+    if outline.status is not ApprovalStatus.APPROVED:
+        _fail(StateError("test outline must be approved before testcase approval"))
+    if document.status is not ApprovalStatus.DRAFT:
+        _fail(StateError("testcase artifact must be draft before approval"))
+    findings = validate_outline(ledger, outline) + validate_testcases(
+        ledger, outline, document
+    )
+    findings.sort(key=lambda item: (item.code, item.artifact_id, item.message))
+    if findings:
+        for finding in findings:
+            typer.echo(f"{finding.code} {finding.artifact_id}: {finding.message}")
+        raise typer.Exit(code=1)
+    approved_document = document.model_copy(update={"status": ApprovalStatus.APPROVED})
+    approved_content = render_testcases_markdown(approved_document)
+    try:
+        workspace.approve_testcases_artifact(
+            artifact_path,
+            original_content,
+            approved_content,
+        )
+    except StateError as error:
+        _fail(error)
 
 
 @app.command()

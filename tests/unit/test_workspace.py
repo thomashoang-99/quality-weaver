@@ -291,6 +291,60 @@ def test_reopen_rejects_gate_that_is_not_approved(tmp_path, stage: Stage) -> Non
         workspace.reopen(stage)
 
 
+def test_testcase_artifact_approval_rolls_back_artifact_when_state_write_fails(
+    tmp_path, monkeypatch
+) -> None:
+    workspace = Workspace.init(tmp_path)
+    workspace.approve(Stage.REQUIREMENTS)
+    workspace.approve(Stage.COVERAGE)
+    artifact = workspace.path / "tests" / "detailed" / "testcases.md"
+    artifact.write_text("draft", encoding="utf-8")
+    original_write = workspace_module.atomic_write_text
+
+    def fail_state(path: Path, content: str) -> None:
+        if path == workspace.state_path:
+            raise OSError("state write failed")
+        original_write(path, content)
+
+    monkeypatch.setattr(workspace_module, "atomic_write_text", fail_state)
+
+    with pytest.raises(StateError, match="state write failed"):
+        workspace.approve_testcases_artifact(artifact, "draft", "approved")
+
+    assert artifact.read_text(encoding="utf-8") == "draft"
+    assert workspace.load_state().testcases is ApprovalStatus.DRAFT
+
+
+def test_testcase_artifact_approval_reports_best_effort_rollback_failure(
+    tmp_path, monkeypatch
+) -> None:
+    workspace = Workspace.init(tmp_path)
+    workspace.approve(Stage.REQUIREMENTS)
+    workspace.approve(Stage.COVERAGE)
+    artifact = workspace.path / "tests" / "detailed" / "testcases.md"
+    artifact.write_text("draft", encoding="utf-8")
+    original_write = workspace_module.atomic_write_text
+    artifact_writes = 0
+
+    def fail_state_and_rollback(path: Path, content: str) -> None:
+        nonlocal artifact_writes
+        if path == workspace.state_path:
+            raise OSError("state write failed")
+        if path == artifact:
+            artifact_writes += 1
+            if artifact_writes == 2:
+                raise OSError("rollback failed")
+        original_write(path, content)
+
+    monkeypatch.setattr(workspace_module, "atomic_write_text", fail_state_and_rollback)
+
+    with pytest.raises(StateError, match="rollback failed"):
+        workspace.approve_testcases_artifact(artifact, "draft", "approved")
+
+    assert artifact.read_text(encoding="utf-8") == "approved"
+    assert workspace.load_state().testcases is ApprovalStatus.DRAFT
+
+
 def test_approve_persists_complete_json_without_leaving_temporary_file(tmp_path) -> None:
     workspace = Workspace.init(tmp_path)
 
