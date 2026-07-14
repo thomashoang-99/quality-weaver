@@ -1,0 +1,27 @@
+{
+  "name": "quality-weaver",
+  "version": "0.1.0",
+  "description": "Viewpoint-driven manual test design",
+  "author": {
+    "name": "QualityWeaver"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "QualityWeaver",
+    "shortDescription": "Viewpoint-driven manual test design",
+    "longDescription": "Design traceable manual tests from Markdown requirements with deterministic validation and three human approval gates.",
+    "developerName": "QualityWeaver",
+    "category": "Productivity",
+    "defaultPrompt": [
+      "Show the QualityWeaver status for this project."
+    ],
+    "capabilities": [
+      "analyze-requirements",
+      "design-testcases",
+      "export-testcases",
+      "initialize",
+      "plan-coverage",
+      "status"
+    ]
+  }
+}
