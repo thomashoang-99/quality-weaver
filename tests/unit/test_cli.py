@@ -181,12 +181,12 @@ def test_reopen_command_rejects_nonapproved_gate_concisely(tmp_path) -> None:
     assert "Traceback" not in result.stdout
 
 
-def _approval_workspace(tmp_path):
+def _approval_workspace(tmp_path, *, approve_coverage: bool = True):
     workspace = Workspace.init(tmp_path)
     workspace.approve(Stage.REQUIREMENTS)
-    workspace.approve(Stage.COVERAGE)
+    if approve_coverage:
+        workspace.approve(Stage.COVERAGE)
     ledger = CoverageLedger(
-        status=ApprovalStatus.APPROVED,
         catalog_version="1.0.0",
         items=[
             CoverageItem(
@@ -203,7 +203,6 @@ def _approval_workspace(tmp_path):
         ],
     )
     outline = OutlineDocument(
-        status=ApprovalStatus.APPROVED,
         items=[OutlineItem(id="OUT-001", title="Email", coverage_ids=["COV-001"])],
     )
     cases = CaseDocument(
@@ -266,6 +265,23 @@ def test_cli_testcase_approval_requires_and_binds_canonical_artifact(tmp_path) -
     )
     assert exported.exit_code == 0
     assert output.read_bytes() == artifact_path.read_bytes()
+
+
+def test_cli_testcase_approval_requires_approved_workspace_coverage(tmp_path) -> None:
+    workspace, artifact_path = _approval_workspace(tmp_path, approve_coverage=False)
+    before = artifact_path.read_bytes()
+
+    result = CliRunner().invoke(
+        app,
+        ["approve", "testcases", str(tmp_path), "--artifact", str(artifact_path)],
+    )
+
+    assert result.exit_code == 1
+    assert "coverage must be approved before testcases" in result.stdout
+    state = workspace.load_state()
+    assert state.coverage is ApprovalStatus.DRAFT
+    assert state.testcases is ApprovalStatus.DRAFT
+    assert artifact_path.read_bytes() == before
 
 
 def test_approve_help_exposes_artifact_option() -> None:

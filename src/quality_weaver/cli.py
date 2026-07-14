@@ -454,10 +454,6 @@ def _approve_testcase_artifact(workspace: Workspace, artifact_path: Path) -> Non
                 f"current status is {state.testcases.value}"
             )
         )
-    if ledger.status is not ApprovalStatus.APPROVED:
-        _fail(StateError("coverage ledger must be approved before testcase approval"))
-    if outline.status is not ApprovalStatus.APPROVED:
-        _fail(StateError("test outline must be approved before testcase approval"))
     if document.status is not ApprovalStatus.DRAFT:
         _fail(StateError("testcase artifact must be draft before approval"))
     findings = validate_outline(ledger, outline) + validate_testcases(
