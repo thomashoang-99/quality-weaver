@@ -19,8 +19,8 @@ command list and test-layout description.
 ## Conventions
 
 - Python 3.11+, Pydantic 2, Typer, ruamel.yaml, openpyxl.
-- TDD: add a failing test, then the minimal implementation, per task in
-  `docs/superpowers/plans/2026-07-13-quality-weaver-v1.md`.
+- TDD: add a failing test, then the minimal implementation, for every task.
+  See `CONTRIBUTING.md` for the full workflow.
 - Never modify `../qa-engine`; verify with
   `git -C ../qa-engine status --porcelain`.
 - `Workspace` is the only writer of `.quality-weaver/state.json`.

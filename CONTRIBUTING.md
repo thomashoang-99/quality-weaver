@@ -29,9 +29,7 @@ in CI).
 
 ## Workflow
 
-1. Write a failing test first (TDD; see task steps in
-   `docs/superpowers/plans/2026-07-13-quality-weaver-v1.md` for the pattern
-   used throughout this codebase).
+1. Write a failing test first (TDD), one behavior at a time.
 2. Implement the minimal change to pass it.
 3. Run ruff, mypy, and the full test suite before committing.
 4. Keep commits scoped to one task/behavior; follow the existing
